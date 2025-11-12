@@ -4,8 +4,25 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SAFI CMS</title>
+
+    <!-- Netlify Identity (login) -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <!-- Netlify CMS -->
     <script src="https://unpkg.com/netlify-cms@^2/dist/netlify-cms.js"></script>
   </head>
   <body>
+    <script>
+      // Si usas Identity en el sitio completo, este snippet te ayuda con el login
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
   </body>
 </html>
