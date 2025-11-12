@@ -8,66 +8,74 @@ public_folder: "/images"
 publish_mode: editorial_workflow
 
 collections:
+  # Ajustes generales del sitio
   - name: "site"
     label: "Site Settings"
     files:
       - file: "data/site.json"
         label: "General"
         name: "general"
+        format: "json"
         fields:
-          - {label: Brand Name, name: brand_name, widget: string}
-          - {label: Hero Title, name: hero_title, widget: string}
-          - {label: Hero Subtitle, name: hero_subtitle, widget: text}
-          - {label: Email, name: email, widget: string}
-          - {label: Phone Display, name: phone_display, widget: string}
-          - {label: Phone (tel), name: phone_tel, widget: string}
-          - {label: Location, name: location, widget: string}
-          - {label: Hours, name: hours, widget: string}
+          - { label: Brand Name, name: brand_name, widget: string }
+          - { label: Hero Title, name: hero_title, widget: string }
+          - { label: Hero Subtitle, name: hero_subtitle, widget: text }
+          - { label: Email, name: email, widget: string }
+          - { label: Phone Display, name: phone_display, widget: string }
+          - { label: Phone (tel), name: phone_tel, widget: string }
+          - { label: Location, name: location, widget: string }
+          - { label: Hours, name: hours, widget: string }
+
+  # Servicios (lista)
   - name: "services"
     label: "Services"
-    label_singular: "Service"
-    folder: "data"
-    create: false
     files:
       - file: "data/services.json"
         label: "Services List"
         name: "services"
+        format: "json"
         fields:
           - label: Services
-            name: items
+            name: ""
             widget: list
             summary: "{{fields.title}}"
             fields:
-              - {label: Title, name: title, widget: string}
-              - {label: Description, name: desc, widget: string}
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: desc, widget: string }
+
+  # Proyectos (galería)
   - name: "projects"
     label: "Projects"
     files:
       - file: "data/projects.json"
         label: "Project Gallery"
         name: "projects"
+        format: "json"
         fields:
           - label: Projects
-            name: items
+            name: ""
             widget: list
             fields:
-              - {label: Title, name: title, widget: string}
-              - {label: Image, name: image, widget: image}
+              - { label: Title, name: title, widget: string }
+              - { label: Image, name: image, widget: image }
+
+  # Directorio de trabajadores
   - name: "workers"
     label: "Crew Directory"
     files:
       - file: "data/workers.json"
         label: "Workers"
         name: "workers"
+        format: "json"
         fields:
           - label: Workers
-            name: items
+            name: ""
             widget: list
             summary: "{{fields.name}} — {{fields.trade}}"
             fields:
-              - {label: Name, name: name, widget: string}
-              - {label: Trade, name: trade, widget: string}
-              - {label: Experience (years), name: experience, widget: number, value_type: int, min: 0}
-              - {label: Cities, name: cities, widget: string}
-              - {label: Certifications, name: certs, widget: string}
-              - {label: Photo, name: photo, widget: image}
+              - { label: Name, name: name, widget: string }
+              - { label: Trade, name: trade, widget: string }
+              - { label: Experience (years), name: experience, widget: number, value_type: int, min: 0 }
+              - { label: Cities, name: cities, widget: string }
+              - { label: Certifications, name: certs, widget: string }
+              - { label: Photo, name: photo, widget: image }
