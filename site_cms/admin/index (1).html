@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SAFI CMS</title>
+    <script src="https://unpkg.com/netlify-cms@^2/dist/netlify-cms.js"></script>
+    <style>html,body{height:100%;margin:0}.loading{display:grid;place-items:center;height:100vh;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#334155}</style>
+  </head>
+  <body>
+    <div class="loading">Loading CMS…</div>
+    <script>
+      window.addEventListener('error', function(ev){
+        const div = document.querySelector('.loading');
+        if(div){ div.textContent = 'CMS error: ' + (ev.message || 'unknown'); }
+      });
+      fetch('./config.yml', {cache:'no-store'}).then(function(r){
+        if(!r.ok){
+          const div = document.querySelector('.loading');
+          if(div){ div.textContent = 'Cannot load config.yml ('+r.status+')'; }
+        }
+      });
+    </script>
+  </body>
+</html>
