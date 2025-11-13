@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAFI Construction — Building Smarter. Building Stronger.</title>
+  <meta name="description" content="Your trusted partner in construction labor, drywall, framing, painting, site cleaning, and modular installations in Calgary.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <span>Licensed • Insured • WCB</span>
+      <span>Calgary &amp; Area · Mon–Fri 8:00–17:00 · <a href="tel:+18255587313">+1 (825) 558-7313</a></span>
+    </div>
+  </div>
+
+  <!-- HEADER / NAV -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="#home" class="brand">
+        <!-- Cuando tengas logo, lo ponemos aquí -->
+        <span class="brand-mark">SAFI</span>
+        <span class="brand-text">SAFI Construction Projects</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#projects">Projects</a>
+        <a href="#about">About</a>
+        <a href="#contact" class="btn btn-primary">Get a Quote</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <h1>BUILDING SMARTER. BUILDING STRONGER.</h1>
+          <p class="hero-subtitle">
+            Construction labor, drywall, metal stud framing, painting &amp; sanding,
+            site cleaning, and modular wall installations in Calgary &amp; area.
+          </p>
+          <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary">Request a Quote</a>
+            <a href="#services" class="btn btn-outline">View Services</a>
+          </div>
+          <p class="hero-badge">
+            Skilled workers · Efficient execution · Clean, safe job sites
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="section">
+      <div class="container">
+        <h2>Services</h2>
+        <p class="section-intro">
+          Specialized labor &amp; construction services for contractors and builders in Calgary.
+        </p>
+        <div class="grid">
+          <article class="card">
+            <h3>Drywall Installation &amp; Finishing</h3>
+            <p>Clean, professional hanging, taping, and finishing for residential and commercial projects.</p>
+          </article>
+          <article class="card">
+            <h3>Metal Stud Framing</h3>
+            <p>Durable, straight, and code-compliant framing for walls, bulkheads, and partitions.</p>
+          </article>
+          <article class="card">
+            <h3>Painting &amp; Sanding</h3>
+            <p>Quality finishes, surface preparation, and detailed sanding for a polished final look.</p>
+          </article>
+          <article class="card">
+            <h3>Construction Site Cleaning</h3>
+            <p>Rough and final cleans to keep sites safer, more organized, and ready for inspection.</p>
+          </article>
+          <article class="card">
+            <h3>General Labor Support</h3>
+            <p>Reliable manpower for material handling, demolition, protection, and more.</p>
+          </article>
+          <article class="card">
+            <h3>Modular Wall Installation</h3>
+            <p>Specialized installation of modular systems for modern, flexible commercial spaces.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section section-alt">
+      <div class="container">
+        <h2>About SAFI Construction Projects</h2>
+        <p>
+          At SAFI Construction Projects, we provide specialized labor and construction services across Calgary.
+          From drywall and metal framing to painting, sanding, and construction site cleaning, our team delivers
+          reliable results for contractors and builders.
+        </p>
+        <p>
+          We are also experienced with modular installation, offering precise and efficient service for innovative
+          construction projects. Our mission is simple: skilled workers, efficient execution, and construction
+          solutions that make a difference.
+        </p>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <div class="container contact-grid">
+        <div>
+          <h2>Request a Quote</h2>
+          <p class="section-intro">
+            Tell us briefly about your project and we’ll get back to you within 24–48 hours.
+          </p>
+          <form class="card" method="post" action="#">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" required>
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required>
+            </div>
+            <div class="field">
+              <label for="phone">Phone</label>
+              <input id="phone" name="phone" type="tel">
+            </div>
+            <div class="field">
+              <label for="message">Project details</label>
+              <textarea id="message" name="message" rows="4" required></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">Send</button>
+            <p class="form-note">
+              Form integration (Formspree, CloudCannon, etc.) se puede configurar después.
+            </p>
+          </form>
+        </div>
+        <div>
+          <h3>Contact Info</h3>
+          <p>
+            <strong>Calgary, AB</strong><br>
+            Mon–Fri 8:00–17:00
+          </p>
+          <p>
+            <strong>Phone:</strong> <a href="tel:+18255587313">+1 (825) 558-7313</a><br>
+            <strong>Email:</strong> <a href="mailto:ricardo.sarmiento@saficonstruction.com">ricardo.sarmiento@saficonstruction.com</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> SAFI Construction Projects. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
