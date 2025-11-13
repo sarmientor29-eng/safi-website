@@ -1,4 +1,4 @@
-SAFI Site with Netlify CMS
+SAFI Site CMS
 ============================
 Structure:
 - index.html (reads editable data from /data/*.json)
