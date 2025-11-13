@@ -1,0 +1,75 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+publish_mode: editorial_workflow
+
+collections:
+  - name: "site"
+    label: "Site Settings"
+    files:
+      - file: "data/site.json"
+        label: "General"
+        name: "general"
+        format: "json"
+        fields:
+          - {label: "Brand Name", name: "brand_name", widget: "string"}
+          - {label: "Hero Title", name: "hero_title", widget: "string"}
+          - {label: "Hero Subtitle", name: "hero_subtitle", widget: "text"}
+          - {label: "Email", name: "email", widget: "string"}
+          - {label: "Phone Display", name: "phone_display", widget: "string"}
+          - {label: "Phone (tel)", name: "phone_tel", widget: "string"}
+          - {label: "Location", name: "location", widget: "string"}
+          - {label: "Hours", name: "hours", widget: "string"}
+
+  - name: "services"
+    label: "Services"
+    files:
+      - file: "data/services.json"
+        label: "Services List"
+        name: "services"
+        format: "json"
+        fields:
+          - label: "Services"
+            name: "items"
+            widget: "list"
+            fields:
+              - {label: "Title", name: "title", widget: "string"}
+              - {label: "Description", name: "desc", widget: "string"}
+
+  - name: "projects"
+    label: "Projects"
+    files:
+      - file: "data/projects.json"
+        label: "Project Gallery"
+        name: "projects"
+        format: "json"
+        fields:
+          - label: "Projects"
+            name: "items"
+            widget: "list"
+            fields:
+              - {label: "Title", name: "title", widget: "string"}
+              - {label: "Image", name: "image", widget: "image"}
+
+  - name: "workers"
+    label: "Crew Directory"
+    files:
+      - file: "data/workers.json"
+        label: "Workers"
+        name: "workers"
+        format: "json"
+        fields:
+          - label: "Workers"
+            name: "items"
+            widget: "list"
+            fields:
+              - {label: "Name", name: "name", widget: "string"}
+              - {label: "Trade", name: "trade", widget: "string"}
+              - {label: "Experience (years)", name: "experience", widget: "number", value_type: "int", min: 0}
+              - {label: "Cities", name: "cities", widget: "string"}
+              - {label: "Certifications", name: "certs", widget: "string"}
+              - {label: "Photo", name: "photo", widget: "image"}
