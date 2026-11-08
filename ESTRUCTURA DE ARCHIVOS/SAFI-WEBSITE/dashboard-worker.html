@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAFI Portal | Worker dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    #logout-btn {
+      background: transparent;
+      border: 1px solid #374151;
+      color: #fca5a5;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 10px 14px;
+      border-radius: 999px;
+    }
+
+    #logout-btn:hover {
+      background: #111827;
+    }
+  </style>
+</head>
+<body class="portal-shell">
+
+  <div class="portal-frame">
+    <div class="portal-card">
+      <div class="portal-topbar">
+        <div class="portal-session">
+          <span class="status-chip">Worker portal</span>
+          <span>Logged in to SAFI Portal</span>
+        </div>
+        <button id="logout-btn">Log out</button>
+      </div>
+
+      <div class="portal-hero">
+        <div>
+          <div class="portal-kicker">Field operations</div>
+          <h1 class="portal-title">Worker dashboard</h1>
+          <p class="portal-sub">
+            Choose the task you need before, during or after your shift. The underlying worker flow stays the same, but the page now behaves more like a real software home screen.
+          </p>
+        </div>
+
+        <div class="portal-summary">
+          <div class="portal-summary-card">
+            <strong>Daily priority</strong>
+            <span>Start with FLHA and then submit your daily timesheet once work is complete.</span>
+          </div>
+          <div class="portal-summary-card">
+            <strong>Current scope</strong>
+            <span>This phase improves visual structure only. No worker data flow or authentication logic was changed.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="portal-actions-grid">
+        <article class="portal-action-card">
+          <h3>New FLHA</h3>
+          <p>Complete your field-level hazard assessment before work begins.</p>
+          <div class="portal-action-meta">
+            <span class="mini-pill">Safety</span>
+            <span class="mini-pill">Before shift</span>
+          </div>
+          <div class="portal-link-row">
+            <a href="flha.html" class="portal-btn-primary">Open FLHA form</a>
+          </div>
+        </article>
+
+        <article class="portal-action-card">
+          <h3>Fill timesheet</h3>
+          <p>Log your hours, activities and supervisor confirmation for the day.</p>
+          <div class="portal-action-meta">
+            <span class="mini-pill">Daily reporting</span>
+            <span class="mini-pill">Signature required</span>
+          </div>
+          <div class="portal-link-row">
+            <a href="worker-timesheet-form.html" class="portal-btn-secondary">Open timesheet form</a>
+          </div>
+        </article>
+
+        <article class="portal-action-card">
+          <h3>Submitted timesheets</h3>
+          <p>Review what you have already sent through the SAFI portal.</p>
+          <div class="portal-action-meta">
+            <span class="mini-pill">History</span>
+            <span class="mini-pill">Status visibility</span>
+          </div>
+          <div class="portal-link-row">
+            <a href="timesheets.html" class="portal-btn-secondary">View my timesheets</a>
+            <a href="contact.html" class="portal-btn-muted">Need help?</a>
+          </div>
+        </article>
+      </div>
+
+      <p class="portal-note">
+        Invoice handling is intentionally left out of the main action grid in this phase because there is no active worker invoice page in the current project. This avoids sending workers into a broken route while keeping the rest of the portal intact.
+      </p>
+    </div>
+  </div>
+
+  <script type="module" src="assets/js/auth.js"></script>
+</body>
+</html>

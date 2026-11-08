@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quotes & Invoices | SAFI Admin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #020617, #020617 60%);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #e5e7eb;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 24px 12px;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .admin-card {
+      background: #020617;
+      border-radius: 22px;
+      border: 1px solid rgba(148,163,184,0.45);
+      box-shadow: 0 30px 80px rgba(15,23,42,0.96);
+      padding: 22px 20px 18px;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .admin-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .admin-sub {
+      font-size: 13px;
+      color: #9ca3af;
+      margin: 3px 0 0;
+    }
+
+    .admin-actions-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn-small {
+      border-radius: 999px;
+      padding: 8px 13px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-small:hover {
+      background: #0f172a;
+    }
+
+    .btn-small-primary {
+      border-color: #2563eb;
+      background: #2563eb;
+      color: #f9fafb;
+    }
+
+    .btn-small-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .admin-status {
+      margin-bottom: 8px;
+      font-size: 13px;
+      min-height: 18px;
+    }
+
+    .admin-status.error {
+      color: #f97373;
+    }
+
+    .admin-status.ok {
+      color: #9ca3af;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-size: 12px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #9ca3af;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: #111827;
+      color: #e5e7eb;
+      border-color: #4b5563;
+    }
+
+    .table-wrapper {
+      border-radius: 14px;
+      border: 1px solid rgba(31,41,55,1);
+      overflow-x: auto;
+      background: radial-gradient(circle at top left,#111827,#020617 60%);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead {
+      background: rgba(15,23,42,0.95);
+    }
+
+    th, td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(31,41,55,1);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      font-weight: 500;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: rgba(15,23,42,0.8);
+    }
+
+    .btn-chip {
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 11px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      cursor: pointer;
+    }
+
+    .btn-chip.download {
+      border-color: #3b82f6;
+      color: #93c5fd;
+    }
+
+    .btn-chip.delete {
+      border-color: #4b5563;
+      color: #9ca3af;
+    }
+
+    .empty-state {
+      padding: 16px 10px;
+      text-align: center;
+      color: #9ca3af;
+    }
+
+    .admin-footer {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 16px 8px;
+      }
+      .admin-card {
+        padding: 18px 14px 14px;
+      }
+      .admin-header {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="admin-card">
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-title">Quotes & invoices</h1>
+          <p class="admin-sub">
+            Review previously created quotes and invoices and download the PDF again.
+          </p>
+        </div>
+        <div class="admin-actions-top">
+          <!-- IMPORTANTE: coincide con redirectByRole en auth.js -->
+          <a href="admin-dashboard.html" class="btn-small">← Back to admin</a>
+          <a href="quote.html" class="btn-small">New quote</a>
+          <a href="invoice.html" class="btn-small btn-small-primary">New invoice</a>
+        </div>
+      </div>
+
+      <div id="admin-status" class="admin-status"></div>
+
+      <div class="context-nav-wrap">
+        <p class="context-nav-label">Admin navigation</p>
+        <div class="context-nav">
+          <a href="admin-dashboard.html" class="context-nav-link">Overview</a>
+          <a href="admin-timesheets.html" class="context-nav-link">Timesheets</a>
+          <a href="admin-flhas.html" class="context-nav-link">FLHAs</a>
+          <a href="admin-quotes-invoice.html" class="context-nav-link is-active">Quotes & invoices</a>
+          <a href="quote.html" class="context-nav-link">New quote</a>
+          <a href="invoice.html" class="context-nav-link">New invoice</a>
+        </div>
+      </div>
+
+      <div class="context-summary">
+        <div class="context-summary-card">
+          <strong>Document records</strong>
+          <span>This page acts as the retrieval layer for previously created quotes and invoices without changing the document-generation workflow.</span>
+        </div>
+        <div class="context-summary-card">
+          <strong>Best next action</strong>
+          <span>Jump to a new quote or invoice when you are creating a document, and use this screen only for review, download or cleanup.</span>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="quotes">Quotes</button>
+        <button class="tab-btn" data-tab="invoices">Invoices</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr id="table-head-row">
+              <!-- se llena desde JS según tab -->
+            </tr>
+          </thead>
+          <tbody id="docs-body">
+            <tr>
+              <td colspan="7" class="empty-state">Loading documents…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="admin-footer">
+        <span>© <span id="year"></span> SAFI Construction Projects. Admin access.</span>
+        <span>Quotes & invoices are stored as records; PDFs are generated on demand.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script type="module">
+    import { auth, db } from "./assets/js/firebase-config.js";
+    import {
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    import {
+      collection,
+      getDocs,
+      doc,
+      getDoc,
+      deleteDoc,
+      orderBy,
+      query
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    const statusEl = document.getElementById("admin-status");
+    const tableHeadRow = document.getElementById("table-head-row");
+    const docsBody = document.getElementById("docs-body");
+    const tabs = document.querySelectorAll(".tab-btn");
+
+    const ACCENT_BLUE = { r: 37, g: 99, b: 235 };
+    const GST_NUMBER = "73911 5160 RT0001";
+
+    let currentTab = "quotes";
+    let quotes = [];
+    let invoices = [];
+
+    function setStatus(msg, type = "") {
+      if (!statusEl) return;
+      statusEl.textContent = msg || "";
+      statusEl.className = "admin-status";
+      if (type === "error") statusEl.classList.add("error");
+      if (type === "ok") statusEl.classList.add("ok");
+    }
+
+    function formatDate(ts) {
+      if (!ts) return "–";
+      try {
+        const d = ts.toDate();
+        return d.toLocaleDateString();
+      } catch {
+        return "–";
+      }
+    }
+
+    function getJsPdfClass() {
+      if (window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
+      if (window.jsPDF) return window.jsPDF;
+      alert("Error loading jsPDF.");
+      throw new Error("jsPDF not loaded");
+    }
+
+    // ========== RENDER TABLA ==========
+    function renderTable() {
+      if (!docsBody || !tableHeadRow) return;
+
+      let items;
+      if (currentTab === "quotes") {
+        tableHeadRow.innerHTML = `
+          <th>Quote #</th>
+          <th>Client</th>
+          <th>Project</th>
+          <th>Location</th>
+          <th>Date</th>
+          <th>Total (approx.)</th>
+          <th>Actions</th>
+        `;
+        items = quotes;
+      } else {
+        tableHeadRow.innerHTML = `
+          <th>Invoice #</th>
+          <th>Client</th>
+          <th>Project</th>
+          <th>Location</th>
+          <th>Date</th>
+          <th>Total</th>
+          <th>Actions</th>
+        `;
+        items = invoices;
+      }
+
+      if (!items || !items.length) {
+        docsBody.innerHTML = `
+          <tr>
+            <td colspan="7" class="empty-state">
+              No ${currentTab === "quotes" ? "quotes" : "invoices"} found.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      const rows = items.map(docData => {
+        const total = calculateTotal(docData);
+        const dateStr = formatDate(docData.createdAt || docData.dateTs);
+        return `
+          <tr data-id="${docData.id}">
+            <td>${docData.number || "—"}</td>
+            <td>${docData.clientName || "—"}</td>
+            <td>${docData.projectName || "—"}</td>
+            <td>${docData.projectLocation || "—"}</td>
+            <td>${dateStr}</td>
+            <td>${total.toFixed(2)}</td>
+            <td>
+              <button type="button" class="btn-chip download" data-action="download">
+                Download PDF
+              </button>
+              <button type="button" class="btn-chip delete" data-action="delete">
+                Delete
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      docsBody.innerHTML = rows;
+    }
+
+    function calculateTotal(d) {
+      const items = d.items || [];
+      const taxRate = parseFloat(d.taxRate || 0) || 0;
+      let subtotal = 0;
+      items.forEach(it => {
+        const qty = parseFloat(it.qty || 0) || 0;
+        const rate = parseFloat(it.rate || 0) || 0;
+        subtotal += qty * rate;
+      });
+      const tax = subtotal * (taxRate / 100);
+      return subtotal + tax;
+    }
+
+    // ========== CARGAR DESDE FIRESTORE ==========
+    async function loadQuotesAndInvoices() {
+      setStatus("Loading quotes & invoices…", "ok");
+
+      try {
+        // quotes
+        const qQuotes = query(collection(db, "quotes"), orderBy("createdAt", "desc"));
+        const snapQuotes = await getDocs(qQuotes);
+        quotes = [];
+        snapQuotes.forEach(docSnap => {
+          quotes.push({
+            id: docSnap.id,
+            ...docSnap.data()
+          });
+        });
+
+        // invoices
+        const qInvoices = query(collection(db, "invoices"), orderBy("createdAt", "desc"));
+        const snapInvoices = await getDocs(qInvoices);
+        invoices = [];
+        snapInvoices.forEach(docSnap => {
+          invoices.push({
+            id: docSnap.id,
+            ...docSnap.data()
+          });
+        });
+
+        setStatus(`Loaded ${quotes.length} quotes and ${invoices.length} invoices.`, "ok");
+        renderTable();
+      } catch (err) {
+        console.error("LOAD QUOTES/INVOICES ERROR:", err);
+        setStatus("Error loading documents. Check console.", "error");
+      }
+    }
+
+    // ========== PDF INVOICE ==========
+    function generateInvoicePdf(data) {
+      const jsPDF = getJsPdfClass();
+      const pdf = new jsPDF({ unit: "pt", format: "letter" });
+
+      const marginX = 40;
+      let y = 40;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(14);
+      pdf.setTextColor(0,0,0);
+      pdf.text("SAFI Construction Projects", marginX, y + 14);
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "normal");
+      pdf.text("97 Elkton Way SW, Calgary, Alberta", marginX, y + 28);
+      pdf.text("Phone: +1 (825) 558-7313", marginX, y + 40);
+      pdf.text("Email: ricardo.sarmiento@saficonstruction.com", marginX, y + 52);
+
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(20);
+      pdf.setTextColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+      pdf.text("INVOICE", 580, y + 20, { align: "right" });
+
+      y += 70;
+      pdf.setDrawColor(220, 220, 220);
+      pdf.line(marginX, y, 580, y);
+      y += 16;
+
+      pdf.setTextColor(0,0,0);
+      pdf.setFontSize(10);
+      pdf.setLineWidth(0.7);
+      pdf.setDrawColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+
+      const boxHeight = 40;
+
+      // Invoice No / Date / GST
+      pdf.rect(marginX, y, 260, boxHeight);
+      pdf.rect(marginX + 260, y, 140, boxHeight);
+      pdf.rect(marginX + 400, y, 180, boxHeight);
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Invoice No.:", marginX + 8, y + 14);
+      pdf.text("Date:", marginX + 268, y + 14);
+      pdf.text("GST/HST:", marginX + 408, y + 14);
+
+      pdf.setFont("helvetica", "normal");
+      pdf.text(data.number || "-", marginX + 8, y + 30);
+      pdf.text(data.date || "-", marginX + 268, y + 30);
+      pdf.text(GST_NUMBER, marginX + 408, y + 30);
+
+      y += boxHeight + 10;
+
+      // Due date
+      pdf.rect(marginX, y, 260, boxHeight);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Due Date:", marginX + 8, y + 14);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(data.dueDate || "-", marginX + 8, y + 30);
+
+      y += boxHeight + 18;
+
+      // Bill for
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+      pdf.text("Bill For:", marginX, y);
+      pdf.setTextColor(0,0,0);
+      pdf.setFont("helvetica", "normal");
+      y += 14;
+      pdf.text(data.clientName || "-", marginX, y);
+      if (data.projectName) {
+        pdf.text(data.projectName, marginX, y + 14);
+        y += 14;
+      }
+      if (data.projectLocation) {
+        pdf.text(data.projectLocation, marginX, y + 14);
+        y += 14;
+      }
+      y += 10;
+
+      // Tabla items
+      pdf.setFont("helvetica", "bold");
+      pdf.setFillColor(240, 245, 255);
+      pdf.setDrawColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+      pdf.rect(marginX, y, 540, 18, "FD");
+
+      pdf.setTextColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+      pdf.text("Description", marginX + 6, y + 12);
+      pdf.text("Qty", marginX + 260, y + 12);
+      pdf.text("Rate", marginX + 330, y + 12);
+      pdf.text("Amount (CAD)", marginX + 430, y + 12);
+      pdf.setTextColor(0,0,0);
+      pdf.setFont("helvetica", "normal");
+
+      y += 22;
+
+      let subtotal = 0;
+      (data.items || []).forEach(item => {
+        const amount = (item.qty || 0) * (item.rate || 0);
+        subtotal += amount;
+
+        const descLines = pdf.splitTextToSize(item.desc || "-", 240);
+        descLines.forEach((line, idx) => {
+          if (y > 720) {
+            pdf.addPage();
+            y = 40;
+          }
+          pdf.text(line, marginX + 6, y);
+          if (idx === 0) {
+            pdf.text(String(item.qty || 0), marginX + 260, y);
+            pdf.text((item.rate || 0).toFixed(2), marginX + 330, y);
+            pdf.text(amount.toFixed(2), marginX + 470, y, { align: "right" });
+          }
+          y += 12;
+        });
+      });
+
+      if (!data.items || !data.items.length) {
+        pdf.text("-", marginX + 6, y);
+        y += 14;
+      }
+
+      pdf.setDrawColor(220,220,220);
+      pdf.line(marginX, y, 580, y);
+      y += 14;
+
+      const taxRate = parseFloat(data.taxRate || 0) || 0;
+      const tax = subtotal * (taxRate / 100);
+      const total = subtotal + tax;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Subtotal:", marginX + 360, y);
+      pdf.text(subtotal.toFixed(2), 580, y, { align: "right" });
+      y += 14;
+
+      pdf.text(`GST (${taxRate.toFixed(2)}%):`, marginX + 360, y);
+      pdf.text(tax.toFixed(2), 580, y, { align: "right" });
+      y += 14;
+
+      pdf.setFontSize(11);
+      pdf.setTextColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+      pdf.text("Total:", marginX + 360, y);
+      pdf.text(total.toFixed(2), 580, y, { align: "right" });
+      pdf.setTextColor(0,0,0);
+      y += 24;
+
+      // Notas / términos si existen
+      if (data.notes) {
+        if (y > 720) {
+          pdf.addPage();
+          y = 40;
+        }
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(10);
+        pdf.setTextColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+        pdf.text("Notes / Terms", marginX, y);
+        y += 12;
+
+        pdf.setFont("helvetica", "normal");
+        pdf.setTextColor(0,0,0);
+        const notesLines = pdf.splitTextToSize(data.notes, 520);
+        notesLines.forEach(line => {
+          if (y > 760) {
+            pdf.addPage();
+            y = 40;
+          }
+          pdf.text(line, marginX, y);
+          y += 12;
+        });
+
+        y += 8;
+      }
+
+      // Payment info
+      pdf.setFontSize(11);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+      pdf.text("Payment Information", marginX, y);
+      pdf.setTextColor(0,0,0);
+      y += 14;
+
+      pdf.setFontSize(9);
+      const lines = [
+        "E-transfer: ricardo.sarmiento@saficonstruction.com",
+        "Bank Transfer:",
+        "  Bank Name: RBC Royal Bank",
+        "  Account Number: 1038157",
+        "  Transit / Branch: 00836",
+        "Cheque Payable To: SAFI Construction Projects",
+        "Payment Terms: Payment due within 15 days."
+      ];
+      lines.forEach(line => {
+        if (y > 760) {
+          pdf.addPage();
+          y = 40;
+        }
+        pdf.text(line, marginX, y);
+        y += 12;
+      });
+
+      const safeClient = (data.clientName || "client").replace(/[^\w\d]+/g, "_").toLowerCase();
+      const safeNumber = (data.number || "invoice").replace(/[^\w\d]+/g, "_");
+      const fileName = `Invoice_${safeClient}_${safeNumber}.pdf`;
+      pdf.save(fileName);
+    }
+
+    // ========== PDF QUOTE ==========
+    function generateQuotePdf(data) {
+      const jsPDF = getJsPdfClass();
+      const pdf = new jsPDF({ unit: "pt", format: "letter" });
+
+      const marginX = 40;
+      let y = 40;
+
+      // Marco azul
+      pdf.setDrawColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+      pdf.setLineWidth(2);
+      pdf.rect(30, 30, 555, 730);
+
+      // Título
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(16);
+      pdf.setTextColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+      pdf.text("INSTALLATION QUOTE", 307, 70, { align: "center" });
+
+      y = 90;
+
+      pdf.setFontSize(10);
+      pdf.setTextColor(0,0,0);
+
+      // Proyecto / empresa
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Project Name:", marginX, y);
+      pdf.text("SAFI CONSTRUCTION PROJECTS", 330, y);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(data.projectName || "-", marginX + 90, y);
+      y += 14;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Project Location:", marginX, y);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(data.projectLocation || "-", marginX + 100, y);
+      pdf.text("97 Elkton Way SW, Calgary, Alberta", 330, y);
+      y += 14;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Client:", marginX, y);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(data.clientName || "-", marginX + 45, y);
+      pdf.text("ricardo.sarmiento@saficonstruction.com", 330, y);
+      y += 14;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Date:", marginX, y);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(data.date || "-", marginX + 35, y);
+      pdf.text("+1 (825) 558-7313", 330, y);
+      y += 22;
+
+      // Intro
+      pdf.setFontSize(9);
+      const intro = "Below is the detailed quote for the proposed scope of work. All prices are in CAD and exclude applicable taxes.";
+      const introLines = pdf.splitTextToSize(intro, 520);
+      introLines.forEach(line => {
+        pdf.text(line, marginX, y);
+        y += 12;
+      });
+      y += 8;
+
+      // Tabla: description + amount
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(10);
+      pdf.setFillColor(240, 245, 255);
+      pdf.setDrawColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+      pdf.rect(marginX, y, 380, 18, "FD");
+      pdf.rect(marginX + 380, y, 160, 18, "FD");
+      pdf.setTextColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+      pdf.text("Description", marginX + 6, y + 12);
+      pdf.text("Amount (CAD)", marginX + 390, y + 12);
+      pdf.setTextColor(0,0,0);
+      pdf.setFont("helvetica", "normal");
+      y += 22;
+
+      let subtotal = 0;
+      (data.items || []).forEach(item => {
+        const amount = (item.qty || 0) * (item.rate || 0);
+        subtotal += amount;
+        const descLines = pdf.splitTextToSize(item.desc || "-", 360);
+        descLines.forEach((line, idx) => {
+          if (y > 720) {
+            pdf.addPage();
+            y = 40;
+          }
+          pdf.text(line, marginX + 6, y);
+          if (idx === 0) {
+            pdf.text(amount.toFixed(2), marginX + 530, y, { align: "right" });
+          }
+          y += 12;
+        });
+      });
+
+      if (!data.items || !data.items.length) {
+        pdf.text("-", marginX + 6, y);
+        y += 14;
+      }
+
+      pdf.setDrawColor(220,220,220);
+      pdf.line(marginX, y, 580, y);
+      y += 14;
+
+      const taxRate = parseFloat(data.taxRate || 0) || 0;
+      const tax = subtotal * (taxRate / 100);
+      const total = subtotal + tax;
+
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Subtotal (before tax):", marginX + 290, y);
+      pdf.text(subtotal.toFixed(2), 580, y, { align: "right" });
+      y += 14;
+
+      pdf.text(`Estimated Tax (${taxRate.toFixed(2)}%):`, marginX + 260, y);
+      pdf.text(tax.toFixed(2), 580, y, { align: "right" });
+      y += 14;
+
+      pdf.setFontSize(11);
+      pdf.setTextColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+      pdf.text("Total Estimated Project Value (excl. taxes):", marginX + 160, y);
+      pdf.text(total.toFixed(2), 580, y, { align: "right" });
+      pdf.setTextColor(0,0,0);
+      y += 18;
+
+      // Notas si existen
+      if (data.notes) {
+        if (y > 720) {
+          pdf.addPage();
+          y = 40;
+        }
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(10);
+        pdf.setTextColor(ACCENT_BLUE.r, ACCENT_BLUE.g, ACCENT_BLUE.b);
+        pdf.text("Notes / Terms", marginX, y);
+        y += 12;
+
+        pdf.setFont("helvetica", "normal");
+        pdf.setTextColor(0,0,0);
+        const notesLines = pdf.splitTextToSize(data.notes, 520);
+        notesLines.forEach(line => {
+          if (y > 760) {
+            pdf.addPage();
+            y = 40;
+          }
+          pdf.text(line, marginX, y);
+          y += 12;
+        });
+      }
+
+      const safeClient = (data.clientName || "client").replace(/[^\w\d]+/g, "_").toLowerCase();
+      const safeNumber = (data.number || "quote").replace(/[^\w\d]+/g, "_");
+      const fileName = `Quote_${safeClient}_${safeNumber}.pdf`;
+      pdf.save(fileName);
+    }
+
+    // ========== EVENTOS TABLA (DOWNLOAD / DELETE) ==========
+    if (docsBody) {
+      docsBody.addEventListener("click", async (e) => {
+        const btn = e.target.closest("button[data-action]");
+        if (!btn) return;
+        const action = btn.getAttribute("data-action");
+        const tr = btn.closest("tr");
+        const id = tr?.getAttribute("data-id");
+        if (!id) return;
+
+        if (action === "download") {
+          try {
+            if (currentTab === "quotes") {
+              const snap = await getDoc(doc(db, "quotes", id));
+              if (!snap.exists()) {
+                alert("Quote not found.");
+                return;
+              }
+              generateQuotePdf(snap.data());
+            } else {
+              const snap = await getDoc(doc(db, "invoices", id));
+              if (!snap.exists()) {
+                alert("Invoice not found.");
+                return;
+              }
+              generateInvoicePdf(snap.data());
+            }
+          } catch (err) {
+            console.error("DOWNLOAD PDF ERROR:", err);
+            alert("Error generating PDF. Check console.");
+          }
+        } else if (action === "delete") {
+          if (!confirm("Delete this record from Firestore?")) return;
+          try {
+            await deleteDoc(doc(db, currentTab === "quotes" ? "quotes" : "invoices", id));
+            if (currentTab === "quotes") {
+              quotes = quotes.filter(q => q.id !== id);
+            } else {
+              invoices = invoices.filter(i => i.id !== id);
+            }
+            renderTable();
+            setStatus("Document deleted.", "ok");
+          } catch (err) {
+            console.error("DELETE DOC ERROR:", err);
+            setStatus("Error deleting document. Check console.", "error");
+          }
+        }
+      });
+    }
+
+    // ========== TABS ==========
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        currentTab = tab.getAttribute("data-tab");
+        renderTable();
+      });
+    });
+
+    // ========== AUTH PROTECCIÓN ==========
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+        if (!userDoc.exists()) {
+          window.location.href = "login.html";
+          return;
+        }
+        const data = userDoc.data();
+        if (data.role !== "admin") {
+          if (data.role === "worker") {
+            window.location.href = "dashboard-worker.html";
+          } else if (data.role === "client") {
+            window.location.href = "dashboard-client.html";
+          } else {
+            window.location.href = "account-pending.html";
+          }
+          return;
+        }
+
+        loadQuotesAndInvoices();
+      } catch (err) {
+        console.error("ADMIN AUTH CHECK ERROR:", err);
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+</body>
+</html>

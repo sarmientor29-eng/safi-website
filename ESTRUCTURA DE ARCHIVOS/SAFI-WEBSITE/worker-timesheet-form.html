@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Worker Timesheet Form | SAFI Construction Projects</title>
+  <meta name="description" content="Daily timesheet form for SAFI Construction workers. Log your hours, activities and supervisor approval.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* Estilos específicos para esta página de timesheet */
+
+    .timesheet-section .card {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 18px 16px 20px;
+    }
+
+    .timesheet-section h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .timesheet-section p.helper {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    /* Grids específicos de este formulario */
+    .ts-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .ts-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .ts-activity-block {
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:14px;
+      padding:12px;
+      margin-bottom:8px;
+    }
+
+    .ts-activity-grid {
+      display:grid;
+      grid-template-columns:2fr 1.5fr 0.8fr;
+      gap:10px;
+    }
+
+    /* Firma */
+    .signature-wrapper {
+      border:1px solid rgba(255,255,255,0.25);
+      border-radius:8px;
+      padding:10px;
+      background:#ffffff;
+    }
+
+    #signature-pad {
+      width:100%;
+      height:150px;
+      display:block;
+      border:1px solid #ddd;
+      border-radius:4px;
+      background:#ffffff;
+    }
+
+    /* Responsive para móvil */
+    @media (max-width: 800px) {
+      .ts-grid-2,
+      .ts-grid-4,
+      .ts-activity-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .timesheet-section .card {
+        padding: 16px 12px 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #signature-pad {
+        height:130px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <div class="nav">
+        <a href="index.html" class="nav-left">
+          <div class="logo-mark">
+            <img src="imagenes/logo-safi.png" alt="SAFI Construction Projects logo">
+          </div>
+          <div class="brand-block">
+            <div class="brand-title">SAFI CONSTRUCTION PROJECTS</div>
+            <div class="brand-sub">Calgary, Alberta · Commercial & Residential</div>
+          </div>
+        </a>
+
+        <button class="nav-toggle" aria-label="Toggle navigation">
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-links">
+          <a href="services.html">Services</a>
+          <a href="projects.html">Projects</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="apply.html">Apply</a>
+          <a href="timesheets.html">Timesheets</a>
+          <a href="contact.html" class="btn btn-primary">Request a quote</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- WORKER TIMESHEET FORM -->
+    <section class="section timesheet-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Timesheets</div>
+            <h2 class="section-title">Daily timesheet form (workers)</h2>
+          </div>
+          <p class="section-description">
+            Fill this form once per day, per project. Enter your hours and the activities you completed. 
+            Before submitting, ask your supervisor to review and approve in the last section.
+          </p>
+        </div>
+
+        <div class="context-nav-wrap" style="max-width:860px; margin:0 auto 16px;">
+          <p class="context-nav-label">Worker navigation</p>
+          <div class="context-nav">
+            <a href="dashboard-worker.html" class="context-nav-link">Dashboard</a>
+            <a href="flha.html" class="context-nav-link">New FLHA</a>
+            <a href="worker-timesheet-form.html" class="context-nav-link is-active">New timesheet</a>
+            <a href="timesheets.html" class="context-nav-link">My submitted timesheets</a>
+          </div>
+        </div>
+
+        <div class="context-summary" style="max-width:860px; margin:0 auto 16px;">
+          <div class="context-summary-card">
+            <strong>Before you submit</strong>
+            <span>Complete one form per worker, per project, per day so admin review and payroll remain cleaner.</span>
+          </div>
+          <div class="context-summary-card">
+            <strong>Operational flow</strong>
+            <span>Workers typically complete FLHA first, then fill the daily timesheet once work and supervisor approval are done.</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <!-- novalidate para que todo pase por nuestro JS -->
+          <form id="timesheet-form" novalidate>
+            <!-- 1) WORKER & PROJECT INFO -->
+            <h3>1. Worker & project information</h3>
+            <div class="ts-grid-2">
+              <div>
+                <label class="form-label" for="worker-name">Worker name *</label>
+                <input 
+                  class="form-input" 
+                  type="text" 
+                  id="worker-name" 
+                  name="Worker name" 
+                  placeholder="Full name" 
+                  required
+                >
+              </div>
+
+              <div>
+                <label class="form-label" for="crew-trade">Crew / Trade *</label>
+                <select 
+                  class="form-input" 
+                  id="crew-trade" 
+                  name="Crew / Trade"
+                  required
+                >
+                  <option value="">Select an option</option>
+                  <option>Framing</option>
+                  <option>Drywall</option>
+                  <option>Mudding / Taping</option>
+                  <option>Painting</option>
+                  <option>Cleaning</option>
+                  <option>Demolition</option>
+                  <option>Modular installs</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label" for="date">Work date *</label>
+                <input 
+                  class="form-input" 
+                  type="date" 
+                  id="date" 
+                  name="Date" 
+                  required
+                >
+              </div>
+
+              <div>
+                <label class="form-label" for="project">Project / Site *</label>
+                <input 
+                  class="form-input" 
+                  type="text" 
+                  id="project" 
+                  name="Project / Site" 
+                  placeholder="Project name or address" 
+                  required
+                >
+              </div>
+
+              <div>
+                <label class="form-label" for="area-unit">Area / Unit (optional)</label>
+                <input 
+                  class="form-input" 
+                  type="text" 
+                  id="area-unit" 
+                  name="Area / Unit" 
+                  placeholder="Suite, floor, house number, etc."
+                >
+              </div>
+
+              <div>
+                <label class="form-label" for="worker-email">Worker email (optional)</label>
+                <input 
+                  class="form-input" 
+                  type="email" 
+                  id="worker-email" 
+                  name="Worker email" 
+                  placeholder="you@example.com"
+                >
+              </div>
+            </div>
+
+            <!-- 2) SHIFT INFO -->
+            <h3 style="margin-top:8px;">2. Shift information</h3>
+            <div class="ts-grid-4">
+              <div>
+                <label class="form-label" for="start-time">Start time *</label>
+                <input 
+                  class="form-input" 
+                  type="time" 
+                  id="start-time" 
+                  name="Start time" 
+                  required
+                >
+              </div>
+
+              <div>
+                <label class="form-label" for="end-time">Finish time *</label>
+                <input 
+                  class="form-input" 
+                  type="time" 
+                  id="end-time" 
+                  name="Finish time" 
+                  required
+                >
+              </div>
+
+              <div>
+                <label class="form-label" for="break-minutes">Breaks (minutes)</label>
+                <input 
+                  class="form-input" 
+                  type="number" 
+                  id="break-minutes" 
+                  name="Breaks (minutes)" 
+                  min="0" 
+                  step="5" 
+                  placeholder="e.g. 30"
+                >
+              </div>
+
+              <div>
+                <label class="form-label" for="total-hours">Total hours on site</label>
+                <input 
+                  class="form-input" 
+                  type="number" 
+                  id="total-hours" 
+                  name="Total hours (approx.)" 
+                  min="0" 
+                  step="0.5" 
+                  placeholder="e.g. 8.0"
+                >
+              </div>
+            </div>
+
+            <!-- 3) DAILY ACTIVITIES -->
+            <h3 style="margin-top:8px;">3. Activities completed today</h3>
+            <p class="helper">
+              List the main tasks you completed today. You can use one line per activity or per area/room.
+            </p>
+
+            <!-- Activity 1 -->
+            <div class="ts-activity-block">
+              <div class="ts-activity-grid">
+                <div>
+                  <label class="form-label" for="activity-1-desc">Activity 1 *</label>
+                  <input 
+                    class="form-input" 
+                    type="text" 
+                    id="activity-1-desc" 
+                    name="Activity 1 - description" 
+                    placeholder="e.g. Framed walls in hallway, level 2" 
+                    required
+                  >
+                </div>
+                <div>
+                  <label class="form-label" for="activity-1-location">Location / Room</label>
+                  <input 
+                    class="form-input" 
+                    type="text" 
+                    id="activity-1-location" 
+                    name="Activity 1 - location" 
+                    placeholder="e.g. Unit 204"
+                  >
+                </div>
+                <div>
+                  <label class="form-label" for="activity-1-hours">Hours</label>
+                  <input 
+                    class="form-input" 
+                    type="number" 
+                    id="activity-1-hours" 
+                    name="Activity 1 - hours" 
+                    min="0" 
+                    step="0.5" 
+                    placeholder="e.g. 4"
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Activity 2 -->
+            <div class="ts-activity-block">
+              <div class="ts-activity-grid">
+                <div>
+                  <label class="form-label" for="activity-2-desc">Activity 2</label>
+                  <input 
+                    class="form-input" 
+                    type="text" 
+                    id="activity-2-desc" 
+                    name="Activity 2 - description" 
+                    placeholder="e.g. Installed drywall in corridor"
+                  >
+                </div>
+                <div>
+                  <label class="form-label" for="activity-2-location">Location / Room</label>
+                  <input 
+                    class="form-input" 
+                    type="text" 
+                    id="activity-2-location" 
+                    name="Activity 2 - location" 
+                    placeholder="e.g. Level 3, east wing"
+                  >
+                </div>
+                <div>
+                  <label class="form-label" for="activity-2-hours">Hours</label>
+                  <input 
+                    class="form-input" 
+                    type="number" 
+                    id="activity-2-hours" 
+                    name="Activity 2 - hours" 
+                    min="0" 
+                    step="0.5" 
+                    placeholder="e.g. 2"
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Activity 3 -->
+            <div class="ts-activity-block">
+              <div class="ts-activity-grid">
+                <div>
+                  <label class="form-label" for="activity-3-desc">Activity 3</label>
+                  <input 
+                    class="form-input" 
+                    type="text" 
+                    id="activity-3-desc" 
+                    name="Activity 3 - description" 
+                    placeholder="e.g. Patching and sanding"
+                  >
+                </div>
+                <div>
+                  <label class="form-label" for="activity-3-location">Location / Room</label>
+                  <input 
+                    class="form-input" 
+                    type="text" 
+                    id="activity-3-location" 
+                    name="Activity 3 - location" 
+                    placeholder="e.g. Lobby"
+                  >
+                </div>
+                <div>
+                  <label class="form-label" for="activity-3-hours">Hours</label>
+                  <input 
+                    class="form-input" 
+                    type="number" 
+                    id="activity-3-hours" 
+                    name="Activity 3 - hours" 
+                    min="0" 
+                    step="0.5" 
+                    placeholder="e.g. 2"
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Extra notes -->
+            <div style="margin-top:8px; margin-bottom:16px;">
+              <label class="form-label" for="notes">Notes / Extras / Site issues</label>
+              <textarea 
+                class="form-input" 
+                id="notes" 
+                name="Notes" 
+                rows="4" 
+                placeholder="Extras, changes from original scope, delays, instructions from site supervisor, material issues, etc."
+              ></textarea>
+            </div>
+
+            <!-- 4) SUPERVISOR APPROVAL -->
+            <h3 style="margin-top:8px;">4. Supervisor approval</h3>
+            <p class="helper">
+              Show this section to your supervisor, foreman or client representative at the end of the day. 
+              They should enter their name, role and signature before you submit.
+            </p>
+
+            <div class="ts-grid-2" style="margin-bottom:12px;">
+              <div>
+                <label class="form-label" for="supervisor-name">Supervisor name *</label>
+                <input 
+                  class="form-input" 
+                  type="text" 
+                  id="supervisor-name" 
+                  name="Supervisor name" 
+                  placeholder="Person approving this timesheet" 
+                  required
+                >
+              </div>
+
+              <div>
+                <label class="form-label" for="supervisor-role">Supervisor role *</label>
+                <select 
+                  class="form-input" 
+                  id="supervisor-role" 
+                  name="Supervisor role"
+                  required
+                >
+                  <option value="">Select an option</option>
+                  <option>Site supervisor</option>
+                  <option>Foreman</option>
+                  <option>Client representative</option>
+                  <option>Project manager</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-bottom:12px;">
+              <label style="display:flex; align-items:flex-start; gap:8px; font-size:13px;">
+                <input 
+                  type="checkbox" 
+                  name="Supervisor confirmation" 
+                  required
+                  style="margin-top:3px; width:14px; height:14px;"
+                >
+                <span>
+                  I confirm that the hours and activities listed above were completed today to the best of my knowledge.
+                </span>
+              </label>
+            </div>
+
+            <!-- SIGNATURE PAD -->
+            <div style="margin-bottom:18px;">
+              <label class="form-label">Supervisor signature *</label>
+              <div class="signature-wrapper">
+                <canvas id="signature-pad"></canvas>
+                <button 
+                  type="button" 
+                  id="clear-signature" 
+                  class="btn" 
+                  style="margin-top:8px; font-size:12px; padding:6px 10px; color:#333; background:#e5e7eb; border-color:#d1d5db;"
+                >
+                  Clear signature
+                </button>
+              </div>
+            </div>
+
+            <!-- SUBMIT -->
+            <div style="margin-top:20px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+              <button type="submit" class="btn btn-primary">
+                Submit timesheet
+              </button>
+              <a href="timesheets.html" class="btn" style="font-size:13px;">
+                Back to timesheets
+              </a>
+            </div>
+
+            <p style="font-size:12px; color:var(--muted); margin-top:10px;">
+              By submitting this form you confirm that the information above is accurate. 
+              A copy will be stored in SAFI's digital records for approvals and invoicing.
+            </p>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>© <span id="year"></span> SAFI Construction Projects. All rights reserved.</div>
+        <div>Serving all of Canada · 
+          <a href="mailto:ricardo.sarmiento@saficonstruction.com">ricardo.sarmiento@saficonstruction.com</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SIGNATURE PAD LIB -->
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.6/dist/signature_pad.umd.min.js"></script>
+
+  <!-- JS + FIREBASE (MODULAR) -->
+  <script type="module">
+    import { auth, db } from "./assets/js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import {
+      collection,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    // Footer year
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // Mobile menu
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    if (navToggle) {
+      navToggle.addEventListener('click', () => {
+        document.body.classList.toggle('nav-open');
+      });
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          document.body.classList.remove('nav-open');
+        });
+      });
+    }
+
+    // Reveal animation
+    const revealElements = [
+      ...document.querySelectorAll('.section'),
+      ...document.querySelectorAll('.card')
+    ];
+    revealElements.forEach(el => el.classList.add('reveal-on-scroll'));
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealElements.forEach(el => observer.observe(el));
+
+    // ---------- SIGNATURE PAD (responsive) ----------
+    const canvas = document.getElementById("signature-pad");
+    let signaturePad = null;
+
+    function setupSignaturePad() {
+      if (!canvas) return;
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * ratio;
+      canvas.height = rect.height * ratio;
+      const ctx = canvas.getContext("2d");
+      ctx.scale(ratio, ratio);
+
+      if (!signaturePad) {
+        signaturePad = new window.SignaturePad(canvas);
+      } else {
+        signaturePad.clear();
+      }
+    }
+
+    if (canvas) {
+      setupSignaturePad();
+      window.addEventListener("resize", setupSignaturePad);
+    }
+
+    const clearSignatureBtn = document.getElementById("clear-signature");
+    if (clearSignatureBtn) {
+      clearSignatureBtn.addEventListener("click", () => {
+        if (signaturePad) signaturePad.clear();
+      });
+    }
+
+    // ---------- AUTH ----------
+    let currentUser = null;
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user || null;
+    });
+
+    // ---------- SUBMIT FORM ----------
+    const tsForm = document.getElementById("timesheet-form");
+
+    if (tsForm) {
+      tsForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Comprobamos login
+        if (!currentUser) {
+          alert("You must be signed in to submit a timesheet.");
+          window.location.href = "timesheets.html";
+          return;
+        }
+
+        const requiredFields = [
+          "worker-name",
+          "crew-trade",
+          "date",
+          "project",
+          "start-time",
+          "end-time",
+          "supervisor-name",
+          "supervisor-role",
+        ];
+
+        for (const id of requiredFields) {
+          const el = document.getElementById(id);
+          if (!el || !el.value || el.value.trim() === "") {
+            alert("Please fill in all required fields (*). Missing: " + id);
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+            if (el) el.focus();
+            return;
+          }
+        }
+
+        // Checkbox de supervisor
+        const supConfirm = tsForm.querySelector('input[name="Supervisor confirmation"]');
+        if (!supConfirm || !supConfirm.checked) {
+          alert("Supervisor must confirm the timesheet (checkbox).");
+          return;
+        }
+
+        // Firma obligatoria
+        if (!signaturePad || signaturePad.isEmpty()) {
+          alert("Please ask the supervisor to sign before submitting.");
+          return;
+        }
+
+        // Datos del formulario
+        const data = {
+          // 🔹 IMPORTANTE: esto alinea con tus reglas / consultas
+          userUid: currentUser.uid,
+          userEmail: currentUser.email || "",
+
+          workerName: document.getElementById("worker-name").value.trim(),
+          crewTrade: document.getElementById("crew-trade").value,
+          date: document.getElementById("date").value,
+          project: document.getElementById("project").value.trim(),
+          areaUnit: document.getElementById("area-unit").value.trim(),
+          workerEmail: document.getElementById("worker-email").value.trim(),
+
+          startTime: document.getElementById("start-time").value,
+          endTime: document.getElementById("end-time").value,
+          breakMinutes: document.getElementById("break-minutes").value,
+          totalHours: document.getElementById("total-hours").value,
+
+          activity1Desc: document.getElementById("activity-1-desc").value.trim(),
+          activity1Location: document.getElementById("activity-1-location").value.trim(),
+          activity1Hours: document.getElementById("activity-1-hours").value,
+
+          activity2Desc: document.getElementById("activity-2-desc").value.trim(),
+          activity2Location: document.getElementById("activity-2-location").value.trim(),
+          activity2Hours: document.getElementById("activity-2-hours").value,
+
+          activity3Desc: document.getElementById("activity-3-desc").value.trim(),
+          activity3Location: document.getElementById("activity-3-location").value.trim(),
+          activity3Hours: document.getElementById("activity-3-hours").value,
+
+          notes: document.getElementById("notes").value.trim(),
+
+          supervisorName: document.getElementById("supervisor-name").value.trim(),
+          supervisorRole: document.getElementById("supervisor-role").value,
+          supervisorConfirmed: supConfirm.checked,
+
+          signatureDataURL: signaturePad.toDataURL(),
+
+          createdAt: serverTimestamp()
+        };
+
+        try {
+          await addDoc(collection(db, "timesheets"), data);
+
+          alert("Timesheet submitted successfully with supervisor signature.");
+          tsForm.reset();
+          if (signaturePad) signaturePad.clear();
+          window.location.href = "timesheets.html";
+        } catch (err) {
+          console.error("TIMESHEET SAVE ERROR:", err);
+          alert("Error saving timesheet. Please try again.");
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Timesheets | SAFI Construction Projects</title>
+  <meta name="description" content="Admin view of worker timesheets for SAFI Construction Projects. Review, filter and export timesheets to PDF.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #020617, #020617 60%);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #e5e7eb;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 24px 12px;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .admin-card {
+      background: #020617;
+      border-radius: 22px;
+      border: 1px solid rgba(148,163,184,0.45);
+      box-shadow: 0 30px 80px rgba(15,23,42,0.96);
+      padding: 22px 20px 18px;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .admin-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .admin-sub {
+      font-size: 13px;
+      color: #9ca3af;
+      margin: 3px 0 0;
+    }
+
+    .admin-actions-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn-small {
+      border-radius: 999px;
+      padding: 8px 13px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-small:hover {
+      background: #0f172a;
+    }
+
+    .btn-small-primary {
+      border-color: #2563eb;
+      background: #2563eb;
+      color: #f9fafb;
+    }
+
+    .btn-small-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .admin-status {
+      margin-bottom: 8px;
+      font-size: 13px;
+      min-height: 18px;
+    }
+
+    .admin-status.error {
+      color: #f97373;
+    }
+
+    .admin-status.ok {
+      color: #9ca3af;
+    }
+
+    .filters-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .filters-row input,
+    .filters-row select {
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      padding: 6px 10px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .filters-row input:focus,
+    .filters-row select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37,99,235,0.4);
+    }
+
+    .table-wrapper {
+      border-radius: 14px;
+      border: 1px solid rgba(31,41,55,1);
+      overflow-x: auto;
+      background: radial-gradient(circle at top left,#111827,#020617 60%);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead {
+      background: rgba(15,23,42,0.95);
+    }
+
+    th, td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(31,41,55,1);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      font-weight: 500;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: rgba(15,23,42,0.8);
+    }
+
+    .empty-state {
+      padding: 16px 10px;
+      text-align: center;
+      color: #9ca3af;
+    }
+
+    .row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .btn-chip {
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 11px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      cursor: pointer;
+    }
+
+    .btn-chip.pdf {
+      border-color: #3b82f6;
+      color: #93c5fd;
+    }
+
+    .admin-footer {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 16px 8px;
+      }
+      .admin-card {
+        padding: 18px 14px 14px;
+      }
+      .admin-header {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="admin-card">
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-title">Timesheets – Admin View</h1>
+          <p class="admin-sub">
+            Review worker timesheets, check hours and activities, and export any record to PDF.
+          </p>
+        </div>
+        <div class="admin-actions-top">
+          <a href="admin-dashboard.html" class="btn-small">← Back to Admin</a>
+          <button id="refresh-btn" class="btn-small">Refresh list ⟳</button>
+        </div>
+      </div>
+
+      <div id="admin-status" class="admin-status"></div>
+
+      <div class="context-nav-wrap">
+        <p class="context-nav-label">Admin navigation</p>
+        <div class="context-nav">
+          <a href="admin-dashboard.html" class="context-nav-link">Overview</a>
+          <a href="admin-timesheets.html" class="context-nav-link is-active">Timesheets</a>
+          <a href="admin-flhas.html" class="context-nav-link">FLHAs</a>
+          <a href="admin-quotes-invoice.html" class="context-nav-link">Quotes & invoices</a>
+          <a href="quote.html" class="context-nav-link">New quote</a>
+          <a href="invoice.html" class="context-nav-link">New invoice</a>
+        </div>
+      </div>
+
+      <div class="context-summary">
+        <div class="context-summary-card">
+          <strong>Primary use</strong>
+          <span>Review daily labour records, verify hours and export timesheets when admin or client follow-up is needed.</span>
+        </div>
+        <div class="context-summary-card">
+          <strong>Fast path</strong>
+          <span>Use the filters first, then export the exact record you need instead of scanning the full table manually.</span>
+        </div>
+      </div>
+
+      <div class="filters-row">
+        <span>Filter:</span>
+        <input type="text" id="filter-project" placeholder="Project / site">
+        <input type="text" id="filter-worker" placeholder="Worker name">
+        <input type="date" id="filter-date">
+        <button id="clear-filters" class="btn-small" style="padding:4px 10px; font-size:11px;">Clear filters</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Worker</th>
+              <th>Date</th>
+              <th>Crew</th>
+              <th>Total hours</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="timesheets-body">
+            <tr>
+              <td colspan="7" class="empty-state">Loading timesheets…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="admin-footer">
+        <span>© <span id="year"></span> SAFI Construction Projects. Timesheets admin.</span>
+        <span>For internal use: payroll, invoicing and approvals.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- jsPDF para generar PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <!-- SCRIPT MODULAR: usa assets/js/firebase-config.js -->
+  <script type="module">
+    import { auth, db } from "./assets/js/firebase-config.js";
+    import {
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    import {
+      collection,
+      getDocs,
+      doc,
+      getDoc,
+      orderBy,
+      query
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const statusEl = document.getElementById("admin-status");
+    const tbody = document.getElementById("timesheets-body");
+    const refreshBtn = document.getElementById("refresh-btn");
+    const yearEl = document.getElementById("year");
+
+    const filterProject = document.getElementById("filter-project");
+    const filterWorker = document.getElementById("filter-worker");
+    const filterDate = document.getElementById("filter-date");
+    const clearFiltersBtn = document.getElementById("clear-filters");
+
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    let allTimesheets = [];
+
+    function setStatus(msg, type = "") {
+      if (!statusEl) return;
+      statusEl.textContent = msg || "";
+      statusEl.className = "admin-status";
+      if (type === "error") statusEl.classList.add("error");
+      if (type === "ok") statusEl.classList.add("ok");
+    }
+
+    function formatTs(ts) {
+      if (!ts) return "–";
+      try {
+        const d = ts.toDate();
+        return d.toLocaleString();
+      } catch {
+        return String(ts);
+      }
+    }
+
+    function applyFilters() {
+      const p = (filterProject.value || "").toLowerCase().trim();
+      const w = (filterWorker.value || "").toLowerCase().trim();
+      const d = (filterDate.value || "").trim();
+
+      return allTimesheets.filter(t => {
+        let ok = true;
+        if (p) {
+          ok = ok && (t.project || "").toLowerCase().includes(p);
+        }
+        if (w) {
+          ok = ok && (t.workerName || "").toLowerCase().includes(w);
+        }
+        if (d) {
+          ok = ok && (t.date === d);
+        }
+        return ok;
+      });
+    }
+
+    function renderTable() {
+      if (!tbody) return;
+
+      const filtered = applyFilters();
+
+      if (!filtered.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="empty-state">No timesheets found for this filter.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      const rows = filtered.map(t => {
+        const created = t.createdAt ? formatTs(t.createdAt) : "–";
+        return `
+          <tr data-id="${t.id}">
+            <td>${t.project || "—"}</td>
+            <td>${t.workerName || "—"}</td>
+            <td>${t.date || "—"}</td>
+            <td>${t.crewTrade || "—"}</td>
+            <td>${t.totalHours || "—"}</td>
+            <td>${created}</td>
+            <td>
+              <div class="row-actions">
+                <button class="btn-chip pdf" data-action="pdf" data-id="${t.id}">
+                  PDF
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      tbody.innerHTML = rows;
+    }
+
+    async function loadTimesheets() {
+      if (!tbody) return;
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" class="empty-state">Loading timesheets…</td>
+        </tr>
+      `;
+      setStatus("Loading timesheets…", "ok");
+
+      try {
+        const q = query(collection(db, "timesheets"), orderBy("createdAt", "desc"));
+        const snap = await getDocs(q);
+
+        allTimesheets = [];
+        snap.forEach(docSnap => {
+          allTimesheets.push({
+            id: docSnap.id,
+            ...docSnap.data()
+          });
+        });
+
+        if (!allTimesheets.length) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" class="empty-state">No timesheets submitted yet.</td>
+            </tr>
+          `;
+          setStatus("No timesheets found.", "ok");
+        } else {
+          renderTable();
+          setStatus(`Loaded ${allTimesheets.length} timesheets.`, "ok");
+        }
+      } catch (err) {
+        console.error("LOAD TIMESHEETS ERROR:", err);
+        setStatus("Error loading timesheets. Check console.", "error");
+      }
+    }
+
+    if (refreshBtn) {
+      refreshBtn.addEventListener("click", loadTimesheets);
+    }
+
+    if (filterProject) filterProject.addEventListener("input", renderTable);
+    if (filterWorker) filterWorker.addEventListener("input", renderTable);
+    if (filterDate)   filterDate.addEventListener("change", renderTable);
+    if (clearFiltersBtn) {
+      clearFiltersBtn.addEventListener("click", () => {
+        filterProject.value = "";
+        filterWorker.value = "";
+        filterDate.value = "";
+        renderTable();
+      });
+    }
+
+    // Click acciones
+    if (tbody) {
+      tbody.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-action]");
+        if (!btn) return;
+        const action = btn.getAttribute("data-action");
+        const id = btn.getAttribute("data-id");
+        if (!id) return;
+
+        if (action === "pdf") {
+          downloadTimesheetPdf(id);
+        }
+      });
+    }
+
+    // ============ PDF ============
+    async function downloadTimesheetPdf(id) {
+      try {
+        const docRef = doc(db, "timesheets", id);
+        const snap = await getDoc(docRef);
+        if (!snap.exists()) {
+          alert("Timesheet not found.");
+          return;
+        }
+        const data = snap.data();
+        exportTimesheetToPdf(data, id);
+      } catch (err) {
+        console.error("LOAD SINGLE TIMESHEET ERROR:", err);
+        alert("Error loading timesheet for PDF.");
+      }
+    }
+
+    function exportTimesheetToPdf(ts, id) {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({
+        unit: "pt",
+        format: "letter"
+      });
+
+      const marginX = 40;
+      let y = 40;
+
+      // Header
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(14);
+      pdf.text("SAFI CONSTRUCTION PROJECTS", marginX, y);
+      y += 16;
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "normal");
+      pdf.text("Daily Timesheet", marginX, y);
+      y += 14;
+
+      if (id) {
+        pdf.setFontSize(8);
+        pdf.text("Timesheet ID: " + id, marginX, y);
+        y += 10;
+      }
+
+      y += 4;
+      pdf.setLineWidth(0.5);
+      pdf.line(marginX, y, 550, y);
+      y += 16;
+
+      function ensureSpace(lines = 1, lineHeight = 14) {
+        const needed = lines * lineHeight;
+        if (y + needed > 780) {
+          pdf.addPage();
+          y = 40;
+        }
+      }
+
+      function drawSectionTitle(text) {
+        ensureSpace(2, 16);
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(11);
+        pdf.text(text, marginX, y);
+        y += 16;
+      }
+
+      function drawTextRow(label, value) {
+        ensureSpace(1, 12);
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(9);
+        pdf.text(label + ": ", marginX, y);
+        pdf.setFont("helvetica", "normal");
+        const text = value || "-";
+        pdf.text(String(text), marginX + 130, y);
+        y += 12;
+      }
+
+      // 1) Worker & project info
+      drawSectionTitle("1. Worker & project information");
+      drawTextRow("Worker name", ts.workerName);
+      drawTextRow("Crew / Trade", ts.crewTrade);
+      drawTextRow("Work date", ts.date);
+      drawTextRow("Project / Site", ts.project);
+      drawTextRow("Area / Unit", ts.areaUnit);
+      drawTextRow("Worker email", ts.workerEmail);
+
+      // 2) Shift information
+      drawSectionTitle("2. Shift information");
+      drawTextRow("Start time", ts.startTime);
+      drawTextRow("Finish time", ts.endTime);
+      drawTextRow("Breaks (minutes)", ts.breakMinutes);
+      drawTextRow("Total hours (approx.)", ts.totalHours);
+
+      // 3) Activities
+      drawSectionTitle("3. Activities completed");
+
+      function drawActivityRow(n, desc, loc, hours) {
+        const label = `Activity ${n}`;
+        ensureSpace(3, 12);
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(9);
+        pdf.text(label, marginX, y);
+        y += 12;
+
+        pdf.setFont("helvetica", "normal");
+        pdf.text("Description: " + (desc || "-"), marginX + 15, y);
+        y += 12;
+        pdf.text("Location: " + (loc || "-"), marginX + 15, y);
+        y += 12;
+        pdf.text("Hours: " + (hours || "-"), marginX + 15, y);
+        y += 12;
+      }
+
+      drawActivityRow(1, ts.activity1Desc, ts.activity1Location, ts.activity1Hours);
+      if (ts.activity2Desc || ts.activity2Location || ts.activity2Hours) {
+        drawActivityRow(2, ts.activity2Desc, ts.activity2Location, ts.activity2Hours);
+      }
+      if (ts.activity3Desc || ts.activity3Location || ts.activity3Hours) {
+        drawActivityRow(3, ts.activity3Desc, ts.activity3Location, ts.activity3Hours);
+      }
+
+      // Notes
+      if (ts.notes) {
+        drawSectionTitle("Notes / Extras / Site issues");
+        ensureSpace(4, 12);
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(9);
+        const split = pdf.splitTextToSize(String(ts.notes), 520);
+        split.forEach(line => {
+          ensureSpace(1, 12);
+          pdf.text(line, marginX, y);
+          y += 12;
+        });
+      }
+
+      // Supervisor
+      drawSectionTitle("4. Supervisor approval");
+      drawTextRow("Supervisor name", ts.supervisorName);
+      drawTextRow("Supervisor role", ts.supervisorRole);
+      drawTextRow("Confirmed", ts.supervisorConfirmed ? "Yes" : "No");
+
+      // Firma en PDF (si la guardas como base64 en signatureDataURL)
+      if (ts.signatureDataURL) {
+        ensureSpace(6, 12);
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(9);
+        pdf.text("Supervisor signature:", marginX, y);
+        y += 8;
+
+        try {
+          const imgWidth = 180;
+          const imgHeight = 80;
+          pdf.addImage(ts.signatureDataURL, "PNG", marginX, y, imgWidth, imgHeight);
+          y += imgHeight + 10;
+        } catch (e) {
+          console.error("SIGNATURE IMAGE ERROR:", e);
+          pdf.setFont("helvetica", "italic");
+          pdf.setFontSize(8);
+          pdf.text("Signature stored electronically (image could not be rendered).", marginX, y);
+          y += 12;
+        }
+      } else {
+        ensureSpace(2, 12);
+        pdf.setFont("helvetica", "italic");
+        pdf.setFontSize(8);
+        pdf.text("No signature image stored with this record.", marginX, y);
+        y += 12;
+      }
+
+      // Footer
+      ensureSpace(2, 12);
+      pdf.setFont("helvetica", "italic");
+      pdf.setFontSize(8);
+      pdf.text(
+        "Timesheet stored in SAFI digital records for payroll and invoicing.",
+        marginX,
+        y
+      );
+
+      const safeWorker = (ts.workerName || "worker").replace(/[^\w\d]+/g, "_").toLowerCase();
+      const safeDate = (ts.date || "").replace(/[^\w\d]+/g, "_");
+      const fileName = `Timesheet_${safeWorker}_${safeDate || "day"}.pdf`;
+
+      pdf.save(fileName);
+    }
+
+    // 🔐 Solo ADMIN puede ver esta página (igual que admin-flhas)
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+        if (!userDoc.exists()) {
+          window.location.href = "login.html";
+          return;
+        }
+        const data = userDoc.data();
+        if (data.role !== "admin") {
+          if (data.role === "worker") {
+            window.location.href = "dashboard-worker.html";
+          } else if (data.role === "client") {
+            window.location.href = "dashboard-client.html";
+          } else {
+            window.location.href = "account-pending.html";
+          }
+          return;
+        }
+        // es admin → cargar timesheets
+        loadTimesheets();
+      } catch (err) {
+        console.error("AUTH TIMESHEETS ADMIN ERROR:", err);
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FLHA | SAFI Construction Projects</title>
+  <meta name="description" content="Field Level Hazard Assessment (FLHA) form for SAFI Construction Projects in Calgary, Alberta.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    body {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #020617, #020617 60%);
+      color: #e5e7eb;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 16px 0;
+      background: rgba(2,6,23,0.9);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(148,163,184,0.25);
+      backdrop-filter: blur(12px);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo-mark img {
+      height: 40px;
+      width: auto;
+    }
+
+    .brand-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    main {
+      padding: 24px 0 40px;
+    }
+
+    .page-card {
+      background: #020617;
+      border-radius: 20px;
+      border: 1px solid rgba(148,163,184,0.45);
+      box-shadow: 0 24px 60px rgba(15,23,42,0.9);
+      padding: 22px 18px 20px;
+    }
+
+    .page-header {
+      margin-bottom: 18px;
+    }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: #9ca3af;
+      margin: 0;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 18px 0 6px;
+      color: #e5e7eb;
+    }
+
+    .section-subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      margin: 8px 0 4px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .section-help {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px 14px;
+    }
+
+    label {
+      font-size: 12px;
+      color: #cbd5f5;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="time"],
+    input[type="datetime-local"],
+    textarea,
+    select {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      color: #e5e7eb;
+      padding: 9px 10px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37,99,235,0.4);
+    }
+
+    .yesno-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 8px 14px;
+    }
+
+    .yesno-item {
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      padding: 8px 9px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: radial-gradient(circle at top left,#020617,#020617 60%);
+    }
+
+    .yesno-label {
+      color: #e5e7eb;
+    }
+
+    .yesno-options {
+      display: flex;
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .yesno-options label {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .signature-wrapper {
+      border-radius: 12px;
+      border: 1px solid #1f2937;
+      background: #020617;
+      padding: 10px;
+    }
+
+    #signature-pad {
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      width: 100%;
+      height: 180px;
+      touch-action: none;
+      display: block;
+    }
+
+    .sig-buttons {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .btn-primary {
+      border-color: #2563eb;
+      background: #2563eb;
+      color: #f9fafb;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .btn-secondary {
+      background: #020617;
+    }
+
+    .status-text {
+      margin-top: 10px;
+      font-size: 13px;
+      min-height: 18px;
+    }
+
+    .status-text.error {
+      color: #f97373;
+    }
+
+    .status-text.ok {
+      color: #9ca3af;
+    }
+
+    @media (max-width: 640px) {
+      .page-card {
+        padding: 18px 14px 18px;
+      }
+      .page-title {
+        font-size: 19px;
+      }
+      .yesno-item {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .yesno-options {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <div class="nav">
+        <a href="index.html" class="nav-left">
+          <div class="logo-mark">
+            <img src="imagenes/logo-safi.png" alt="SAFI logo">
+          </div>
+          <div>
+            <div class="brand-title">SAFI CONSTRUCTION PROJECTS</div>
+            <div class="brand-sub">Calgary, Alberta · Commercial & Residential</div>
+          </div>
+        </a>
+        <a href="dashboard-worker.html" class="btn btn-secondary" style="font-size:12px;padding:6px 12px;">⟵ Back to portal</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="container">
+      <div class="page-card">
+        <div class="page-header">
+          <h1 class="page-title">Field Level Hazard Assessment (FLHA)</h1>
+          <p class="page-subtitle">
+            Complete this checklist before starting work. Mark each item Yes / No / N/A and sign.
+          </p>
+        </div>
+
+        <form id="flha-form">
+          <!-- 1. PROJECT INFO -->
+          <h2 class="section-title">1. Project & worker information</h2>
+          <p class="section-help">Few basics only – the rest is checklist.</p>
+
+          <div class="form-grid">
+            <div>
+              <label for="project-name">Project / Site name *</label>
+              <input id="project-name" name="projectName" type="text" required>
+            </div>
+            <div>
+              <label for="project-location">Site address / location *</label>
+              <input id="project-location" name="projectLocation" type="text" required>
+            </div>
+            <div>
+              <label for="task-description">Main task(s) today *</label>
+              <select id="task-description" name="taskDescription" required>
+                <option value="">Select task</option>
+                <option value="Demolition / removal">Demolition / removal</option>
+                <option value="Framing / carpentry">Framing / carpentry</option>
+                <option value="Drywall / boarding / taping">Drywall / boarding / taping</option>
+                <option value="Concrete / formwork">Concrete / formwork</option>
+                <option value="Cleanup / labour support">Cleanup / labour support</option>
+                <option value="Material handling / deliveries">Material handling / deliveries</option>
+                <option value="Finishing / miscellaneous">Finishing / miscellaneous</option>
+                <option value="Modular install">Modular install</option>
+                <option value="Other / mixed tasks">Other / mixed tasks</option>
+              </select>
+            </div>
+            <div>
+              <label for="weather">Weather conditions *</label>
+              <select id="weather" name="weather" required>
+                <option value="">Select weather</option>
+                <option value="Clear / sunny">Clear / sunny</option>
+                <option value="Cloudy">Cloudy</option>
+                <option value="Rain">Rain</option>
+                <option value="Snow">Snow</option>
+                <option value="Windy">Windy</option>
+                <option value="Extreme cold">Extreme cold</option>
+                <option value="Extreme heat">Extreme heat</option>
+                <option value="Mixed / changing">Mixed / changing</option>
+              </select>
+            </div>
+            <div>
+              <label for="worker-name">Worker name *</label>
+              <input id="worker-name" name="workerName" type="text" required>
+            </div>
+            <div>
+              <label for="supervisor-name">Supervisor (optional)</label>
+              <input id="supervisor-name" name="supervisorName" type="text">
+            </div>
+          </div>
+
+          <!-- 2. HAZARDS YES / NO / N/A -->
+          <h2 class="section-title">2. Hazards – See it / Evaluate it / Control it</h2>
+          <p class="section-help">
+            For each item select: Yes = conditions are acceptable / controls in place,  
+            No = problem, fix before work, N/A = not applicable to today’s work.
+          </p>
+
+          <!-- A. SITE & HOUSEKEEPING -->
+          <div class="section-subtitle">A. Site conditions & housekeeping</div>
+          <div class="yesno-grid">
+            <div class="yesno-item">
+              <div class="yesno-label">Housekeeping acceptable? (no tripping hazards, debris controlled)</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="housekeeping" value="yes" required> Yes</label>
+                <label><input type="radio" name="housekeeping" value="no"> No</label>
+                <label><input type="radio" name="housekeeping" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Walking surfaces in good condition? (no ice, holes, unsecured covers)</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="slipsTripsFalls" value="yes" required> Yes</label>
+                <label><input type="radio" name="slipsTripsFalls" value="no"> No</label>
+                <label><input type="radio" name="slipsTripsFalls" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Lighting adequate in work area?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="lighting" value="yes" required> Yes</label>
+                <label><input type="radio" name="lighting" value="no"> No</label>
+                <label><input type="radio" name="lighting" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Weather conditions considered and controls in place? (cold, heat, wind, storm)</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="weatherControls" value="yes" required> Yes</label>
+                <label><input type="radio" name="weatherControls" value="no"> No</label>
+                <label><input type="radio" name="weatherControls" value="na"> N/A</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- B. ACCESS, LADDERS, HEIGHTS -->
+          <div class="section-subtitle">B. Access, ladders, scaffolds & working at heights</div>
+          <div class="yesno-grid">
+            <div class="yesno-item">
+              <div class="yesno-label">Access / stairs / work platforms safe and in good condition?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="access" value="yes" required> Yes</label>
+                <label><input type="radio" name="access" value="no"> No</label>
+                <label><input type="radio" name="access" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Ladders inspected and in good condition?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="ladders" value="yes" required> Yes</label>
+                <label><input type="radio" name="ladders" value="no"> No</label>
+                <label><input type="radio" name="ladders" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Scaffolds / platforms inspected, tagged and complete (guardrails, planks, access)?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="scaffolds" value="yes" required> Yes</label>
+                <label><input type="radio" name="scaffolds" value="no"> No</label>
+                <label><input type="radio" name="scaffolds" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Working at heights with proper fall protection (harness, anchor, guardrails)?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="heights" value="yes" required> Yes</label>
+                <label><input type="radio" name="heights" value="no"> No</label>
+                <label><input type="radio" name="heights" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Open edges, floor openings, shafts and roof edges properly guarded?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="unguardedEdges" value="yes" required> Yes</label>
+                <label><input type="radio" name="unguardedEdges" value="no"> No</label>
+                <label><input type="radio" name="unguardedEdges" value="na"> N/A</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- C. TOOLS & EQUIPMENT -->
+          <div class="section-subtitle">C. Tools, equipment & machinery</div>
+          <div class="yesno-grid">
+            <div class="yesno-item">
+              <div class="yesno-label">Power cords and tools undamaged and in good condition?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="powerCords" value="yes" required> Yes</label>
+                <label><input type="radio" name="powerCords" value="no"> No</label>
+                <label><input type="radio" name="powerCords" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Guards and safety devices in place on tools / equipment?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="machineGuards" value="yes" required> Yes</label>
+                <label><input type="radio" name="machineGuards" value="no"> No</label>
+                <label><input type="radio" name="machineGuards" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Defective tools / equipment tagged out and removed from service?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="lockoutTools" value="yes" required> Yes</label>
+                <label><input type="radio" name="lockoutTools" value="no"> No</label>
+                <label><input type="radio" name="lockoutTools" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Mobile equipment (zoom boom, skid steer, forklifts, etc.) in good condition and inspected?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="mobileEquipment" value="yes" required> Yes</label>
+                <label><input type="radio" name="mobileEquipment" value="no"> No</label>
+                <label><input type="radio" name="mobileEquipment" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Hoisting / crane / overhead loads controlled and exclusion zones in place?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="overheadLoads" value="yes" required> Yes</label>
+                <label><input type="radio" name="overheadLoads" value="no"> No</label>
+                <label><input type="radio" name="overheadLoads" value="na"> N/A</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- D. ELECTRICAL, UNDERGROUND, CONFINED SPACE -->
+          <div class="section-subtitle">D. Electrical, underground & confined space</div>
+          <div class="yesno-grid">
+            <div class="yesno-item">
+              <div class="yesno-label">Overhead power lines and electrical panels identified and clearances maintained?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="electricalOverhead" value="yes" required> Yes</label>
+                <label><input type="radio" name="electricalOverhead" value="no"> No</label>
+                <label><input type="radio" name="electricalOverhead" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Lockout / tagout in place for energized systems where required?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="lockoutTagout" value="yes" required> Yes</label>
+                <label><input type="radio" name="lockoutTagout" value="no"> No</label>
+                <label><input type="radio" name="lockoutTagout" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Underground services (gas, power, water, telecom) located before digging?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="undergroundServices" value="yes" required> Yes</label>
+                <label><input type="radio" name="undergroundServices" value="no"> No</label>
+                <label><input type="radio" name="undergroundServices" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Excavations / trenches properly sloped, shored, barricaded and access provided?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="excavations" value="yes" required> Yes</label>
+                <label><input type="radio" name="excavations" value="no"> No</label>
+                <label><input type="radio" name="excavations" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Confined spaces identified and proper entry permit / testing in place?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="confinedSpace" value="yes" required> Yes</label>
+                <label><input type="radio" name="confinedSpace" value="no"> No</label>
+                <label><input type="radio" name="confinedSpace" value="na"> N/A</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- E. CHEMICALS, DUST, NOISE -->
+          <div class="section-subtitle">E. Chemicals, dust, noise & air quality</div>
+          <div class="yesno-grid">
+            <div class="yesno-item">
+              <div class="yesno-label">Chemicals / products labelled and used as per WHMIS / SDS?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="whmis" value="yes" required> Yes</label>
+                <label><input type="radio" name="whmis" value="no"> No</label>
+                <label><input type="radio" name="whmis" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Asbestos, silica or other hazardous materials identified and controls in place?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="asbestosSilica" value="yes" required> Yes</label>
+                <label><input type="radio" name="asbestosSilica" value="no"> No</label>
+                <label><input type="radio" name="asbestosSilica" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Dust, fumes, vapours controlled (ventilation, wet methods, respirators)?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="dustFumes" value="yes" required> Yes</label>
+                <label><input type="radio" name="dustFumes" value="no"> No</label>
+                <label><input type="radio" name="dustFumes" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Noise levels acceptable or hearing protection used if required?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="noise" value="yes" required> Yes</label>
+                <label><input type="radio" name="noise" value="no"> No</label>
+                <label><input type="radio" name="noise" value="na"> N/A</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- F. MANUAL HANDLING & ERGONOMICS -->
+          <div class="section-subtitle">F. Manual handling & ergonomics</div>
+          <div class="yesno-grid">
+            <div class="yesno-item">
+              <div class="yesno-label">Lifting / carrying tasks planned to avoid overexertion (team lifts, equipment)?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="manualLifting" value="yes" required> Yes</label>
+                <label><input type="radio" name="manualLifting" value="no"> No</label>
+                <label><input type="radio" name="manualLifting" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Awkward postures / repetitive tasks minimized where possible?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="ergonomics" value="yes" required> Yes</label>
+                <label><input type="radio" name="ergonomics" value="no"> No</label>
+                <label><input type="radio" name="ergonomics" value="na"> N/A</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- G. TRAFFIC, PUBLIC & OTHER TRADES -->
+          <div class="section-subtitle">G. Traffic, public & other trades</div>
+          <div class="yesno-grid">
+            <div class="yesno-item">
+              <div class="yesno-label">Vehicle / equipment traffic controlled (spotters, barricades, routes)?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="vehiclesTraffic" value="yes" required> Yes</label>
+                <label><input type="radio" name="vehiclesTraffic" value="no"> No</label>
+                <label><input type="radio" name="vehiclesTraffic" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Public / building occupants protected from work hazards?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="publicProtection" value="yes" required> Yes</label>
+                <label><input type="radio" name="publicProtection" value="no"> No</label>
+                <label><input type="radio" name="publicProtection" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Other trades / contractors coordinated to avoid conflicts (overhead work, same area)?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="otherTrades" value="yes" required> Yes</label>
+                <label><input type="radio" name="otherTrades" value="no"> No</label>
+                <label><input type="radio" name="otherTrades" value="na"> N/A</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- H. PPE & PERSONAL FACTORS -->
+          <div class="section-subtitle">H. PPE & personal factors</div>
+          <div class="yesno-grid">
+            <div class="yesno-item">
+              <div class="yesno-label">Required PPE available and being used (hard hat, hi-vis, boots, gloves, eye/ear, respirator)?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="ppe" value="yes" required> Yes</label>
+                <label><input type="radio" name="ppe" value="no"> No</label>
+                <label><input type="radio" name="ppe" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Workers fit for duty (no impairment from drugs, alcohol, fatigue, etc.)?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="fitForDuty" value="yes" required> Yes</label>
+                <label><input type="radio" name="fitForDuty" value="no"> No</label>
+                <label><input type="radio" name="fitForDuty" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Young / new / inexperienced workers given extra supervision?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="youngWorkers" value="yes" required> Yes</label>
+                <label><input type="radio" name="youngWorkers" value="no"> No</label>
+                <label><input type="radio" name="youngWorkers" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Violence, harassment or working alone risks considered and controls in place?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="violenceHarassment" value="yes" required> Yes</label>
+                <label><input type="radio" name="violenceHarassment" value="no"> No</label>
+                <label><input type="radio" name="violenceHarassment" value="na"> N/A</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- I. ENVIRONMENT & EMERGENCY PREPAREDNESS -->
+          <div class="section-subtitle">I. Environment & emergency preparedness</div>
+          <div class="yesno-grid">
+            <div class="yesno-item">
+              <div class="yesno-label">Fuel, oils, paints and other materials stored to prevent spills / environmental release?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="environmentalSpill" value="yes" required> Yes</label>
+                <label><input type="radio" name="environmentalSpill" value="no"> No</label>
+                <label><input type="radio" name="environmentalSpill" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Wildlife or pests considered (remote sites) and controls in place if required?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="wildlife" value="yes" required> Yes</label>
+                <label><input type="radio" name="wildlife" value="no"> No</label>
+                <label><input type="radio" name="wildlife" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Emergency exits, routes and muster point known and kept clear?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="exits" value="yes" required> Yes</label>
+                <label><input type="radio" name="exits" value="no"> No</label>
+                <label><input type="radio" name="exits" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Fire extinguishers, first aid kit and eye wash available and accessible?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="firstAid" value="yes" required> Yes</label>
+                <label><input type="radio" name="firstAid" value="no"> No</label>
+                <label><input type="radio" name="firstAid" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Communication available in case of emergency (radio, phone, contact list)?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="communication" value="yes" required> Yes</label>
+                <label><input type="radio" name="communication" value="no"> No</label>
+                <label><input type="radio" name="communication" value="na"> N/A</label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-label">Permit(s) in place if required (hot work, confined space, ground disturbance, etc.)?</div>
+              <div class="yesno-options">
+                <label><input type="radio" name="permits" value="yes" required> Yes</label>
+                <label><input type="radio" name="permits" value="no"> No</label>
+                <label><input type="radio" name="permits" value="na"> N/A</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- J. EXTRA HAZARDS -->
+          <h2 class="section-title">3. Extra hazards / notes (optional)</h2>
+          <p class="section-help">Use only if there is something special today (extra controls, permits, client instructions, etc.).</p>
+          <textarea id="extra-hazards" name="extraHazards" placeholder="Example: overhead work above public area, special client rules, hot work after hours, etc."></textarea>
+
+          <!-- 4. SIGN-OFF + FIRMA DIGITAL -->
+          <h2 class="section-title">4. Worker sign-off</h2>
+          <p class="section-help">
+            I confirm I have reviewed the hazards, controls and will stop work and contact my supervisor if conditions change.
+          </p>
+
+          <div class="form-grid">
+            <div>
+              <label for="signoff-name">Worker name (again) *</label>
+              <input id="signoff-name" name="signoffName" type="text" required>
+            </div>
+            <div>
+              <label for="signoff-datetime">Date & time *</label>
+              <input id="signoff-datetime" name="signoffDatetime" type="datetime-local" required>
+            </div>
+          </div>
+
+          <div class="signature-wrapper" style="margin-top:10px;">
+            <label>Digital signature (draw with your finger) *</label>
+            <canvas id="signature-pad"></canvas>
+            <div class="sig-buttons">
+              <button type="button" class="btn btn-secondary" id="clear-signature">Clear signature</button>
+              <span style="font-size:11px;color:#9ca3af;">Tip: rotate your phone for more space if needed.</span>
+            </div>
+          </div>
+
+          <!-- guardamos el PNG en base64 dentro del documento -->
+          <input type="hidden" id="signature-data" name="signatureData">
+
+          <!-- ENVIAR -->
+          <div style="margin-top:18px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+            <button type="submit" class="btn btn-primary" id="submit-btn">
+              Submit FLHA
+            </button>
+            <span id="form-status" class="status-text"></span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- SignaturePad (librería del canvas) -->
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.6/dist/signature_pad.umd.min.js"></script>
+
+  <!-- LÓGICA FLHA + FIRMA + FIREBASE (sin Storage) -->
+  <script type="module">
+    import { auth, db } from "./assets/js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import {
+      collection,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const form = document.getElementById("flha-form");
+    const statusEl = document.getElementById("form-status");
+    const submitBtn = document.getElementById("submit-btn");
+    const sigCanvas = document.getElementById("signature-pad");
+    const clearSigBtn = document.getElementById("clear-signature");
+    const sigHiddenInput = document.getElementById("signature-data");
+    const signoffDatetimeInput = document.getElementById("signoff-datetime");
+
+    function setStatus(msg, type = "") {
+      if (!statusEl) return;
+      statusEl.textContent = msg || "";
+      statusEl.className = "status-text";
+      if (type === "error") statusEl.classList.add("error");
+      if (type === "ok") statusEl.classList.add("ok");
+    }
+
+    // Fecha/hora actual por defecto
+    if (signoffDatetimeInput && !signoffDatetimeInput.value) {
+      const now = new Date();
+      const localISO = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16);
+      signoffDatetimeInput.value = localISO;
+    }
+
+    // Ajustar canvas para pantallas retina
+    function resizeCanvas() {
+      if (!sigCanvas) return;
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const rect = sigCanvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      sigCanvas.width = rect.width * ratio;
+      sigCanvas.height = rect.height * ratio;
+      const ctx = sigCanvas.getContext("2d");
+      ctx.scale(ratio, ratio);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    if (!window.SignaturePad) {
+      console.error("SignaturePad no disponible.");
+    }
+
+    const signaturePad = new window.SignaturePad(sigCanvas, {
+      backgroundColor: "white",
+      penColor: "black",
+      throttle: 10
+    });
+
+    if (clearSigBtn) {
+      clearSigBtn.addEventListener("click", () => {
+        signaturePad.clear();
+        setStatus("", "");
+      });
+    }
+
+    // Auth
+    let currentUser = null;
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user || null;
+      console.log("Auth state:", currentUser ? currentUser.email : "no user");
+    });
+
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        setStatus("", "");
+
+        try {
+          if (!currentUser) {
+            setStatus("You must be logged in to submit an FLHA.", "error");
+            return;
+          }
+
+          if (signaturePad.isEmpty()) {
+            setStatus("Please sign before submitting.", "error");
+            return;
+          }
+
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Sending...";
+          setStatus("Saving FLHA, please wait…", "ok");
+
+          // 1) Firma en base64 (se guarda directa en Firestore)
+          const sigDataUrl = signaturePad.toDataURL("image/png");
+          sigHiddenInput.value = sigDataUrl;
+
+          // 2) Datos del formulario
+          const fd = new FormData(form);
+
+          const flhaData = {
+            userUid: currentUser.uid,
+            userEmail: currentUser.email || null,
+            createdAt: serverTimestamp(),
+
+            projectName: fd.get("projectName") || "",
+            projectLocation: fd.get("projectLocation") || "",
+            taskDescription: fd.get("taskDescription") || "",
+            weather: fd.get("weather") || "",
+            workerName: fd.get("workerName") || "",
+            supervisorName: fd.get("supervisorName") || "",
+
+            housekeeping: fd.get("housekeeping") || "",
+            slipsTripsFalls: fd.get("slipsTripsFalls") || "",
+            lighting: fd.get("lighting") || "",
+            weatherControls: fd.get("weatherControls") || "",
+
+            access: fd.get("access") || "",
+            ladders: fd.get("ladders") || "",
+            scaffolds: fd.get("scaffolds") || "",
+            heights: fd.get("heights") || "",
+            unguardedEdges: fd.get("unguardedEdges") || "",
+
+            powerCords: fd.get("powerCords") || "",
+            machineGuards: fd.get("machineGuards") || "",
+            lockoutTools: fd.get("lockoutTools") || "",
+            mobileEquipment: fd.get("mobileEquipment") || "",
+            overheadLoads: fd.get("overheadLoads") || "",
+
+            electricalOverhead: fd.get("electricalOverhead") || "",
+            lockoutTagout: fd.get("lockoutTagout") || "",
+            undergroundServices: fd.get("undergroundServices") || "",
+            excavations: fd.get("excavations") || "",
+            confinedSpace: fd.get("confinedSpace") || "",
+
+            whmis: fd.get("whmis") || "",
+            asbestosSilica: fd.get("asbestosSilica") || "",
+            dustFumes: fd.get("dustFumes") || "",
+            noise: fd.get("noise") || "",
+
+            manualLifting: fd.get("manualLifting") || "",
+            ergonomics: fd.get("ergonomics") || "",
+
+            vehiclesTraffic: fd.get("vehiclesTraffic") || "",
+            publicProtection: fd.get("publicProtection") || "",
+            otherTrades: fd.get("otherTrades") || "",
+
+            ppe: fd.get("ppe") || "",
+            fitForDuty: fd.get("fitForDuty") || "",
+            youngWorkers: fd.get("youngWorkers") || "",
+            violenceHarassment: fd.get("violenceHarassment") || "",
+
+            environmentalSpill: fd.get("environmentalSpill") || "",
+            wildlife: fd.get("wildlife") || "",
+            exits: fd.get("exits") || "",
+            firstAid: fd.get("firstAid") || "",
+            communication: fd.get("communication") || "",
+            permits: fd.get("permits") || "",
+
+            extraHazards: fd.get("extraHazards") || "",
+
+            signoffName: fd.get("signoffName") || "",
+            signoffDatetime: fd.get("signoffDatetime") || "",
+
+            // Firma guardada en el documento (base64)
+            signatureData: sigDataUrl
+          };
+
+          await addDoc(collection(db, "flhas"), flhaData);
+
+          setStatus("FLHA submitted and signature saved successfully.", "ok");
+          form.reset();
+          signaturePad.clear();
+
+          if (signoffDatetimeInput) {
+            const now = new Date();
+            const localISO = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+              .toISOString()
+              .slice(0, 16);
+            signoffDatetimeInput.value = localISO;
+          }
+
+        } catch (err) {
+          console.error("FLHA SAVE ERROR:", err);
+          setStatus(
+            "Error saving FLHA. Please try again or contact admin. (" +
+              (err.code || err.message || "no-code") +
+            ")",
+            "error"
+          );
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit FLHA";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAFI Portal | Login</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .auth-card {
+      max-width: 460px;
+    }
+    @media (max-width: 959px) {
+      .auth-aside {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="auth-shell">
+
+  <div class="auth-layout">
+    <aside class="auth-aside">
+      <div class="auth-badge">Portal access</div>
+
+      <div class="auth-logo-row">
+        <div class="auth-logo-box">
+          <img src="imagenes/logo-safi.png" alt="SAFI logo">
+        </div>
+        <div>
+          <p class="auth-brand-title">SAFI Construction Projects</p>
+          <p class="auth-brand-sub">Website, sales and portal access in one system.</p>
+        </div>
+      </div>
+
+      <h1 class="auth-hero-title">Sign in to the SAFI portal</h1>
+      <p class="auth-hero-copy">
+        This access point is now visually clearer for clients, workers and approved internal users while keeping the exact same authentication flow.
+      </p>
+
+      <div class="auth-points">
+        <div class="auth-point">
+          <strong>Client access</strong>
+          <span>Review project records, timesheets and SAFI-submitted information.</span>
+        </div>
+        <div class="auth-point">
+          <strong>Worker access</strong>
+          <span>Submit field forms and move through daily operational tasks.</span>
+        </div>
+        <div class="auth-point">
+          <strong>Approval still required</strong>
+          <span>New users continue through the current approval process exactly as before.</span>
+        </div>
+      </div>
+    </aside>
+
+    <section class="auth-card">
+      <p class="auth-kicker">Portal sign in</p>
+      <h2 class="auth-title">Login to SAFI Portal</h2>
+      <p class="auth-subtitle">
+        Use the same email and password linked to your approved SAFI access.
+      </p>
+
+      <form id="login-form">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="you@example.com" required>
+
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="Enter your password" required>
+
+        <button type="submit" class="auth-submit">Sign In</button>
+      </form>
+
+      <p id="login-error" class="auth-error"></p>
+
+      <div class="auth-links">
+        <a href="signup.html">Need an account? Request access →</a>
+        <a href="index.html">← Back to website</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="assets/js/auth.js"></script>
+</body>
+</html>

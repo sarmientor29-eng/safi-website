@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Services | SAFI Construction Projects</title>
+  <meta name="description" content="Drywall, metal stud framing, painting, site cleaning, modular installations and skilled labour crews in Calgary.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <div class="nav">
+        <a href="index.html" class="nav-left">
+          <div class="logo-mark">
+            <img src="imagenes/logo-safi.png" alt="SAFI Construction Projects logo">
+          </div>
+          <div class="brand-block">
+            <div class="brand-title">SAFI CONSTRUCTION PROJECTS</div>
+            <div class="brand-sub">Calgary, Alberta · Commercial & Residential</div>
+          </div>
+        </a>
+
+        <button class="nav-toggle" aria-label="Toggle navigation">
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-links">
+          <a href="services.html" class="active">Services</a>
+          <a href="projects.html">Projects</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="apply.html">Apply</a>
+          <a href="login.html">Login</a>
+          <a href="contact.html?intent=quote-request&timeline=within-2-weeks&preferredContact=email&source=services-nav" class="btn btn-primary">Request a quote</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- SERVICES -->
+    <section id="services" class="section">
+      <div class="container">
+
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">What we do</div>
+            <h2 class="section-title">Construction Services We Provide</h2>
+          </div>
+          <p class="section-description">
+            SAFI Construction Projects supports general contractors, builders and property managers with reliable labour and finish trades. Each service below now points to a clearer next step inside the commercial funnel.
+          </p>
+        </div>
+
+        <div id="service-paths" class="funnel-grid" style="margin-bottom:22px;">
+          <article class="funnel-card">
+            <span class="funnel-eyebrow">Quote-ready</span>
+            <h3>I already know the scope</h3>
+            <p>Best for buyers who know the service, site and timing and want pricing or availability next.</p>
+            <div class="funnel-actions">
+              <a href="contact.html?intent=quote-request&projectStage=bidding&timeline=within-2-weeks&preferredContact=email&source=services-path-quote" class="btn btn-primary">Start quote intake</a>
+            </div>
+          </article>
+
+          <article class="funnel-card">
+            <span class="funnel-eyebrow">Fast support</span>
+            <h3>I need crews on site quickly</h3>
+            <p>Use this route for urgent labour support, active jobs and short-notice crew needs.</p>
+            <div class="funnel-actions">
+              <a href="contact.html?intent=fast-staffing&service=Labour%20Support&projectStage=active-site&timeline=asap&urgency=urgent&preferredContact=phone&source=services-path-fast" class="btn btn-primary">Request crews fast</a>
+            </div>
+          </article>
+
+          <article class="funnel-card">
+            <span class="funnel-eyebrow">Guided route</span>
+            <h3>I need help choosing the service</h3>
+            <p>Start with the sales assistant entry point and let the intake guide the lead before pricing.</p>
+            <div class="funnel-actions">
+              <a href="#service-paths" class="btn btn-secondary" data-open-sales-assistant>Ask sales assistant</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="grid grid-3">
+
+          <article class="card service-card">
+            <div class="service-card-body">
+              <div class="service-icon">🧱</div>
+              <div class="service-card-copy">
+                <span class="tag">Drywall</span>
+                <h3>Drywall Installation & Taping</h3>
+                <p>Boarding, taping and sanding with clean, consistent finishes.</p>
+                <p class="service-note">Best for buyers who need drywall crews, patching support or finish-ready delivery.</p>
+              </div>
+              <div class="service-actions">
+                <a href="contact.html?intent=quote-request&service=Drywall&projectStage=bidding&source=services-page-drywall" class="btn btn-secondary">Request this service</a>
+                <a href="contact.html?intent=sales-conversation&service=Drywall&source=services-page-drywall-guidance" class="btn">Need guidance first</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card service-card">
+            <div class="service-card-body">
+              <div class="service-icon">🏗️</div>
+              <div class="service-card-copy">
+                <span class="tag">Framing</span>
+                <h3>Steel Stud Walls & Ceilings</h3>
+                <p>Reliable, plumb framing for partitions, bulkheads and soffits.</p>
+                <p class="service-note">Good fit for tenant improvements, interior layouts and scope packages that need framing plus follow-on trades.</p>
+              </div>
+              <div class="service-actions">
+                <a href="contact.html?intent=quote-request&service=Framing&projectStage=bidding&source=services-page-framing" class="btn btn-secondary">Request this service</a>
+                <a href="contact.html?intent=sales-conversation&service=Framing&source=services-page-framing-guidance" class="btn">Need guidance first</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card service-card">
+            <div class="service-card-body">
+              <div class="service-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                  stroke="var(--accent)" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="11" height="5" rx="2"></rect>
+                  <path d="M14 5h2a2 2 0 0 1 2 2v3"></path>
+                  <path d="M10 8v5a2 2 0 0 0 2 2h1"></path>
+                  <path d="M13 15v5"></path>
+                </svg>
+              </div>
+              <div class="service-card-copy">
+                <span class="tag">Painting</span>
+                <h3>Interior Paint Systems</h3>
+                <p>Prep, priming and finish coats with attention to clean lines.</p>
+                <p class="service-note">Useful for projects moving into finishing stages, turnover prep or punch support.</p>
+              </div>
+              <div class="service-actions">
+                <a href="contact.html?intent=quote-request&service=Painting&projectStage=finishing&source=services-page-painting" class="btn btn-secondary">Request this service</a>
+                <a href="contact.html?intent=sales-conversation&service=Painting&source=services-page-painting-guidance" class="btn">Need guidance first</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card service-card">
+            <div class="service-card-body">
+              <div class="service-icon">🧹</div>
+              <div class="service-card-copy">
+                <span class="tag">Cleaning</span>
+                <h3>Construction Site Cleanup</h3>
+                <p>Rough and final cleaning for a ready-to-handover site.</p>
+                <p class="service-note">Best when schedules are close to turnover, inspection or a handover milestone.</p>
+              </div>
+              <div class="service-actions">
+                <a href="contact.html?intent=quote-request&service=Cleaning&projectStage=finishing&source=services-page-cleaning" class="btn btn-secondary">Request this service</a>
+                <a href="contact.html?intent=sales-conversation&service=Cleaning&source=services-page-cleaning-guidance" class="btn">Need guidance first</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card service-card">
+            <div class="service-card-body">
+              <div class="service-icon">🛠️</div>
+              <div class="service-card-copy">
+                <span class="tag">Labour</span>
+                <h3>Skilled Labour Support</h3>
+                <p>Material handling, protection, demolition and helper roles.</p>
+                <p class="service-note">This is the fastest route when a site needs manpower now or a crew gap is slowing progress.</p>
+              </div>
+              <div class="service-actions">
+                <a href="contact.html?intent=fast-staffing&service=Labour%20Support&projectStage=active-site&urgency=urgent&timeline=asap&preferredContact=phone&source=services-page-labour" class="btn btn-secondary">Request this service</a>
+                <a href="contact.html?intent=sales-conversation&service=Labour%20Support&source=services-page-labour-guidance" class="btn">Need guidance first</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card service-card">
+            <div class="service-card-body">
+              <div class="service-icon">🧩</div>
+              <div class="service-card-copy">
+                <span class="tag">Modular</span>
+                <h3>Modular Walls & Systems</h3>
+                <p>Installation of modular partitions with precise alignment.</p>
+                <p class="service-note">Good for scopes that require precision, phased installation or clean coordination with other trades.</p>
+              </div>
+              <div class="service-actions">
+                <a href="contact.html?intent=quote-request&service=Modular%20Systems&projectStage=bidding&source=services-page-modular" class="btn btn-secondary">Request this service</a>
+                <a href="contact.html?intent=sales-conversation&service=Modular%20Systems&source=services-page-modular-guidance" class="btn">Need guidance first</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="split-section">
+          <div class="info-stack">
+            <div class="section-header" style="margin-bottom:12px;">
+              <div>
+                <div class="section-kicker">How we fit</div>
+                <h2 class="section-title">Support for real construction workflows</h2>
+              </div>
+            </div>
+
+            <ul class="list-checks">
+              <li>Labour and finish trade support for commercial and residential scopes.</li>
+              <li>Useful for general contractors, builders, property managers and site supervisors.</li>
+              <li>Positioned for both planned work and jobs that need crew support quickly.</li>
+              <li>Clear next step for buyers: request a quote, start fast staffing or use the guided intake path.</li>
+            </ul>
+          </div>
+
+          <div class="service-lead-panel">
+            <article class="feature-item">
+              <h3>Quote-ready route</h3>
+              <p>Defined scopes should move into the smart intake with service, timing and project stage already classified.</p>
+            </article>
+            <article class="feature-item">
+              <h3>Guided route</h3>
+              <p>Unclear scopes can start with the assistant entry point and become better-qualified leads before SAFI prices them.</p>
+            </article>
+            <article class="feature-item">
+              <h3>Operations continuity</h3>
+              <p>This page now feeds the commercial layer while still fitting the larger Website, Sales AI, Operations Portal and Analyst Layer plan.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-panel">
+          <div class="cta-eyebrow">Next step</div>
+          <h2 class="cta-title">Know what you need, or want SAFI to guide the lead first?</h2>
+          <p class="cta-copy">
+            Use the smart intake when the scope is already clear, choose the fast staffing route for urgent jobs, or let the assistant help classify the lead before pricing.
+          </p>
+          <div class="cta-actions">
+            <a href="contact.html?intent=quote-request&source=services-cta" class="btn btn-primary">Start smart intake</a>
+            <a href="contact.html?intent=fast-staffing&service=Labour%20Support&timeline=asap&urgency=urgent&preferredContact=phone&source=services-cta-fast" class="btn btn-secondary">Need crews fast</a>
+            <a href="#services" class="btn" data-open-sales-assistant>Ask sales assistant</a>
+          </div>
+          <div class="mini-meta">
+            <span class="mini-pill">Service-level routing</span>
+            <span class="mini-pill">AI-ready entry point</span>
+            <span class="mini-pill">Built for conversion</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>© <span id="year"></span> SAFI Construction Projects. All rights reserved.</div>
+        <div>Serving all of Canada · <a href="mailto:ricardo.sarmiento@saficonstruction.com">ricardo.sarmiento@saficonstruction.com</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="assets/js/sales-ui.js"></script>
+  <script>
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    if (navToggle) {
+      navToggle.addEventListener('click', () => {
+        document.body.classList.toggle('nav-open');
+      });
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          document.body.classList.remove('nav-open');
+        });
+      });
+    }
+
+    const revealElements = [
+      ...document.querySelectorAll('.section'),
+      ...document.querySelectorAll('.card')
+    ];
+
+    revealElements.forEach(el => el.classList.add('reveal-on-scroll'));
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealElements.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

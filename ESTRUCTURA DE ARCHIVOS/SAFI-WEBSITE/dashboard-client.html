@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAFI Portal | Client dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    #logout-btn {
+      background: transparent;
+      border: 1px solid #374151;
+      color: #fca5a5;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 10px 14px;
+      border-radius: 999px;
+    }
+
+    #logout-btn:hover {
+      background: #111827;
+    }
+  </style>
+</head>
+<body class="portal-shell">
+
+  <div class="portal-frame">
+    <div class="portal-card">
+      <div class="portal-topbar">
+        <div class="portal-session">
+          <span class="status-chip">Client portal</span>
+          <span>Logged in to SAFI Client Portal</span>
+        </div>
+        <button id="logout-btn">Log out</button>
+      </div>
+
+      <div class="portal-hero">
+        <div>
+          <div class="portal-kicker">Client access</div>
+          <h1 class="portal-title">Client dashboard</h1>
+          <p class="portal-sub">
+            Review hours, submitted safety records and project-related information in a cleaner operational layout. The existing read-only flow remains unchanged.
+          </p>
+        </div>
+
+        <div class="portal-summary">
+          <div class="portal-summary-card">
+            <strong>Portal use</strong>
+            <span>Best for reviewing what SAFI has already submitted and following up on project questions.</span>
+          </div>
+          <div class="portal-summary-card">
+            <strong>Current behavior</strong>
+            <span>No data logic changed in this phase. This is a visual and navigation improvement only.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="portal-actions-grid">
+        <article class="portal-action-card">
+          <h3>Review timesheets</h3>
+          <p>Open submitted timesheets and review the hours already recorded in the portal.</p>
+          <div class="portal-action-meta">
+            <span class="mini-pill">Read-only</span>
+            <span class="mini-pill">Project visibility</span>
+          </div>
+          <div class="portal-link-row">
+            <a href="timesheets.html" class="portal-btn-primary">Review timesheets</a>
+          </div>
+        </article>
+
+        <article class="portal-action-card">
+          <h3>View FLHA records</h3>
+          <p>Access field-level hazard assessment records submitted through the SAFI workflow.</p>
+          <div class="portal-action-meta">
+            <span class="mini-pill">Safety records</span>
+            <span class="mini-pill">Operational reference</span>
+          </div>
+          <div class="portal-link-row">
+            <a href="flha.html" class="portal-btn-secondary">Open FLHA records</a>
+          </div>
+        </article>
+
+        <article class="portal-action-card">
+          <h3>Need changes or support?</h3>
+          <p>Contact SAFI if you need corrections, labour adjustments or project-specific follow-up.</p>
+          <div class="portal-action-meta">
+            <span class="mini-pill">Direct support</span>
+            <span class="mini-pill">Fast follow-up</span>
+          </div>
+          <div class="portal-link-row">
+            <a href="contact.html" class="portal-btn-secondary">Contact SAFI team</a>
+          </div>
+        </article>
+      </div>
+
+      <p class="portal-note">
+        Tip: This portal remains read-only for clients in the current implementation. If you need corrections or additional labour, contact SAFI with the project name and date.
+      </p>
+    </div>
+  </div>
+
+  <!-- Usa el mismo auth.js para manejar logout y protección de ruta -->
+  <script type="module" src="assets/js/auth.js"></script>
+</body>
+</html>

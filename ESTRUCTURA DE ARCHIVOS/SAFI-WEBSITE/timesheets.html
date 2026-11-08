@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My submitted timesheets | SAFI Portal</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #020617;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #e5e7eb;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 24px 12px;
+    }
+
+    .page-wrapper {
+      width: 100%;
+      max-width: 960px;
+      margin: auto;
+    }
+
+    .ts-card {
+      background: #020617;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.4);
+      box-shadow: 0 24px 50px rgba(15,23,42,0.85);
+      padding: 20px 18px 22px;
+    }
+
+    .ts-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .ts-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .ts-sub {
+      font-size: 13px;
+      color: #9ca3af;
+      margin: 2px 0 0;
+    }
+
+    .ts-top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn-small {
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn-small:hover {
+      background: #0f172a;
+    }
+
+    .ts-status {
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: #f97373;
+    }
+
+    .ts-table-wrapper {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid rgba(31,41,55,1);
+      background: radial-gradient(circle at top left,#111827,#020617 55%);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead {
+      background: rgba(15,23,42,0.9);
+    }
+
+    th, td {
+      padding: 8px 10px;
+      text-align: left;
+      white-space: nowrap;
+      border-bottom: 1px solid rgba(31,41,55,1);
+    }
+
+    th {
+      font-weight: 500;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: rgba(15,23,42,0.7);
+    }
+
+    .pill-status {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .pill-pending {
+      background: rgba(250,204,21,0.1);
+      color: #eab308;
+      border: 1px solid rgba(234,179,8,0.4);
+    }
+
+    .pill-approved {
+      background: rgba(34,197,94,0.1);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.4);
+    }
+
+    .pill-rejected {
+      background: rgba(239,68,68,0.1);
+      color: #f97373;
+      border: 1px solid rgba(248,113,113,0.4);
+    }
+
+    .empty-state {
+      padding: 16px 10px;
+      font-size: 13px;
+      color: #9ca3af;
+      text-align: center;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    @media (max-width: 640px) {
+      .ts-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      body {
+        padding: 12px;
+      }
+      .ts-card {
+        padding: 16px 14px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="ts-card">
+      <div class="ts-header">
+        <div>
+          <h1 class="ts-title">My submitted timesheets</h1>
+          <p class="ts-sub">Timesheets you have sent through the SAFI portal.</p>
+        </div>
+        <div class="ts-top-actions">
+          <a href="worker-timesheet-form.html" class="btn-small">New timesheet</a>
+          <a href="dashboard-worker.html" class="btn-small">Back to dashboard</a>
+        </div>
+      </div>
+
+      <div class="context-nav-wrap">
+        <p class="context-nav-label">Worker navigation</p>
+        <div class="context-nav">
+          <a href="dashboard-worker.html" class="context-nav-link">Dashboard</a>
+          <a href="flha.html" class="context-nav-link">New FLHA</a>
+          <a href="worker-timesheet-form.html" class="context-nav-link">New timesheet</a>
+          <a href="timesheets.html" class="context-nav-link is-active">My submitted timesheets</a>
+        </div>
+      </div>
+
+      <div class="context-summary">
+        <div class="context-summary-card">
+          <strong>What you can do here</strong>
+          <span>Review the timesheets you already submitted and check whether they are still pending, approved or rejected.</span>
+        </div>
+        <div class="context-summary-card">
+          <strong>Best next action</strong>
+          <span>If you need to add a new record, jump directly to the daily timesheet form from the action bar above.</span>
+        </div>
+      </div>
+
+      <div id="ts-status" class="ts-status"></div>
+
+      <div class="ts-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Project / Site</th>
+              <th>Total hours</th>
+              <th>Notes</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="ts-body">
+            <tr>
+              <td colspan="5" class="empty-state">Loading your timesheets…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="footer-note">
+        Note: If you think hours are missing or incorrect, please contact SAFI administration with the project name and date.
+      </p>
+    </div>
+  </div>
+
+  <!-- JS + FIREBASE (MODULAR) -->
+  <script type="module">
+    import { auth, db } from "./assets/js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import {
+      collection,
+      query,
+      where,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const statusEl = document.getElementById("ts-status");
+    const bodyEl = document.getElementById("ts-body");
+
+    function setStatus(msg, isError = false) {
+      if (!statusEl) return;
+      statusEl.textContent = msg || "";
+      statusEl.style.color = isError ? "#f97373" : "#9ca3af";
+    }
+
+    function setEmptyTable(message) {
+      if (!bodyEl) return;
+      bodyEl.innerHTML = `
+        <tr>
+          <td colspan="5" class="empty-state">${message}</td>
+        </tr>
+      `;
+    }
+
+    async function loadTimesheetsForUser(user) {
+      if (!bodyEl) return;
+
+      setStatus("");
+      setEmptyTable("Loading your timesheets…");
+
+      try {
+        // 👉 El formulario guarda userUid, así que filtramos por ese campo
+        const q = query(
+          collection(db, "timesheets"),
+          where("userUid", "==", user.uid)
+        );
+
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          setStatus("You don't have submitted timesheets yet.");
+          setEmptyTable("No timesheets found. Submit a new one to see it here.");
+          return;
+        }
+
+        let rows = "";
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+
+          const workDate = data.date || "";
+          const project = data.project || "—";
+          const total = data.totalHours || "—";
+          const notes = data.notes
+            ? (data.notes.length > 40 ? data.notes.slice(0, 37) + "..." : data.notes)
+            : "—";
+
+          const rawStatus = data.status || "submitted";
+          let pillClass = "pill-pending";
+          let pillText = "Submitted";
+
+          if (rawStatus === "approved") {
+            pillClass = "pill-approved";
+            pillText = "Approved";
+          } else if (rawStatus === "rejected") {
+            pillClass = "pill-rejected";
+            pillText = "Rejected";
+          }
+
+          rows += `
+            <tr>
+              <td>${workDate || "—"}</td>
+              <td>${project}</td>
+              <td>${total}</td>
+              <td>${notes}</td>
+              <td><span class="pill-status ${pillClass}">${pillText}</span></td>
+            </tr>
+          `;
+        });
+
+        bodyEl.innerHTML = rows;
+        setStatus("");
+      } catch (err) {
+        console.error("TIMESHEETS ERROR:", err);
+        setStatus("Error loading timesheets. Please try again or contact SAFI.", true);
+        setEmptyTable("Could not load timesheets. Please try again or contact SAFI.");
+      }
+    }
+
+    // Protección de ruta + carga
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      loadTimesheetsForUser(user);
+    });
+  </script>
+</body>
+</html>

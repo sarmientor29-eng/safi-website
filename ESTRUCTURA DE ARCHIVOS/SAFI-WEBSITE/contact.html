@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact | SAFI Construction Projects</title>
+  <meta name="description" content="Request a quote from SAFI Construction Projects in Calgary. Skilled labour for drywall, framing, painting, cleaning and modular installations.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* --- POPUP SUCCESS (igual estilo que APPLY) --- */
+    .popup-success {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.35s ease;
+    }
+
+    .popup-success.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .popup-card {
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 28px 36px;
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.55);
+      animation: popIn 0.35s ease forwards;
+      transform: scale(0.75);
+      opacity: 0;
+    }
+
+    @keyframes popIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .popup-check {
+      font-size: 48px;
+      color: #4ade80;
+      margin-bottom: 12px;
+    }
+
+    .popup-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 6px;
+    }
+
+    .popup-sub {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 18px;
+    }
+
+    .popup-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+      background: #1e293b;
+      border-radius: 10px;
+      color: #cbd5e1;
+      border: 1px solid rgba(255,255,255,0.15);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .popup-btn:hover {
+      background: #334155;
+    }
+
+    /* --- AJUSTES DE FORMATO PARA CONTACT --- */
+    #contact.section {
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+
+    #contact .card {
+      padding: 22px 22px;
+    }
+
+    #contact .field {
+      margin-bottom: 14px;
+    }
+
+    #contact .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    #contact input,
+    #contact select,
+    #contact textarea {
+      width: 100%;
+    }
+
+    #contact textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .form-status {
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    /* --- MOBILE RESPONSIVE --- */
+    @media (max-width: 768px) {
+      #contact.section {
+        padding-top: 72px;
+        padding-bottom: 64px;
+      }
+
+      .grid.grid-2 {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+      }
+
+      header .nav {
+        gap: 10px;
+      }
+
+      .brand-block .brand-sub {
+        font-size: 10px;
+      }
+
+      #contact .card {
+        padding: 18px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="container">
+      <div class="nav">
+        <a href="index.html" class="nav-left">
+          <div class="logo-mark">
+            <img src="imagenes/logo-safi.png" alt="SAFI Construction Projects logo">
+          </div>
+          <div class="brand-block">
+            <div class="brand-title">SAFI CONSTRUCTION PROJECTS</div>
+            <div class="brand-sub">Calgary, Alberta · Commercial & Residential</div>
+          </div>
+        </a>
+
+        <button class="nav-toggle" aria-label="Toggle navigation">
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-links">
+          <a href="services.html">Services</a>
+          <a href="projects.html">Projects</a>
+          <a href="gallery.html">Gallery</a>
+          <a href="apply.html">Apply</a>
+          <a href="login.html">Login</a>
+          <a href="contact.html?intent=quote-request&timeline=within-2-weeks&preferredContact=email&source=contact-nav" class="btn btn-primary active">Request a quote</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="section">
+      <div class="container">
+
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Intelligent intake</div>
+            <h2 class="section-title">Start the SAFI sales and support intake</h2>
+          </div>
+          <p class="section-description">
+            This page now works as a structured intake layer between marketing, sales, support and future automation. Choose the right path first, then give SAFI the context needed for faster routing.
+          </p>
+        </div>
+
+        <div class="sales-intake-meta">
+          <span class="mini-pill">Sales AI entry point</span>
+          <span class="mini-pill">Lead qualification ready</span>
+          <span class="mini-pill">Analyst layer metadata</span>
+        </div>
+
+        <div class="sales-choice-grid" style="margin-bottom:20px;">
+          <article class="sales-choice-card">
+            <h3>Need services or pricing?</h3>
+            <p>Best for new buyers who already know the service, scope or project need and want pricing or availability.</p>
+            <div class="sales-choice-actions">
+              <button type="button" class="sales-chip-btn" data-intent-button="quote-request">Start as quote request</button>
+            </div>
+          </article>
+
+          <article class="sales-choice-card">
+            <h3>Need manpower or crews fast?</h3>
+            <p>Use this route for urgent staffing, short-notice labour support or active jobs that cannot slow down.</p>
+            <div class="sales-choice-actions">
+              <button type="button" class="sales-chip-btn" data-intent-button="fast-staffing">Start as fast staffing</button>
+            </div>
+          </article>
+
+          <article class="sales-choice-card">
+            <h3>Already a SAFI client and need support?</h3>
+            <p>Use this route for existing project follow-up, document questions or client-side operational support.</p>
+            <div class="sales-choice-actions">
+              <button type="button" class="sales-chip-btn" data-intent-button="client-support">Start client support</button>
+              <a href="login.html" class="sales-chip-btn">Portal login</a>
+            </div>
+          </article>
+
+          <article class="sales-choice-card">
+            <h3>Just need guidance or a general answer?</h3>
+            <p>Choose this if you still need help defining the right service mix, the next step or the right team to talk to.</p>
+            <div class="sales-choice-actions">
+              <button type="button" class="sales-chip-btn" data-intent-button="sales-conversation">Talk to sales first</button>
+              <button type="button" class="sales-chip-btn" data-intent-button="general-inquiry">Start general inquiry</button>
+              <button type="button" class="sales-chip-btn" data-open-sales-assistant>Use sales assistant</button>
+            </div>
+          </article>
+
+          <article class="sales-choice-card">
+            <h3>Want to work with SAFI?</h3>
+            <p>The best hiring route is still the apply page. Use this intake only if you need hiring support or have a specific question.</p>
+            <div class="sales-choice-actions">
+              <a href="apply.html" class="sales-chip-btn">Go to apply</a>
+              <button type="button" class="sales-chip-btn" data-intent-button="worker-application">Hiring support</button>
+            </div>
+          </article>
+        </div>
+
+        <div class="grid grid-2">
+
+          <!-- FORMULARIO -->
+          <div class="card">
+            <div class="sales-form-shell">
+              <div class="sales-form-header">
+                <div>
+                  <h3>Smart lead form</h3>
+                  <p>This frontend now captures cleaner sales context for future automation without changing your current submission flow.</p>
+                </div>
+                <span class="sales-badge">AI-ready intake</span>
+              </div>
+
+              <div class="sales-summary-card">
+                <h3>Lead profile</h3>
+                <p id="lead-summary-text">Use the quick-start buttons or the assistant to preclassify this lead.</p>
+                <div id="lead-summary" class="lead-summary">
+                  <span class="lead-summary-pill is-muted">No lead profile selected yet</span>
+                </div>
+              </div>
+
+              <form id="contact-form">
+                <input type="hidden" id="lead-intent" name="leadIntent" value="">
+                <input type="hidden" id="lead-source" name="leadSource" value="">
+                <input type="hidden" id="assistant-summary" name="assistantSummary" value="">
+                <input type="hidden" id="page-context" name="pageContext" value="">
+                <input type="hidden" id="lead-temperature" name="leadTemperature" value="">
+                <input type="hidden" id="recommended-action" name="recommendedAction" value="">
+                <input type="hidden" id="automation-route" name="automationRoute" value="">
+                <input type="hidden" id="lead-score" name="leadScore" value="">
+                <input type="hidden" id="lead-segment" name="leadSegment" value="">
+                <input type="hidden" id="journey-stage" name="journeyStage" value="">
+                <input type="hidden" id="analyst-bucket" name="analystBucket" value="">
+                <input type="hidden" id="recommended-destination" name="recommendedDestination" value="">
+                <input type="hidden" id="response-priority" name="responsePriority" value="">
+                <input type="hidden" id="intake-version" name="intakeVersion" value="contact-v3-2">
+
+                <div class="sales-readiness-panel">
+                  <div class="sales-readiness-head">
+                    <div>
+                      <h3>Recommended next step</h3>
+                      <p id="lead-route-copy">Once this form has a service, timing and scope, SAFI can route the request more confidently.</p>
+                    </div>
+                    <span id="lead-route-badge" class="sales-route-badge is-discovery">Discovery lead</span>
+                  </div>
+
+                  <div class="sales-score-wrap">
+                    <div class="sales-score-label">
+                      <span>Lead readiness score</span>
+                      <strong id="lead-score-label">0 / 100</strong>
+                    </div>
+                    <div class="sales-score-bar">
+                      <span id="lead-score-fill" class="sales-score-fill"></span>
+                    </div>
+                  </div>
+
+                  <div class="sales-helper-grid">
+                    <div class="sales-helper-card">
+                      <h4>What is ready</h4>
+                      <ul id="lead-ready-list" class="sales-checklist">
+                        <li class="is-missing">Select an intent, service or timeline to start classifying the lead.</li>
+                      </ul>
+                    </div>
+
+                    <div class="sales-helper-card">
+                      <h4>What would help next</h4>
+                      <ul id="lead-missing-list" class="sales-checklist">
+                        <li class="is-missing">Add scope, location and timing for a better quote path.</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <p id="lead-automation-note" class="sales-small-note">
+                    This recommendation remains frontend-only for now, but the structure is ready to connect later to OpenAI, CRM routing or a Next.js sales workflow.
+                  </p>
+
+                  <div class="sales-route-links">
+                    <a id="lead-route-link" href="#contact-form" class="btn btn-secondary">Complete intake below</a>
+                    <a id="lead-secondary-link" href="services.html" class="btn">Review services</a>
+                  </div>
+                </div>
+
+                <div class="sales-analyst-panel">
+                  <div class="sales-analyst-head">
+                    <h3>Analyst snapshot</h3>
+                    <p>This visual layer previews the kind of structured metadata SAFI can later route into CRM, analytics or AI workflows.</p>
+                  </div>
+
+                  <div class="sales-analyst-grid">
+                    <div class="sales-analyst-item">
+                      <span>Lead segment</span>
+                      <strong id="lead-segment-label">Unclassified</strong>
+                    </div>
+                    <div class="sales-analyst-item">
+                      <span>Journey stage</span>
+                      <strong id="journey-stage-label">Discovery</strong>
+                    </div>
+                    <div class="sales-analyst-item">
+                      <span>Suggested destination</span>
+                      <strong id="recommended-destination-label">Stay on intelligent intake</strong>
+                    </div>
+                    <div class="sales-analyst-item">
+                      <span>Response priority</span>
+                      <strong id="response-priority-label">Normal</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sales-quick-picks">
+                  <h4>Quick service picks</h4>
+                  <div class="sales-filter-row">
+                    <button type="button" class="sales-chip-btn" data-service-button="Drywall">Drywall</button>
+                    <button type="button" class="sales-chip-btn" data-service-button="Framing">Framing</button>
+                    <button type="button" class="sales-chip-btn" data-service-button="Painting">Painting</button>
+                    <button type="button" class="sales-chip-btn" data-service-button="Labour Support">Labour support</button>
+                    <button type="button" class="sales-chip-btn" data-service-button="Multiple Services">Multi-service</button>
+                    <button type="button" class="sales-chip-btn" data-service-button="Existing Project Support">Client support</button>
+                    <button type="button" class="sales-chip-btn" data-service-button="General Inquiry">General inquiry</button>
+                  </div>
+                </div>
+
+                <div class="sales-form-section">
+                  <div class="sales-form-section-head">
+                    <h4>1. Who is reaching out?</h4>
+                    <p>Capture the type of contact first so SAFI can separate sales, support, staffing and hiring paths.</p>
+                  </div>
+
+                  <div class="field">
+                    <label for="client-name">Name *</label>
+                    <input id="client-name" name="name" required type="text" placeholder="Your name">
+                  </div>
+
+                  <div class="sales-field-grid">
+                    <div class="field">
+                      <label for="client-company">Company (optional)</label>
+                      <input id="client-company" name="company" type="text" placeholder="GC, builder, property manager…">
+                    </div>
+
+                    <div class="field">
+                      <label for="contact-role">Role / profile</label>
+                      <select id="contact-role" name="contactRole">
+                        <option value="">Select one</option>
+                        <option value="general-contractor">General contractor / builder</option>
+                        <option value="project-manager">Project manager / site supervisor</option>
+                        <option value="property-manager">Property manager / owner rep</option>
+                        <option value="current-client-contact">Current client contact</option>
+                        <option value="worker-applicant">Worker / applicant</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+
+                    <div class="field">
+                      <label for="client-status">Relationship to SAFI</label>
+                      <select id="client-status" name="clientStatus">
+                        <option value="">Select status</option>
+                        <option value="new-prospect">New prospect</option>
+                        <option value="existing-client">Existing client</option>
+                        <option value="partner-vendor">Partner / vendor</option>
+                        <option value="worker-applicant">Worker / applicant</option>
+                        <option value="general-inquiry">General inquiry</option>
+                      </select>
+                    </div>
+
+                    <div class="field">
+                      <label for="referral-source">How did you hear about SAFI?</label>
+                      <select id="referral-source" name="referralSource">
+                        <option value="">Select one</option>
+                        <option value="website">Website</option>
+                        <option value="referral">Referral</option>
+                        <option value="returning-client">Returning client</option>
+                        <option value="social-media">Social media</option>
+                        <option value="job-board">Job board</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sales-form-section">
+                  <div class="sales-form-section-head">
+                    <h4>2. What do you need?</h4>
+                    <p>These fields help classify the lead before sales, support or operations touch it.</p>
+                  </div>
+
+                  <div class="sales-field-grid">
+                  <div class="field">
+                    <label for="service-interest">Primary need *</label>
+                    <select id="service-interest" name="serviceInterest" required>
+                      <option value="">Select a need</option>
+                      <option value="Drywall">Drywall</option>
+                      <option value="Framing">Framing</option>
+                      <option value="Painting">Painting</option>
+                      <option value="Cleaning">Cleaning</option>
+                      <option value="Labour Support">Labour Support</option>
+                      <option value="Modular Systems">Modular Systems</option>
+                      <option value="Multiple Services">Multiple Services</option>
+                      <option value="Existing Project Support">Existing Project Support</option>
+                      <option value="General Inquiry">General Inquiry</option>
+                      <option value="Hiring / Work Inquiry">Hiring / Work Inquiry</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="project-type">Project type</label>
+                    <select id="project-type" name="projectType">
+                      <option value="">Select one</option>
+                      <option value="commercial">Commercial</option>
+                      <option value="residential">Residential</option>
+                      <option value="multi-family">Multi-family</option>
+                      <option value="tenant-improvement">Tenant improvement</option>
+                      <option value="mixed">Mixed / Other</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="project-stage">Project stage</label>
+                    <select id="project-stage" name="projectStage">
+                      <option value="">Select stage</option>
+                      <option value="planning">Planning</option>
+                      <option value="bidding">Bidding</option>
+                      <option value="active-site">Active site</option>
+                      <option value="finishing">Finishing / close-out</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="timeline">Timeline</label>
+                    <select id="timeline" name="timeline">
+                      <option value="">Select timeline</option>
+                      <option value="asap">ASAP</option>
+                      <option value="within-2-weeks">Within 2 weeks</option>
+                      <option value="this-month">This month</option>
+                      <option value="planning">Planning ahead</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="urgency">Urgency</label>
+                    <select id="urgency" name="urgency">
+                      <option value="">Select urgency</option>
+                      <option value="urgent">Urgent</option>
+                      <option value="planned">Planned</option>
+                      <option value="evaluating">Just evaluating</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="preferred-contact">Preferred contact</label>
+                    <select id="preferred-contact" name="preferredContact">
+                      <option value="">Select one</option>
+                      <option value="email">Email</option>
+                      <option value="phone">Phone</option>
+                      <option value="call">Sales call</option>
+                      <option value="whatsapp">WhatsApp</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="support-topic">Support topic</label>
+                    <select id="support-topic" name="supportTopic">
+                      <option value="">Select topic</option>
+                      <option value="pricing-request">Pricing / quote request</option>
+                      <option value="urgent-crew-support">Urgent crew support</option>
+                      <option value="service-guidance">Service guidance</option>
+                      <option value="existing-project-support">Existing project support</option>
+                      <option value="portal-login-help">Portal / login help</option>
+                      <option value="hiring-work-inquiry">Hiring / work inquiry</option>
+                      <option value="general-question">General question</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="crew-size">Crew size needed (optional)</label>
+                    <select id="crew-size" name="crewSize">
+                      <option value="">Select range</option>
+                      <option value="1-2">1-2 people</option>
+                      <option value="3-5">3-5 people</option>
+                      <option value="6-plus">6+ people</option>
+                      <option value="not-sure">Not sure yet</option>
+                    </select>
+                  </div>
+                </div>
+                </div>
+
+                <div class="sales-form-section">
+                  <div class="sales-form-section-head">
+                    <h4>3. Where and how should SAFI respond?</h4>
+                    <p>This makes the intake more useful for routing, response planning and future analyst review.</p>
+                  </div>
+
+                  <div class="field">
+                    <label for="client-email">Email *</label>
+                    <input id="client-email" name="email" required type="email" placeholder="you@example.com">
+                  </div>
+
+                  <div class="field">
+                    <label for="client-phone">Phone *</label>
+                    <input id="client-phone" name="phone" required type="tel" placeholder="+1 (___) ___-____">
+                  </div>
+
+                  <div class="sales-field-grid">
+                  <div class="field">
+                    <label for="client-location">Site or business location *</label>
+                    <input id="client-location" name="location" required type="text" placeholder="Community, city or project location">
+                  </div>
+
+                  <div class="field">
+                    <label for="budget-range">Budget range (optional)</label>
+                    <select id="budget-range" name="budgetRange">
+                      <option value="">Select range</option>
+                      <option value="under-10k">Under 10k</option>
+                      <option value="10k-25k">10k - 25k</option>
+                      <option value="25k-50k">25k - 50k</option>
+                      <option value="50k-plus">50k+</option>
+                      <option value="unknown">Not defined yet</option>
+                    </select>
+                  </div>
+                </div>
+                </div>
+
+                <div class="sales-form-section">
+                  <div class="sales-form-section-head">
+                    <h4>4. Add context for the handoff</h4>
+                    <p>The better this summary is, the easier it becomes to route later into quotes, client support, staffing or AI workflows.</p>
+                  </div>
+
+                  <div class="field">
+                    <label for="client-scope">Scope or message *</label>
+                    <textarea id="client-scope" name="scope" required placeholder="Project scope, staffing need, support issue, hiring question, timeline details, current site status, etc."></textarea>
+                  </div>
+                </div>
+
+                <p class="sales-inline-note">
+                  This form now captures structured frontend data so it can later feed AI lead routing, CRM automation or a Next.js sales workflow.
+                </p>
+
+                <input type="hidden" name="_subject" value="New SAFI quote request">
+
+                <button type="submit" class="btn btn-primary" style="width:max-content;">
+                  Send intake
+                </button>
+
+                <p id="contact-status" class="form-status"></p>
+              </form>
+            </div>
+          </div>
+
+          <!-- CONTACT INFO + WHATSAPP -->
+          <div class="contact-side-stack">
+            <div class="card">
+              <h3>Direct contact</h3>
+              <p style="font-size:14px;">
+                <strong>Email:</strong><br>
+                <a href="mailto:ricardo.sarmiento@saficonstruction.com">
+                  ricardo.sarmiento@saficonstruction.com
+                </a>
+                <br><br>
+
+                <strong>Phone:</strong><br>
+                <a href="tel:+18255587313">+1 (825) 558-7313</a>
+                <br><br>
+
+                <strong>Location:</strong><br>
+                Calgary, Alberta
+              </p>
+
+              <p class="pill-small">
+                Typical response time: within 24 hours.
+              </p>
+
+              <div class="contact-quick-actions">
+                <a 
+                  class="btn btn-primary"
+                  href="https://wa.me/18255587313?text=Hi%20SAFI,%20I%20need%20a%20quote"
+                  target="_blank"
+                >
+                  Contact via WhatsApp
+                </a>
+                <a href="services.html" class="btn btn-secondary">Review services</a>
+                <a href="login.html" class="btn">Portal access</a>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Best for</h3>
+              <ul class="list-checks">
+                <li>General contractors needing labour or finish trade support.</li>
+                <li>Builders who want to confirm availability and next steps quickly.</li>
+                <li>Property managers or project leads who need a direct SAFI contact path.</li>
+              </ul>
+              <p class="contact-microcopy">
+                This page is now structured as the main commercial intake point, while keeping the existing Formspree flow intact.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>What happens next</h3>
+              <ul class="sales-checklist">
+                <li>Urgent staffing leads can be routed first for fast follow-up.</li>
+                <li>Defined scopes can move into quote review with less back-and-forth.</li>
+                <li>Early-stage buyers can be guided into a sales conversation before pricing.</li>
+              </ul>
+              <p class="contact-microcopy">
+                This keeps the current frontend simple while making the future automation layer much easier to attach.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>Connected routes</h3>
+              <ul class="sales-checklist">
+                <li>New business leads can move toward quote review after this intake.</li>
+                <li>Worker candidates should usually continue to the apply page.</li>
+                <li>Existing clients can move into portal access or support follow-up.</li>
+                <li>Service discovery can loop back to services without losing the intake path.</li>
+              </ul>
+              <div class="contact-quick-actions">
+                <a href="apply.html" class="btn btn-secondary">Worker apply</a>
+                <a href="services.html" class="btn">Services</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>© <span id="year"></span> SAFI Construction Projects. All rights reserved.</div>
+        <div>Serving all of Canada · 
+          <a href="mailto:ricardo.sarmiento@saficonstruction.com">ricardo.sarmiento@saficonstruction.com</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- POPUP CONTACT SUCCESS -->
+  <div id="popup-contact" class="popup-success">
+    <div class="popup-card">
+      <div class="popup-check">✔</div>
+      <div class="popup-title">Intake sent!</div>
+      <div class="popup-sub">SAFI will review the route, context and next step for this message soon.</div>
+      <button class="popup-btn" onclick="closeContactPopup()">Close</button>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="assets/js/sales-ui.js"></script>
+  <script>
+    // Año en footer
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // Menú móvil
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    if (navToggle) {
+      navToggle.addEventListener('click', () => {
+        document.body.classList.toggle('nav-open');
+      });
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          document.body.classList.remove('nav-open');
+        });
+      });
+    }
+
+    // Animaciones de scroll
+    const revealElements = [
+      ...document.querySelectorAll('.section'),
+      ...document.querySelectorAll('.card')
+    ];
+
+    revealElements.forEach(el => el.classList.add('reveal-on-scroll'));
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealElements.forEach(el => observer.observe(el));
+
+    // CONTACT FORM - FORMSPREE AJAX
+    const contactForm = document.getElementById('contact-form');
+    const contactStatus = document.getElementById('contact-status');
+    const popupContact = document.getElementById('popup-contact');
+
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      contactStatus.textContent = '';
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      const formData = new FormData(contactForm);
+
+      try {
+        const response = await fetch('https://formspree.io/f/mrbjvpdr', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          contactForm.reset();
+          popupContact.classList.add('active');
+        } else {
+          contactStatus.textContent = 'There was an error sending your intake. Please try again.';
+          contactStatus.style.color = '#FCA5A5';
+        }
+      } catch (err) {
+        contactStatus.textContent = 'Network error. Please try again.';
+        contactStatus.style.color = '#FCA5A5';
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send intake';
+    });
+
+    function closeContactPopup() {
+      popupContact.classList.remove('active');
+    }
+  </script>
+
+</body>
+</html>

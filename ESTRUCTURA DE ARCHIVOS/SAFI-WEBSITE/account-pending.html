@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Account Pending | SAFI Portal</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Puedes usar tu mismo styles.css si quieres, pero esta página
+       trae su propio estilo básico para que funcione sola -->
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #0f172a, #020617 60%);
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 12px;
+    }
+
+    .pending-wrapper {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .pending-card {
+      background: #020617;
+      border-radius: 24px;
+      border: 1px solid rgba(148,163,184,0.45);
+      box-shadow: 0 30px 80px rgba(15,23,42,0.95);
+      padding: 28px 26px 26px;
+    }
+
+    .pending-eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+
+    .pending-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .pending-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin: 0 0 6px;
+      letter-spacing: 0.02em;
+      color: #f9fafb;
+    }
+
+    .pending-sub {
+      font-size: 14px;
+      color: #9ca3af;
+      margin: 0;
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    .pill-status {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid rgba(234,179,8,0.4);
+      background: rgba(250,204,21,0.08);
+      color: #eab308;
+      gap: 6px;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #eab308;
+    }
+
+    .pending-body {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr);
+      gap: 22px;
+      align-items: flex-start;
+    }
+
+    .pending-list {
+      list-style: disc;
+      padding-left: 18px;
+      margin: 12px 0 0;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    .pending-list li {
+      margin-bottom: 4px;
+    }
+
+    .pending-panel {
+      background: radial-gradient(circle at top left,#0b1120,#020617 70%);
+      border-radius: 16px;
+      border: 1px solid rgba(51,65,85,0.85);
+      padding: 14px 14px 16px;
+      font-size: 13px;
+      color: #e5e7eb;
+    }
+
+    .pending-panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0 0 6px;
+      color: #bfdbfe;
+    }
+
+    .pending-email {
+      font-weight: 600;
+      color: #93c5fd;
+      word-break: break-all;
+    }
+
+    .pending-actions {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      background: #2563eb;
+      color: #f9fafb;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-ghost {
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-size: 13px;
+      border: 1px solid #374151;
+      background: transparent;
+      color: #e5e7eb;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15,23,42,0.9);
+    }
+
+    .pending-footer {
+      margin-top: 14px;
+      font-size: 11px;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 18px 10px;
+      }
+      .pending-card {
+        padding: 22px 18px 18px;
+      }
+      .pending-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .pending-header {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="pending-wrapper">
+    <div class="pending-card">
+      <div class="pending-eyebrow">ACCOUNT PENDING</div>
+
+      <div class="pending-header">
+        <div>
+          <h1 class="pending-title">Your account is awaiting approval</h1>
+          <p class="pending-sub">
+            Your SAFI Portal account was created successfully. An administrator needs to review
+            and approve it before you can access timesheets, FLHA and other tools.
+          </p>
+        </div>
+        <span class="pill-status">
+          <span class="pill-dot"></span>
+          Pending review
+        </span>
+      </div>
+
+      <div class="pending-body">
+        <div>
+          <p style="font-size:14px; color:#cbd5e1; margin:0;">
+            What happens next:
+          </p>
+          <ul class="pending-list">
+            <li>SAFI administration will review your details and assign the correct access.</li>
+            <li>Once approved, you’ll be able to log in and see your dashboard.</li>
+            <li>You can return at any time and sign in with the same email and password.</li>
+          </ul>
+        </div>
+
+        <div class="pending-panel">
+          <p class="pending-panel-title">Need urgent access?</p>
+          <p style="margin:0 0 8px;">
+            For urgent approvals, please contact SAFI administration and include your
+            full name and the company or project you are working on.
+          </p>
+          <p class="pending-email">ricardo.sarmiento@saficonstruction.com</p>
+
+          <div class="pending-actions">
+            <button class="btn-primary" id="pending-logout-btn">
+              Log out &nbsp;↩
+            </button>
+            <a href="index.html" class="btn-ghost">
+              ← Back to website
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pending-footer">
+        <span>© <span id="year"></span> SAFI Construction Projects. All rights reserved.</span>
+        <span>Calgary & Area · ricardo.sarmiento@saficonstruction.com</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth } from "./assets/js/firebase-config.js";
+    import { signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    // año automático
+    const y = document.getElementById("year");
+    if (y) y.textContent = new Date().getFullYear();
+
+    // Cierra sesión sin tocar auth.js ni cambiar el flujo general de aprobación.
+    const btn = document.getElementById("pending-logout-btn");
+    if (btn) {
+      btn.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+        } catch (err) {
+          console.error("PENDING LOGOUT ERROR:", err);
+        } finally {
+          window.location.href = "login.html";
+        }
+      });
+    }
+  </script>
+</body>
+</html>
