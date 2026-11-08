@@ -1,49 +1,34 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SAFI | Finance staging (offline)</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SAFI · Quick Quote</title>
 <style>
-:root{font-family:system-ui,Arial,sans-serif;color:#eaf1f9;background:#0b1726}*{box-sizing:border-box}body{margin:0;padding:24px}main{max-width:920px;margin:auto}h1{margin-bottom:6px}p{color:#aabbd0}.panel{background:#15273c;border:1px solid #34516c;border-radius:14px;padding:20px;margin:18px 0}label{display:block;margin:12px 0 4px}input,select{width:100%;padding:10px;border:1px solid #66829b;border-radius:6px;background:#fff;color:#14263b;font:inherit}button{padding:11px 16px;border:0;border-radius:6px;background:#57d4c1;color:#09222a;font-weight:700;cursor:pointer;margin-top:16px}button.secondary{background:#b8c9dc}table{width:100%;border-collapse:collapse}td,th{text-align:left;border-bottom:1px solid #34516c;padding:9px}td input{min-width:70px}.totals{font-size:1.1rem;line-height:1.8}.error{color:#ffb7ae}.ok{color:#85e7b0}.tag{color:#9edfff;font-weight:700}#output{white-space:pre-wrap;overflow-wrap:anywhere}@media(max-width:650px){body{padding:10px}.panel{padding:12px}table{font-size:12px}td,th{padding:3px}td input{padding:5px}}
-</style></head><body><main>
-<h1>SAFI Construction · Finance staging</h1>
-<p class="tag">DEVELOPMENT ONLY · NO DATABASE · NO EMAIL · NO DOCUMENT ISSUANCE</p>
-<p>This isolated page tests the existing quote/invoice data model against the new calculation engine. It does not create legal invoices or write to Firebase.</p>
-<section class="panel"><label for="kind">Document</label><select id="kind"><option value="quote">Quote</option><option value="invoice">Invoice</option></select>
-<label for="client">Client</label><input id="client" value="Example Client" maxlength="160">
-<label for="project">Project</label><input id="project" value="Example Calgary Project" maxlength="160">
-<label for="date">Document date</label><input id="date" type="date" value="2026-11-08">
-<div id="due-wrap" hidden><label for="due">Due date</label><input id="due" type="date" value="2026-12-08"></div>
-<label for="tax">Tax rate (%) · calculation only</label><input id="tax" type="number" min="0" max="100" step=".01" value="5">
-</section><section class="panel"><h2>Line items</h2><table><thead><tr><th>Description</th><th>Quantity</th><th>Rate CAD</th><th></th></tr></thead><tbody id="items"></tbody></table><button id="add" type="button" class="secondary">Add line</button></section>
-<section class="panel"><h2>Calculated totals</h2><div id="totals" class="totals" aria-live="polite"></div><p id="message" role="status"></p><button id="preview" type="button">Validate draft</button><pre id="output"></pre></section>
-</main><script type="module">
+:root{font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:#172c42;background:#f3f6fa}*{box-sizing:border-box}body{margin:0}.top{background:#10283f;color:white;padding:18px max(24px,calc((100% - 1120px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:18px;font-weight:800;letter-spacing:.04em}.top small{color:#bdd1df}.shell{max-width:1120px;margin:36px auto;padding:0 22px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;color:#1d7882;text-transform:uppercase}h1{font-size:clamp(29px,4vw,42px);line-height:1.1;letter-spacing:-.04em;margin:8px 0}p{color:#627488;margin:8px 0 24px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:24px;align-items:start}.card{background:white;border:1px solid #e3eaf1;border-radius:18px;padding:24px;box-shadow:0 8px 30px #12345609;margin-bottom:18px}.section-title{display:flex;align-items:center;gap:12px;margin:0 0 18px}.step{display:grid;place-items:center;width:30px;height:30px;background:#e3f6f4;color:#126a70;border-radius:50%;font-weight:800}.section-title h2{font-size:18px;margin:0}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{min-width:0}label{display:block;font-size:13px;font-weight:700;margin:0 0 7px}input,select{width:100%;border:1px solid #d6e0e9;border-radius:10px;padding:12px 13px;background:#fff;color:#172c42;font:inherit;min-width:0}input:focus,select:focus{outline:3px solid #d4f2ed;border-color:#2e9e9b}.items{display:grid;gap:12px}.item{display:grid;grid-template-columns:minmax(0,1fr) 90px 110px 34px;gap:10px;align-items:end;padding:13px;background:#f8fafc;border:1px solid #eaf0f5;border-radius:12px}.item label{font-size:12px;color:#51677c}.remove{border:0;background:transparent;color:#8c4c53;cursor:pointer;font-size:24px;padding:8px}.linkbtn{border:0;background:transparent;color:#147b7e;font-weight:800;cursor:pointer;padding:10px 0}.primary{background:#147d81;color:white;border:0;border-radius:11px;padding:14px 18px;font:inherit;font-weight:800;cursor:pointer;width:100%}.primary:hover{background:#0c6267}.summary{position:sticky;top:22px}.summary h2{margin:0 0 20px;font-size:20px}.summaryline{display:flex;justify-content:space-between;gap:10px;margin:13px 0;color:#627488}.summaryline strong{color:#243a4d}.total{border-top:1px solid #e1e9ef;padding-top:18px;margin-top:18px;display:flex;justify-content:space-between;align-items:baseline;font-weight:800}.total output{font-size:28px;letter-spacing:-.04em}.note{font-size:12px;color:#788b9d;line-height:1.5;margin-top:14px}.error{color:#a63842;font-size:13px;min-height:22px}.success{color:#146a52;font-size:13px;min-height:22px}details{border-top:1px solid #e4edf3;margin-top:18px;padding-top:16px}summary{cursor:pointer;font-weight:700;color:#466176;font-size:14px}details .field-grid{margin-top:16px}.draft{font-size:12px;letter-spacing:.08em;color:#24747a;font-weight:800}.foot{color:#8294a4;font-size:12px;margin:26px 0}@media(max-width:850px){.layout{grid-template-columns:1fr}.summary{position:static}}@media(max-width:580px){.shell{margin:22px auto;padding:0 12px}.top{padding:15px}.card{padding:18px}.field-grid{grid-template-columns:1fr}.item{grid-template-columns:minmax(0,1fr) 80px 34px}.item .rate-field{grid-column:1/3}.item .remove{grid-column:3;grid-row:1/3}.total output{font-size:24px}}
+</style></head><body>
+<header class="top"><div class="brand">SAFI <span style="font-weight:400">CONSTRUCTION</span></div><small>Internal quote preview</small></header>
+<main class="shell"><div class="eyebrow">Simple estimating</div><h1>Create a quote</h1><p>Just the essentials. Add a client, describe the work, and review the estimate.</p>
+<div class="layout"><div>
+<section class="card"><div class="section-title"><span class="step">1</span><h2>Who is this for?</h2></div><div class="field-grid"><div class="field"><label for="client">Client name</label><input id="client" placeholder="Company or customer" autocomplete="organization"></div><div class="field"><label for="project">Project name</label><input id="project" placeholder="e.g. Office renovation"></div></div></section>
+<section class="card"><div class="section-title"><span class="step">2</span><h2>What work is included?</h2></div><div class="items" id="items"></div><button class="linkbtn" type="button" id="add">+ Add another item</button>
+<details><summary>Additional details (optional)</summary><div class="field-grid"><div><label for="date">Quote date</label><input type="date" id="date"></div><div><label for="tax">Tax rate (%)</label><input type="number" id="tax" min="0" max="100" step=".01" value="5"></div></div></details></section>
+</div><aside class="card summary"><div class="draft">DRAFT · NOT ISSUED</div><h2>Quote summary</h2><div class="summaryline"><span>Subtotal</span><strong id="subtotal">$0.00</strong></div><div class="summaryline"><span>Estimated tax</span><strong id="tax-amount">$0.00</strong></div><div class="total"><span>Total</span><output id="total">$0.00</output></div><p class="note">CAD · Tax is an estimate. This preview does not save, send, or issue a document.</p><button class="primary" type="button" id="preview">Review quote</button><div id="message" class="error" role="status" aria-live="polite"></div></aside></div><div class="foot">Development preview only · No Firebase access · No customer data transmitted</div></main>
+<script type="module">
+import {calculateDocument,fromCents} from "./finance-core.mjs";
 import {normalizeLegacyDocument} from "./document-adapter.mjs";
-import {fromCents} from "./finance-core.mjs";
-const byId=id=>document.getElementById(id);
-function row(description="",qty="1",rate="0.00"){
- const tr=document.createElement("tr");
- for(const [value,type] of [[description,"text"],[qty,"number"],[rate,"number"]]){
-  const td=document.createElement("td"),input=document.createElement("input");
-  input.type=type;input.value=value;if(type==="number"){input.min="0";input.step=value===qty?".001":".01";}
-  input.addEventListener("input",render);td.append(input);tr.append(td);
- }
- const td=document.createElement("td"),btn=document.createElement("button");btn.type="button";btn.textContent="Remove";btn.className="secondary";btn.addEventListener("click",()=>{tr.remove();render();});td.append(btn);tr.append(td);byId("items").append(tr);
+const $=id=>document.getElementById(id);
+const currency=c=>"$"+fromCents(c);
+function addItem(description="",qty="1",rate="0.00"){
+ const item=document.createElement("div");item.className="item";
+ function field(title,value,type,extraClass=""){const box=document.createElement("div");box.className=extraClass;const label=document.createElement("label");label.textContent=title;const input=document.createElement("input");input.type=type;input.value=value;if(type==="number"){input.min="0";input.step=title==="Qty"?".001":".01";}input.setAttribute("aria-label",title);input.addEventListener("input",render);box.append(label,input);item.append(box);return input;}
+ const desc=field("Work description",description,"text");desc.placeholder="e.g. Drywall installation";
+ const quantity=field("Qty",qty,"number");const price=field("Rate (CAD)",rate,"number","rate-field");
+ const remove=document.createElement("button");remove.type="button";remove.className="remove";remove.textContent="×";remove.setAttribute("aria-label","Remove item");remove.addEventListener("click",()=>{item.remove();render()});item.append(remove);$("items").append(item);render();
 }
-function legacy(){
- return {clientName:byId("client").value,projectName:byId("project").value,date:byId("date").value,dueDate:byId("due").value,taxRate:byId("tax").value,
- items:[...byId("items").rows].map(tr=>({desc:tr.cells[0].firstChild.value,qty:tr.cells[1].firstChild.value,rate:tr.cells[2].firstChild.value}))};
-}
-function render(){
- byId("output").textContent="";try{
-  const d=normalizeLegacyDocument(legacy(),{kind:byId("kind").value});
-  const c=d.calculation;
-  byId("totals").textContent="Subtotal: $"+fromCents(c.subtotalCents)+" CAD | Tax: $"+fromCents(c.taxCents)+" CAD | Total: $"+fromCents(c.totalCents)+" CAD";
-  byId("message").textContent="Valid draft calculation. No document issued.";byId("message").className="ok";
-  return d;
- }catch(e){byId("totals").textContent="—";byId("message").textContent=e.message;byId("message").className="error";return null;}
-}
-byId("add").addEventListener("click",()=>{row();render()});
-byId("kind").addEventListener("change",()=>{byId("due-wrap").hidden=byId("kind").value!=="invoice";render()});
-for(const id of ["client","project","date","due","tax"])byId(id).addEventListener("input",render);
-byId("preview").addEventListener("click",()=>{const d=render();if(d)byId("output").textContent=JSON.stringify(d,null,2)});
-row("Drywall labour","2","50.00");render();
+function readItems(){return [...$("items").children].map(row=>{const inputs=row.querySelectorAll("input");return {description:inputs[0].value,quantity:inputs[1].value,rate:inputs[2].value}});}
+function render(){try{const items=readItems().filter(x=>x.description.trim()||x.rate!=="0.00");if(!items.length){$("subtotal").textContent="$0.00";$("tax-amount").textContent="$0.00";$("total").textContent="$0.00";$("message").textContent="";return;}
+ const tax=Number($("tax").value);if(!Number.isFinite(tax)||tax<0||tax>100||!Number.isInteger(tax*100))throw new RangeError("Enter a valid tax percentage.");
+ const c=calculateDocument({items,taxRateBasisPoints:Math.round(tax*100)});$("subtotal").textContent=currency(c.subtotalCents);$("tax-amount").textContent=currency(c.taxCents);$("total").textContent=currency(c.totalCents);$("message").textContent="";
+ }catch(e){$("subtotal").textContent="—";$("tax-amount").textContent="—";$("total").textContent="—";$("message").textContent=e.message;}}
+$("add").addEventListener("click",()=>addItem());
+$("tax").addEventListener("input",render);
+$("preview").addEventListener("click",()=>{try{const data={clientName:$("client").value,projectName:$("project").value,date:$("date").value,taxRate:$("tax").value,items:readItems().map(x=>({desc:x.description,qty:x.quantity,rate:x.rate}))};const draft=normalizeLegacyDocument(data,{kind:"quote"});$("message").className="success";$("message").textContent="Quote reviewed: "+currency(draft.calculation.totalCents)+". This is a draft preview only."; }catch(e){$("message").className="error";$("message").textContent=e.message;}});
+$("date").value=new Date().toISOString().slice(0,10);addItem("Drywall installation","1","0.00");
 </script></body></html>
