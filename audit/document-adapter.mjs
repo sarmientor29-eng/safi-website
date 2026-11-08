@@ -15,7 +15,7 @@ export function normalizeLegacyDocument(input, {kind = "quote"} = {}) {
   const date = String(input.date || "");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date + "T00:00:00Z")) || new Date(date + "T00:00:00Z").toISOString().slice(0,10) !== date) throw new RangeError("Invalid document date");
   const taxRate = Number(input.taxRate ?? 0);
-  if (!Number.isFinite(taxRate) || taxRate < 0 || taxRate > 100 || !Number.isInteger(taxRate * 100)) throw new RangeError("Invalid tax rate precision");
+  if (!Number.isFinite(taxRate) || taxRate < 0 || taxRate > 100 || !Number.isInteger(Math.round(taxRate * 100)) || Math.abs(taxRate * 100 - Math.round(taxRate * 100)) > 1e-8) throw new RangeError("Invalid tax rate precision");
   if (!Array.isArray(input.items)) throw new RangeError("Line items required");
   const items = input.items.map((item) => ({
     description: String(item.description ?? item.desc ?? "").trim(),
