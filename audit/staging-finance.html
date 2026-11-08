@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAFI | Finance staging (offline)</title>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;color:#eaf1f9;background:#0b1726}*{box-sizing:border-box}body{margin:0;padding:24px}main{max-width:920px;margin:auto}h1{margin-bottom:6px}p{color:#aabbd0}.panel{background:#15273c;border:1px solid #34516c;border-radius:14px;padding:20px;margin:18px 0}label{display:block;margin:12px 0 4px}input,select{width:100%;padding:10px;border:1px solid #66829b;border-radius:6px;background:#fff;color:#14263b;font:inherit}button{padding:11px 16px;border:0;border-radius:6px;background:#57d4c1;color:#09222a;font-weight:700;cursor:pointer;margin-top:16px}button.secondary{background:#b8c9dc}table{width:100%;border-collapse:collapse}td,th{text-align:left;border-bottom:1px solid #34516c;padding:9px}td input{min-width:70px}.totals{font-size:1.1rem;line-height:1.8}.error{color:#ffb7ae}.ok{color:#85e7b0}.tag{color:#9edfff;font-weight:700}#output{white-space:pre-wrap;overflow-wrap:anywhere}@media(max-width:650px){body{padding:10px}.panel{padding:12px}table{font-size:12px}td,th{padding:3px}td input{padding:5px}}
+</style></head><body><main>
+<h1>SAFI Construction · Finance staging</h1>
+<p class="tag">DEVELOPMENT ONLY · NO DATABASE · NO EMAIL · NO DOCUMENT ISSUANCE</p>
+<p>This isolated page tests the existing quote/invoice data model against the new calculation engine. It does not create legal invoices or write to Firebase.</p>
+<section class="panel"><label for="kind">Document</label><select id="kind"><option value="quote">Quote</option><option value="invoice">Invoice</option></select>
+<label for="client">Client</label><input id="client" value="Example Client" maxlength="160">
+<label for="project">Project</label><input id="project" value="Example Calgary Project" maxlength="160">
+<label for="date">Document date</label><input id="date" type="date" value="2026-11-08">
+<div id="due-wrap" hidden><label for="due">Due date</label><input id="due" type="date" value="2026-12-08"></div>
+<label for="tax">Tax rate (%) · calculation only</label><input id="tax" type="number" min="0" max="100" step=".01" value="5">
+</section><section class="panel"><h2>Line items</h2><table><thead><tr><th>Description</th><th>Quantity</th><th>Rate CAD</th><th></th></tr></thead><tbody id="items"></tbody></table><button id="add" type="button" class="secondary">Add line</button></section>
+<section class="panel"><h2>Calculated totals</h2><div id="totals" class="totals" aria-live="polite"></div><p id="message" role="status"></p><button id="preview" type="button">Validate draft</button><pre id="output"></pre></section>
+</main><script type="module">
+import {normalizeLegacyDocument} from "./document-adapter.mjs";
+import {fromCents} from "./finance-core.mjs";
+const byId=id=>document.getElementById(id);
+function row(description="",qty="1",rate="0.00"){
+ const tr=document.createElement("tr");
+ for(const [value,type] of [[description,"text"],[qty,"number"],[rate,"number"]]){
+  const td=document.createElement("td"),input=document.createElement("input");
+  input.type=type;input.value=value;if(type==="number"){input.min="0";input.step=value===qty?".001":".01";}
+  input.addEventListener("input",render);td.append(input);tr.append(td);
+ }
+ const td=document.createElement("td"),btn=document.createElement("button");btn.type="button";btn.textContent="Remove";btn.className="secondary";btn.addEventListener("click",()=>{tr.remove();render();});td.append(btn);tr.append(td);byId("items").append(tr);
+}
+function legacy(){
+ return {clientName:byId("client").value,projectName:byId("project").value,date:byId("date").value,dueDate:byId("due").value,taxRate:byId("tax").value,
+ items:[...byId("items").rows].map(tr=>({desc:tr.cells[0].firstChild.value,qty:tr.cells[1].firstChild.value,rate:tr.cells[2].firstChild.value}))};
+}
+function render(){
+ byId("output").textContent="";try{
+  const d=normalizeLegacyDocument(legacy(),{kind:byId("kind").value});
+  const c=d.calculation;
+  byId("totals").textContent="Subtotal: $"+fromCents(c.subtotalCents)+" CAD | Tax: $"+fromCents(c.taxCents)+" CAD | Total: $"+fromCents(c.totalCents)+" CAD";
+  byId("message").textContent="Valid draft calculation. No document issued.";byId("message").className="ok";
+  return d;
+ }catch(e){byId("totals").textContent="—";byId("message").textContent=e.message;byId("message").className="error";return null;}
+}
+byId("add").addEventListener("click",()=>{row();render()});
+byId("kind").addEventListener("change",()=>{byId("due-wrap").hidden=byId("kind").value!=="invoice";render()});
+for(const id of ["client","project","date","due","tax"])byId(id).addEventListener("input",render);
+byId("preview").addEventListener("click",()=>{const d=render();if(d)byId("output").textContent=JSON.stringify(d,null,2)});
+row("Drywall labour","2","50.00");render();
+</script></body></html>
