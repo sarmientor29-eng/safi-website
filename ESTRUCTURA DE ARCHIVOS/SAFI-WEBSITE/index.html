@@ -1,416 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SAFI Construction Projects | Calgary</title>
-  <meta name="description" content="Skilled construction labour in Calgary: drywall, metal stud framing, painting, site cleaning and modular installations.">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-
-  <!-- CSS principal -->
-  <link rel="stylesheet" href="styles.css">
-
-  <style>
-  /* LOGO MÁS PEQUEÑO Y SIN DESPLAZAR EL HERO */
-  .logo-mark img {
-    max-height: 42px;
-    width: auto;
-    object-fit: contain;
-  }
-
-  .nav-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  /* Asegura que el header sea compacto y no empuje el hero */
-  header .nav {
-    align-items: center;
-  }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAFI Construction Projects | Calgary, Alberta</title>
+<meta name="description" content="SAFI Construction provides drywall, metal stud framing, painting, site cleanup and construction labour support in Calgary, Alberta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.logo-mark img{max-height:42px;width:auto;object-fit:contain}
+.nav-left{display:flex;align-items:center;gap:10px}
+header .nav{align-items:center}
+.home-hero{padding:76px 0 84px}
+.home-hero .hero-grid{align-items:center;gap:46px}
+.home-hero h1{font-size:clamp(38px,5vw,64px);line-height:1.08;max-width:640px;letter-spacing:-.035em}
+.home-hero .hero-sub{font-size:17px;line-height:1.7;max-width:550px;margin:22px 0 0}
+.home-hero .hero-actions{margin-top:30px;gap:12px}
+.home-hero .hero-photo-main img{height:400px}
+.home-hero .hero-photo-card{padding:10px;border-radius:22px}
+.home-hero .hero-photo-main{border-radius:16px}
+.home-hero .hero-tag{border-radius:12px;bottom:22px;left:22px}
+.home-section{padding:68px 0}
+.home-section .section-header{align-items:center}
+.home-section .section-title{font-size:clamp(24px,3vw,34px)}
+.home-services{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.home-service{padding:26px;border:1px solid rgba(148,163,184,.2);background:rgba(15,23,42,.65);border-radius:18px}
+.home-service h3{font-size:18px;margin:0 0 10px}
+.home-service p{font-size:14px;color:#aebacb;margin:0;line-height:1.65}
+.home-section-link{margin-top:24px}
+.home-cta{display:flex;align-items:center;justify-content:space-between;gap:28px;padding:36px;border:1px solid rgba(148,163,184,.24);border-radius:22px;background:linear-gradient(120deg,#17263b,#0b1120)}
+.home-cta h2{font-size:clamp(24px,3vw,34px);margin:0 0 8px}
+.home-cta p{color:#b4c0d0;margin:0;max-width:570px}
+.home-cta .btn{white-space:nowrap}
+.home-quick-links{display:flex;gap:24px;flex-wrap:wrap;margin-top:22px;font-size:13px;color:#cbd5e1}
+.home-quick-links a{text-decoration:underline;text-underline-offset:4px}
+@media(max-width:800px){.home-hero{padding:38px 0 54px}.home-hero .hero-photo-main img{height:280px}.home-services{grid-template-columns:1fr 1fr}.home-cta{align-items:flex-start;flex-direction:column}.home-section{padding:44px 0}}
+@media(max-width:540px){.home-services{grid-template-columns:1fr}.home-hero h1{font-size:38px}.home-hero .hero-actions{flex-direction:column;align-items:stretch}.home-hero .hero-actions .btn{width:100%}}
+</style>
 </head>
 <body>
-
-  <!-- HEADER -->
-  <header>
-    <div class="container">
-      <div class="nav">
-
-        <!-- LOGO + MARCA -->
-        <a href="index.html" class="nav-left">
-          <div class="logo-mark">
-            <img src="imagenes/logo-safi.png" alt="SAFI Construction Projects logo">
-          </div>
-          <div class="brand-block">
-            <div class="brand-title">SAFI CONSTRUCTION PROJECTS</div>
-            <div class="brand-sub">Calgary, Alberta · Commercial & Residential</div>
-          </div>
-        </a>
-
-        <!-- BOTÓN HAMBURGUESA -->
-        <button class="nav-toggle" aria-label="Toggle navigation">
-          <span></span><span></span><span></span>
-        </button>
-
-        <!-- LINKS -->
-        <div class="nav-links">
-          <a href="services.html">Services</a>
-          <a href="projects.html">Projects</a>
-          <a href="gallery.html">Gallery</a>
-          <a href="apply.html">Apply</a>
-          <a href="login.html">Login</a>
-          <a href="contact.html?intent=quote-request&timeline=within-2-weeks&preferredContact=email&source=homepage-nav" class="btn btn-primary">Request a quote</a>
-        </div>
-
-      </div>
-    </div>
-  </header>
-
-  <!-- MAIN -->
-  <main>
-    <section class="hero" id="top">
-      <div class="container">
-        <div class="hero-grid">
-          
-          <!-- LEFT -->
-          <div class="hero-left">
-            <div class="eyebrow">
-              <span class="eyebrow-dot"></span>
-              CONSTRUCTION CREWS
-            </div>
-
-            <h1>
-              <span class="hero-highlight">BUILDING SMARTER.</span>
-              BUILDING STRONGER.
-            </h1>
-
-            <p class="hero-sub hero-sub-animated">
-              SAFI supports general contractors, builders and active sites with drywall, framing, painting, cleanup, modular systems and fast labour support when timing matters.
-            </p>
-
-            <div class="badge-row">
-              <span class="pill">WCB covered</span>
-              <span class="pill">Licensed & insured</span>
-              <span class="pill">Commercial & residential</span>
-            </div>
-
-            <div class="hero-actions">
-              <a href="contact.html?intent=quote-request&projectStage=bidding&timeline=within-2-weeks&preferredContact=email&source=homepage-hero" class="btn btn-primary">Start a quote-ready request</a>
-              <a href="services.html#service-paths" class="btn btn-secondary">Explore services</a>
-              <a href="#top" class="btn" data-open-sales-assistant>Ask sales assistant</a>
-            </div>
-
-            <div class="hero-guidance">
-              <a href="contact.html?intent=fast-staffing&service=Labour%20Support&timeline=asap&urgency=urgent&preferredContact=phone&source=homepage-fast-route">Need crews fast</a>
-              <a href="apply.html">Want to work with SAFI?</a>
-              <a href="login.html">Already have portal access?</a>
-            </div>
-
-            <div class="hero-meta">
-              <span>Serving all of Canada</span>
-              <span>Mon–Fri · 8:00–17:00</span>
-              <span>Phone: +1 (825) 558-7313</span>
-              <span>Email: ricardo.sarmiento@saficonstruction.com</span>
-            </div>
-          </div>
-
-          <!-- RIGHT -->
-          <div class="hero-right">
-            <div class="hero-photo-card">
-              <div class="hero-photo-main">
-                <img src="imagenes/hero-main.jpg" alt="Construction crew working on site">
-              </div>
-              <div class="hero-tag">
-                <div>
-                  <strong>ON-SITE CREWS</strong><br>
-                  Drywall · Framing · Painting · Cleanup
-                </div>
-                <div style="font-size:11px; color:#9ca3af;">
-                  Typical crew <br>
-                  Short notice possible
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <div>
-            <div class="section-kicker">Choose your path</div>
-            <h2 class="section-title">One website, four clear next steps</h2>
-          </div>
-          <p class="section-description">
-            SAFI now directs buyers, urgent staffing requests, workers and portal users into clearer paths without changing the current site structure.
-          </p>
-        </div>
-
-        <div class="funnel-grid">
-          <article class="funnel-card">
-            <span class="funnel-eyebrow">Potential client</span>
-            <h3>Need pricing for a defined scope?</h3>
-            <p>Use the smart intake if you already know the service, site and approximate timing.</p>
-            <div class="funnel-actions">
-              <a href="contact.html?intent=quote-request&projectStage=bidding&timeline=within-2-weeks&preferredContact=email&source=homepage-path-client" class="btn btn-primary">Request a quote</a>
-            </div>
-            <div class="funnel-meta">
-              <span>Best for pricing</span>
-              <span>Quote-ready path</span>
-            </div>
-          </article>
-
-          <article class="funnel-card">
-            <span class="funnel-eyebrow">Crew support</span>
-            <h3>Need labour fast for an active job?</h3>
-            <p>Go straight into the urgent staffing route with timing and service already prefilled.</p>
-            <div class="funnel-actions">
-              <a href="contact.html?intent=fast-staffing&service=Labour%20Support&projectStage=active-site&timeline=asap&urgency=urgent&preferredContact=phone&source=homepage-path-fast" class="btn btn-primary">Request crews fast</a>
-            </div>
-            <div class="funnel-meta">
-              <span>Urgent support</span>
-              <span>Rapid response</span>
-            </div>
-          </article>
-
-          <article class="funnel-card">
-            <span class="funnel-eyebrow">Worker applicant</span>
-            <h3>Looking to join SAFI crews?</h3>
-            <p>Send your application through the existing hiring path without mixing it with the client funnel.</p>
-            <div class="funnel-actions">
-              <a href="apply.html" class="btn btn-secondary">Apply now</a>
-            </div>
-            <div class="funnel-meta">
-              <span>Worker route</span>
-              <span>Separate from sales</span>
-            </div>
-          </article>
-
-          <article class="funnel-card">
-            <span class="funnel-eyebrow">Portal user</span>
-            <h3>Need to enter the operational portal?</h3>
-            <p>Clients, workers and approved internal users can continue through the same login flow already in place.</p>
-            <div class="funnel-actions">
-              <a href="login.html" class="btn btn-secondary">Portal access</a>
-            </div>
-            <div class="funnel-meta">
-              <span>Client</span>
-              <span>Worker</span>
-              <span>Admin</span>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="trust-strip">
-          <div class="trust-item">
-            <strong>Built for contractors and active sites</strong>
-            <span>Clear communication, responsive crew coordination and dependable field support when schedules tighten.</span>
-          </div>
-          <div class="trust-item">
-            <strong>Fast staffing when timing matters</strong>
-            <span>Short-notice support for drywall, framing, painting, cleanup, modular work and general labour needs.</span>
-          </div>
-          <div class="trust-item">
-            <strong>Commercial and residential delivery</strong>
-            <span>Crews ready for fit-outs, tenant improvements, multi-family work, punch support and close-out stages.</span>
-          </div>
-          <div class="trust-item">
-            <strong>Operationally organized</strong>
-            <span>Timesheets, FLHAs and internal workflows already connect the website side with SAFI operations.</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <div>
-            <div class="section-kicker">Funnel logic</div>
-            <h2 class="section-title">How SAFI moves a visitor toward the right next step</h2>
-          </div>
-          <p class="section-description">
-            This is where the public website starts connecting into the future sales AI layer and the operational side of SAFI without becoming a generic landing page.
-          </p>
-        </div>
-
-        <div class="journey-grid">
-          <article class="journey-step">
-            <span class="journey-step-number">01</span>
-            <strong>Identify the visitor type</strong>
-            <p>The homepage now separates buyers, urgent staffing requests, workers and portal users early instead of treating everyone the same.</p>
-          </article>
-          <article class="journey-step">
-            <span class="journey-step-number">02</span>
-            <strong>Send them into the right intake</strong>
-            <p>Most commercial traffic should move into the smart contact intake, where service, urgency and timing can be captured for future automation.</p>
-          </article>
-          <article class="journey-step">
-            <span class="journey-step-number">03</span>
-            <strong>Prepare for AI and operations</strong>
-            <p>The sales assistant entry point and structured lead flow now support the broader Website, Sales AI, Operations Portal and Analyst Layer plan.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="split-section">
-          <div class="info-stack">
-            <div class="section-header" style="margin-bottom:12px;">
-              <div>
-                <div class="section-kicker">Service fit</div>
-                <h2 class="section-title">What clients need to understand quickly</h2>
-              </div>
-            </div>
-
-            <div class="feature-list">
-              <article class="feature-item">
-                <h3>For general contractors and builders</h3>
-                <p>SAFI is positioned for teams that need labour support, finish trades and stronger coordination without slowing down active schedules.</p>
-              </article>
-              <article class="feature-item">
-                <h3>For scopes that need a clear next step</h3>
-                <p>The homepage now tells buyers whether they should request pricing, ask for crews fast, talk to sales or move into the worker path.</p>
-              </article>
-              <article class="feature-item">
-                <h3>For future sales automation</h3>
-                <p>This structure leaves room for guided quoting, lead qualification, analyst scoring and a future AI sales assistant without reworking the site later.</p>
-              </article>
-            </div>
-          </div>
-
-          <div class="cta-panel">
-            <div class="cta-eyebrow">Sales-ready website</div>
-            <h2 class="cta-title">Need pricing, labour support or a quick recommendation?</h2>
-            <p class="cta-copy">
-              Start with the smart intake if the scope is already defined, or use the assistant entry point if you want help choosing the right service mix first.
-            </p>
-            <div class="cta-actions">
-              <a href="contact.html?intent=quote-request&timeline=within-2-weeks&preferredContact=email&source=homepage-cta" class="btn btn-primary">Start smart intake</a>
-              <a href="services.html" class="btn btn-secondary">Explore services</a>
-              <a href="#top" class="btn" data-open-sales-assistant>Ask sales assistant</a>
-            </div>
-            <div class="mini-meta">
-              <span class="mini-pill">Quote-ready requests</span>
-              <span class="mini-pill">AI intake entry point</span>
-              <span class="mini-pill">Operations-aware website</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <div>
-            <div class="section-kicker">Portal access</div>
-            <h2 class="section-title">Clearer separation between website and portal</h2>
-          </div>
-          <p class="section-description">
-            The public website still lives in the same project, but portal access is now framed more clearly for clients, workers and new users.
-          </p>
-        </div>
-
-        <div class="portal-entry-grid">
-          <article class="portal-entry-card">
-            <h3>Client portal</h3>
-            <p>Review timesheets, check submitted safety records and stay aligned with SAFI on project information.</p>
-            <div class="cta-actions">
-              <a href="login.html" class="btn btn-secondary">Client sign in</a>
-            </div>
-          </article>
-          <article class="portal-entry-card">
-            <h3>Worker portal</h3>
-            <p>Submit daily timesheets, complete FLHAs and move through day-to-day field tasks more clearly from one place.</p>
-            <div class="cta-actions">
-              <a href="login.html" class="btn btn-secondary">Worker sign in</a>
-            </div>
-          </article>
-          <article class="portal-entry-card">
-            <h3>Request access</h3>
-            <p>New users can still request portal access through the current approval workflow without changing authentication logic.</p>
-            <div class="cta-actions">
-              <a href="signup.html" class="btn btn-primary">Request access</a>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-inner">
-        <div>© <span id="year"></span> SAFI Construction Projects. All rights reserved.</div>
-        <div>Serving all of Canada · 
-          <a href="mailto:ricardo.sarmiento@saficonstruction.com">
-            ricardo.sarmiento@saficonstruction.com
-          </a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- JS -->
-  <script src="assets/js/sales-ui.js"></script>
-  <script>
-    // Año automático
-    const yearEl = document.getElementById("year");
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-    // Menú móvil
-    const navToggle = document.querySelector('.nav-toggle');
-    const navLinks = document.querySelectorAll('.nav-links a');
-
-    if (navToggle) {
-      navToggle.addEventListener('click', () => {
-        document.body.classList.toggle('nav-open');
-      });
-
-      navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          document.body.classList.remove('nav-open');
-        });
-      });
-    }
-
-    // Animación de scroll (hero + secciones)
-    const revealElements = [
-      ...document.querySelectorAll('.section'),
-      ...document.querySelectorAll('.card')
-    ];
-
-    revealElements.forEach(el => el.classList.add('reveal-on-scroll'));
-
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('reveal-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12 }
-    );
-
-    revealElements.forEach(el => observer.observe(el));
-  </script>
-
-</body>
-</html>
+<header><div class="container"><div class="nav">
+<a href="index.html" class="nav-left" aria-label="SAFI Construction home"><div class="logo-mark"><img src="imagenes/logo-safi.png" alt="SAFI Construction logo"></div><div class="brand-block"><div class="brand-title">SAFI CONSTRUCTION PROJECTS</div><div class="brand-sub">Calgary, Alberta</div></div></a>
+<button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="main-navigation"><span></span><span></span><span></span></button>
+<nav class="nav-links" id="main-navigation" aria-label="Main navigation">
+<a href="services.html">Services</a><a href="projects.html">Projects</a><a href="gallery.html">Gallery</a><a href="apply.html">Careers</a><a href="login.html">Login</a><a href="contact.html" class="btn btn-primary">Get a quote</a>
+</nav></div></div></header>
+<main>
+<section class="hero home-hero"><div class="container"><div class="hero-grid">
+<div class="hero-left">
+<div class="eyebrow"><span class="eyebrow-dot"></span>CALGARY CONSTRUCTION SERVICES</div>
+<h1><span class="hero-highlight">Built on quality.</span>Driven by reliability.</h1>
+<p class="hero-sub">Professional crews for drywall, metal framing, painting and site support. Helping contractors and property owners get the job done.</p>
+<div class="hero-actions"><a class="btn btn-primary" href="contact.html">Request a quote</a><a class="btn btn-secondary" href="services.html">Our services</a></div>
+<div class="home-quick-links"><a href="apply.html">Join our team</a><a href="login.html">Client &amp; worker portal</a></div>
+</div>
+<div class="hero-right"><div class="hero-photo-card"><div class="hero-photo-main"><img src="imagenes/hero-main.jpg" alt="Construction team working on a job site"></div><div class="hero-tag"><div><strong>SAFI CONSTRUCTION</strong><br>Commercial &amp; residential projects</div></div></div></div>
+</div></div></section>
+<section class="section home-section" id="services"><div class="container">
+<div class="section-header"><div><div class="section-kicker">WHAT WE DO</div><h2 class="section-title">Construction services</h2></div><p class="section-description">Practical support for new builds, renovations and active job sites.</p></div>
+<div class="home-services">
+<article class="home-service"><h3>Drywall &amp; finishing</h3><p>Installation and finishing for commercial and residential spaces.</p></article>
+<article class="home-service"><h3>Metal stud framing</h3><p>Interior framing solutions for fit-outs and renovations.</p></article>
+<article class="home-service"><h3>Painting</h3><p>Interior and exterior painting with attention to detail.</p></article>
+<article class="home-service"><h3>Site cleanup</h3><p>Job-site cleanup and close-out support.</p></article>
+<article class="home-service"><h3>Modular installation</h3><p>Installation support for modular construction projects.</p></article>
+<article class="home-service"><h3>Labour support</h3><p>Extra hands for active construction schedules.</p></article>
+</div><div class="home-section-link"><a href="services.html" class="btn btn-secondary">View all services</a></div>
+</div></section>
+<section class="section home-section"><div class="container"><div class="home-cta"><div><div class="section-kicker">LET'S BUILD TOGETHER</div><h2>Have a project in mind?</h2><p>Tell us what you need and our team will get back to you.</p></div><a href="contact.html" class="btn btn-primary">Contact SAFI</a></div>
+<div class="home-quick-links"><a href="projects.html">View projects</a><a href="gallery.html">See our gallery</a><a href="apply.html">Careers</a></div>
+</div></section>
+</main>
+<footer class="footer"><div class="container"><div class="footer-inner"><div>© <span id="year"></span> SAFI Construction Projects. All rights reserved.</div><div>Calgary, Alberta · <a href="mailto:ricardo.sarmiento@saficonstruction.com">ricardo.sarmiento@saficonstruction.com</a></div></div></div></footer>
+<script>
+document.getElementById("year").textContent=new Date().getFullYear();
+const toggle=document.querySelector(".nav-toggle");
+const links=document.querySelectorAll(".nav-links a");
+toggle.addEventListener("click",()=>{const open=document.body.classList.toggle("nav-open");toggle.setAttribute("aria-expanded",String(open))});
+links.forEach(link=>link.addEventListener("click",()=>{document.body.classList.remove("nav-open");toggle.setAttribute("aria-expanded","false")}));
+</script>
+</body></html>
