@@ -24,7 +24,7 @@ function addItem(description="",qty="1",rate="0.00"){
 }
 function readItems(){return [...$("items").children].map(row=>{const inputs=row.querySelectorAll("input");return {description:inputs[0].value,quantity:inputs[1].value,rate:inputs[2].value}});}
 function render(){try{const items=readItems().filter(x=>x.description.trim()||x.rate!=="0.00");if(!items.length){$("subtotal").textContent="$0.00";$("tax-amount").textContent="$0.00";$("total").textContent="$0.00";$("message").textContent="";return;}
- const tax=Number($("tax").value);if(!Number.isFinite(tax)||tax<0||tax>100||!Number.isInteger(tax*100))throw new RangeError("Enter a valid tax percentage.");
+ const taxText=$("tax").value.trim();if(!/^(?:\d{1,3})(?:\.\d{1,2})?$/.test(taxText))throw new RangeError("Enter a tax percentage with up to two decimals.");const tax=Number(taxText);if(tax>100)throw new RangeError("Tax percentage cannot exceed 100%.");
  const c=calculateDocument({items,taxRateBasisPoints:Math.round(tax*100)});$("subtotal").textContent=currency(c.subtotalCents);$("tax-amount").textContent=currency(c.taxCents);$("total").textContent=currency(c.totalCents);$("message").textContent="";
  }catch(e){$("subtotal").textContent="—";$("tax-amount").textContent="—";$("total").textContent="—";$("message").textContent=e.message;}}
 $("add").addEventListener("click",()=>addItem());
@@ -46,10 +46,10 @@ function printDraft(){
  make("p","Subtotal: "+currency(draft.calculation.subtotalCents));
  make("p","Estimated tax ("+data.taxRate+"%): "+currency(draft.calculation.taxCents));
  const total=make("p","Total: "+currency(draft.calculation.totalCents));total.className="print-total";
- make("p","Development preview only. Not an issued invoice or issued invoice.");
+ make("p","Development preview only. Not an issued invoice.");
  window.print();
  }catch(e){$("message").className="error";$("message").textContent=e.message;}
 }
 $("print").addEventListener("click",printDraft);
-$("date").value=new Date().toISOString().slice(0,10);const due=new Date();due.setDate(due.getDate()+30);$("due").value=due.toISOString().slice(0,10);addItem("Drywall installation","1","0.00");
+$("date").value=new Date().toISOString().slice(0,10);const due=new Date();due.setDate(due.getDate()+30);$("due").value=[due.getFullYear(),String(due.getMonth()+1).padStart(2,"0"),String(due.getDate()).padStart(2,"0")].join("-");addItem("Drywall installation","1","0.00");
 </script></body></html>
