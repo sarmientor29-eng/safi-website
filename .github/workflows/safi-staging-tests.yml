@@ -19,3 +19,20 @@ jobs:
           node-version: '22'
       - name: Run isolated SAFI tests
         run: node --test audit/*.test.mjs
+
+      - name: Build complete SAFI development package
+        if: success()
+        run: |
+          mkdir -p /tmp/safi-export
+          rsync -a --exclude='.git' --exclude='node_modules' ./ /tmp/safi-export/
+          cd /tmp
+          zip -qr "SAFI-complete-development-${GITHUB_SHA}.zip" safi-export
+          mv "SAFI-complete-development-${GITHUB_SHA}.zip" "$GITHUB_WORKSPACE/"
+      - name: Upload complete SAFI development package
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SAFI-complete-development
+          path: SAFI-complete-development-${{ github.sha }}.zip
+          if-no-files-found: error
+          retention-days: 7
