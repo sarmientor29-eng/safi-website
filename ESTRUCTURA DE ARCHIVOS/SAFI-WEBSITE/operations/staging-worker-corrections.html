@@ -1,0 +1,162 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>SAFI | Worker Corrections Demo</title><style>:root{font:16px system-ui;color-scheme:dark;background:#0b1220;color:#f1f5f9}*{box-sizing:border-box}body{margin:0}.wrap{max-width:580px;margin:auto;padding:20px 16px 70px}h1{font-size:27px}.card{background:#17263c;border:1px solid #435674;border-radius:16px;padding:18px;margin:18px 0}.warning{background:#40301b;border:1px solid #8b6b3c;border-radius:12px;padding:14px;font-size:13px;line-height:1.6}p{line-height:1.5;color:#c4d0e0}label{display:block;margin:12px 0 6px;font-weight:650}textarea,input,button{font:inherit;width:100%;padding:12px;border-radius:10px;min-height:48px}textarea,input{background:#091526;color:white;border:1px solid #7386a1}textarea{min-height:105px}button{background:#2563eb;color:white;border:0;font-weight:700;margin-top:12px}button:disabled{opacity:.5}img{max-width:100%;max-height:240px;object-fit:contain;border-radius:10px;margin-top:12px}.muted{font-size:13px;color:#a9bad1}a{color:#93c5fd}p{overflow-wrap:anywhere}button{cursor:pointer}button:disabled{cursor:not-allowed}input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #93c5fd;outline-offset:3px}.tag{display:inline-block;padding:5px 9px;border-radius:8px;background:#334c6c;font-size:12px}</style></head><body><main class="wrap"><a href="staging-field-transfer.html">← Local demo home</a><h1>Correction requests</h1><div class="warning"><strong>Demo only:</strong> The request below is fictional. Your response and optional photo are saved only in this browser's IndexedDB. You may optionally send it to the local test server. Disk mode retains a server copy of photos on this computer; it is not encrypted or backed up. Do not upload real employee records or receipts.</div><section class="card"><span id="round-state" class="tag">Action requested · Demo</span><h2>Commercial Interior</h2><p><strong>Original record:</strong> Drywall installed on level 2.</p><p><strong>Supervisor request:</strong> <span id="supervisor-reason">Please clarify which rooms were completed and attach a supporting photo if available.</span></p><p class="muted">Request ID: demo-correction-001</p><label for="notes">Your clarification</label><textarea id="notes" maxlength="1500" placeholder="Describe what was corrected"></textarea><label for="photo">Supporting photo (optional)</label><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" capture="environment"><p class="muted">JPEG, PNG or WebP · 5 MB maximum. Photos are stored locally and may be lost if browser data is cleared.</p><button id="save" disabled>Save response locally</button><p id="status" role="status" aria-live="polite"></p></section><section class="card"><h2>Saved response on this device</h2><div id="saved"><p class="muted">Loading…</p></div><button id="send" disabled>Send saved response to local demo server</button><p id="send-status" role="status" aria-live="polite"></p><button id="check-review" disabled>Check supervisor review</button><button id="next-round" disabled hidden>Prepare next response</button><button id="delete" disabled>Delete local response</button></section><details class="card"><summary>Previous responses on this device</summary><div id="local-history"></div></details></main><script type="module">
+import {submitCorrection} from './field-correction-core.mjs';
+import {transactionResult, sendSavedCorrection, requestJson, prepareNextCorrection} from './field-correction-client.mjs';
+const $ = id => document.getElementById(id);
+const KEY = 'demo-correction-001';
+let db, ready = false, busy = false, record = null, previewUrl = null, reviewInfo = null;
+const canLock = !!navigator.locks;
+
+function openDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('safi-correction-preview-v1', 1);
+    req.onupgradeneeded = () => {
+      if (!req.result.objectStoreNames.contains('responses')) req.result.createObjectStore('responses', {keyPath: 'id'});
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+    req.onblocked = () => { $('status').textContent = 'Close other SAFI preview tabs to unlock local storage.'; };
+  });
+}
+function operation(mode, action) {
+  const tx = db.transaction('responses', mode);
+  return transactionResult(tx, action(tx.objectStore('responses')));
+}
+const readDraft = () => operation('readonly', store => store.get(KEY));
+const writeDraft = value => operation('readwrite', store => store.put(value));
+function updateControls() {
+  const unavailable = !ready || busy;
+  const locked = !!(record?.receiptId || record?.attemptedAt || record?.photoToken);
+  $('save').disabled = unavailable || locked;
+  $('send').disabled = unavailable || !record?.notes?.trim() || !!record.receiptId;
+  const nextAllowed = !!record?.receiptId && reviewInfo?.receiptId === record.receiptId && reviewInfo?.review?.decision === 'needs-more-information';
+  $('next-round').hidden = !nextAllowed;
+  $('next-round').disabled = unavailable || !nextAllowed;
+  $('delete').disabled = unavailable || !record;
+  $('check-review').disabled = unavailable || !record?.receiptId;
+  $('notes').disabled = unavailable || locked;
+  $('photo').disabled = unavailable || locked;
+}
+async function render(hydrate = false) {
+  record = await readDraft();
+  $('supervisor-reason').textContent = record?.supervisorReason || 'Please clarify which rooms were completed and attach a supporting photo if available.';
+  if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = null; }
+  const host = $('saved'); host.replaceChildren();
+  const p = document.createElement('p');
+  p.textContent = record ? 'Saved locally ' + new Date(record.at).toLocaleString('en-CA') + ' - ' + record.notes : 'No local response saved.';
+  host.append(p);
+  if (record?.photo) {
+    const img = document.createElement('img');
+    previewUrl = URL.createObjectURL(record.photo); img.src = previewUrl;
+    img.alt = 'Locally saved supporting photo'; host.append(img);
+  }
+  document.querySelector('.tag').textContent = record?.receiptId ? 'Received - demo' : record?.attemptedAt ? 'Pending confirmation - demo' : 'Action requested - demo';
+  if (record?.receiptId) {
+    if (hydrate || !$('status').textContent) $('status').textContent = 'Confirmed by the local demo server. This response is locked for editing.';
+    const receipt = document.createElement('p');
+    receipt.textContent = 'Received by local demo server - Receipt: ' + record.receiptId;
+    host.append(receipt);
+  } else if (record?.attemptedAt) {
+    const pending = document.createElement('p');
+    pending.textContent = 'Confirmation pending. Retry uses the same record and photo; the original is locked.';
+    host.append(pending);
+  }
+  const history = await operation('readonly', store => store.getAll());
+  const archive = history.filter(x => x.id.startsWith(KEY + '::')).sort((a,b) => (b.round || 1)-(a.round || 1));
+  $('local-history').replaceChildren();
+  for (const item of archive) {
+    const entry = document.createElement('p');
+    entry.textContent = 'Round ' + (item.round || 1) + ': ' + item.notes + ' - Receipt: ' + item.receiptId;
+    $('local-history').append(entry);
+  }
+  if (!archive.length) $('local-history').textContent = 'No previous local responses.';
+  document.querySelector('.tag').textContent = 'Round ' + (record?.round || 1) + ' - ' + document.querySelector('.tag').textContent;
+  if (hydrate && record) $('notes').value = record.notes;
+  updateControls();
+}
+async function exclusive(statusId, action) {
+  if (!ready || busy) return;
+  busy = true; updateControls();
+  try {
+    const run = async lock => {
+      if (canLock && !lock) throw new Error('Another SAFI tab is using this draft. Retry after it finishes.');
+      await action();
+    };
+    if (canLock) await navigator.locks.request('safi-correction-' + KEY, {ifAvailable: true}, run);
+    else await run(null);
+  } catch (error) {
+    $(statusId).textContent = (statusId === 'send-status' ? 'Not confirmed: ' : 'Unable to save: ') + error.message;
+  } finally {
+    try { await render(); } catch { ready = false; $(statusId).textContent += ' Local storage is unavailable; keep this page open.'; }
+    busy = false; updateControls();
+  }
+}
+$('save').onclick = () => exclusive('status', async () => {
+  const existing = await readDraft();
+  if (existing?.receiptId || existing?.attemptedAt || existing?.photoToken) throw new Error('This response has already been sent or attempted. The original cannot be overwritten.');
+  const notes = $('notes').value.trim();
+  const file = $('photo').files[0] || existing?.photo || null;
+  const request = {submissionId: 'demo-progress', project: 'Demo - Commercial Interior', reason: 'Clarify completed rooms', state: 'requested'};
+  const response = submitCorrection(request, 'demo-worker', notes, file ? [{type: file.type, size: file.size}] : []);
+  await writeDraft({...existing, id: KEY, notes: response.response.notes, photo: file, at: response.response.at,
+    responseId: existing?.responseId || 'demo-' + crypto.randomUUID(), receiptId: null, photoToken: null});
+  $('status').textContent = 'Saved on this device only. Not submitted.';
+});
+$('send').onclick = () => exclusive('send-status', async () => {
+  $('send-status').textContent = 'Sending to local demo server...';
+  await sendSavedCorrection({readDraft, writeDraft});
+  const saved = await readDraft();
+  $('status').textContent = 'Confirmed by the local demo server. This response is locked for editing.';
+  $('send-status').textContent = saved?.serverStorage === 'local-disk' ? 'Received and saved in local test storage. No cloud upload or backup.' : 'Received in server memory only. Original photos are not retained.';
+});
+$('check-review').onclick = () => exclusive('send-status', async () => {
+  const current = await readDraft();
+  if (!current?.receiptId) throw new Error('No confirmed receipt.');
+  const data = await requestJson(fetch, '/api/demo-correction-replies');
+  const reply = data.replies?.find(x => x.requestId === KEY && x.responseId === current.responseId && x.receiptId === current.receiptId);
+  reviewInfo = reply || null;
+  $('send-status').textContent = !reply
+    ? 'The local server no longer holds this receipt. Your device copy is kept; nothing was sent again.'
+    : reply.review ? 'Supervisor review: ' + reply.review.decision + (reply.review.note ? ' - ' + reply.review.note : '')
+    : 'Received by the local demo server. Waiting for supervisor review.';
+});
+// A new version never overwrites the sent draft. Both writes share one transaction.
+$('next-round').onclick = () => exclusive('status', async () => {
+  const current = await readDraft();
+  const data = await requestJson(fetch, '/api/demo-corrections');
+  const request = data.requests?.find(x => x.id === KEY);
+  const next = prepareNextCorrection(current, request, 'demo-' + crypto.randomUUID());
+  const tx = db.transaction('responses', 'readwrite');
+  const store = tx.objectStore('responses');
+  const read = store.get(KEY);
+  const committed = transactionResult(tx, read);
+  // Check inside the transaction in case another tab edited the current copy.
+  read.onsuccess = () => {
+    if (read.result?.responseId !== current.responseId || read.result?.receiptId !== current.receiptId) {
+      tx.abort(); return;
+    }
+    store.put({...current, id:KEY + '::' + current.responseId, archive:true});
+    store.put(next);
+  };
+  await committed;
+  reviewInfo = null;
+  $('notes').value = ''; $('photo').value = ''; $('send-status').textContent = '';
+  $('status').textContent = 'New response ready. The previous version is preserved.';
+});
+$('delete').onclick = () => exclusive('status', async () => {
+  if (!confirm('Delete this device copy? Server records are not deleted.')) return;
+  await operation('readwrite', store => store.delete(KEY));
+  reviewInfo = null;
+  $('notes').value = ''; $('photo').value = ''; $('send-status').textContent = '';
+  $('status').textContent = 'Local response deleted. Server records are unchanged.';
+});
+window.addEventListener('pagehide', () => { if (previewUrl) URL.revokeObjectURL(previewUrl); });
+updateControls();
+openDb().then(async database => {
+  db = database;
+  db.onversionchange = () => { db.close(); ready = false; updateControls(); $('status').textContent = 'Storage version changed. Reload this page.'; };
+  await render(true); ready = true; updateControls();
+}).catch(() => {
+  ready = false; updateControls(); $('status').textContent = 'Local storage unavailable. No data was saved.';
+  $('saved').textContent = 'Storage unavailable.';
+});
+</script></body></html>

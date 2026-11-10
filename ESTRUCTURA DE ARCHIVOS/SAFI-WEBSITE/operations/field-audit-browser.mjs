@@ -1,0 +1,4 @@
+// Browser-only demo. Web Crypto hash chain is not an authenticated or durable audit trail.
+const hash=async value=>{const bytes=new TextEncoder().encode(JSON.stringify(value));const digest=await crypto.subtle.digest("SHA-256",bytes);return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,"0")).join("")};
+export async function appendBrowserAudit(chain,event){if(!(await verifyBrowserAudit(chain)))throw Error("Audit chain failed verification");const record={seq:chain.length+1,previousHash:chain.at(-1)?.hash??null,event:structuredClone(event)};return [...chain,{...record,hash:await hash(record)}]}
+export async function verifyBrowserAudit(chain){if(!Array.isArray(chain))return false;let previousHash=null;for(let i=0;i<chain.length;i++){const r=chain[i];if(!r||r.seq!==i+1||r.previousHash!==previousHash||r.hash!==await hash({seq:r.seq,previousHash:r.previousHash,event:r.event}))return false;previousHash=r.hash}return true}

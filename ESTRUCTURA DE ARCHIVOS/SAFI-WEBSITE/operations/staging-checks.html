@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SAFI · Browser checks</title><style>body{font:15px/1.6 system-ui;background:#f3f6fa;color:#193247;margin:0}.top{background:#10283f;color:white;padding:18px 28px}.wrap{max-width:760px;margin:35px auto;padding:0 18px}.card{background:white;padding:24px;border-radius:16px;border:1px solid #e1eaf0}h1{margin:0 0 8px}button{background:#147d81;color:white;padding:12px 18px;border:0;border-radius:10px;font:inherit;font-weight:700;cursor:pointer}.pass{color:#166d50}.fail{color:#a33842}li{margin:8px 0}small{color:#73869a}</style></head><body><div class="top"><strong>SAFI CONSTRUCTION · DEVELOPMENT</strong></div><main class="wrap"><h1>Browser validation</h1><p>Checks finance calculations and draft validation without Firebase or live data.</p><section class="card"><button id="run">Run checks</button><h2 id="status">Not run yet</h2><ol id="results"></ol><small>These are local browser checks, not a substitute for backend, security, or end-to-end tests.</small></section></main><script type="module">
+import {toCents,calculateDocument,outstandingBalance} from "./finance-core.mjs";
+import {normalizeLegacyDocument,assertReadyForIssue} from "./document-adapter.mjs";
+const checks=[];
+const test=(name,fn)=>checks.push({name,fn});
+const equal=(actual,expected)=>{if(actual!==expected)throw Error("Expected "+JSON.stringify(expected)+", received "+JSON.stringify(actual))};
+const throws=(fn)=>{let threw=false;try{fn()}catch{threw=true}if(!threw)throw Error("Expected validation error")};
+const base={clientName:"Sample Customer",projectName:"Sample Project",date:"2026-11-08",taxRate:5,items:[{desc:"Drywall",qty:"2",rate:"125.00"}]};
+test("Exact currency cents",()=>equal(toCents("12.34"),1234));
+test("Reject excess currency decimals",()=>throws(()=>toCents("1.234")));
+test("Calculate subtotal and 5% GST",()=>{const d=calculateDocument({items:[{description:"Drywall",quantity:"2",rate:"125.00"}],taxRateBasisPoints:500});equal(d.subtotalCents,25000);equal(d.taxCents,1250);equal(d.totalCents,26250)});
+test("Reject zero quantity",()=>throws(()=>calculateDocument({items:[{description:"Work",quantity:"0",rate:"1.00"}]})));
+test("Track partial payment",()=>{const r=outstandingBalance({totalCents:26250,paymentsCents:[10000]});equal(r.status,"partial");equal(r.outstandingCents,16250)});
+test("Reject overpayment",()=>throws(()=>outstandingBalance({totalCents:100,paymentsCents:[101]})));
+test("Quote draft validates",()=>{const q=normalizeLegacyDocument(base,{kind:"quote"});equal(q.calculation.totalCents,26250);equal(q.numberReserved,false)});
+test("Decimal tax precision",()=>equal(normalizeLegacyDocument({...base,taxRate:0.29},{kind:"quote"}).calculation.taxCents,73));
+test("Reject three decimal tax rate",()=>throws(()=>normalizeLegacyDocument({...base,taxRate:5.123},{kind:"quote"})));
+test("Invoice due date validates",()=>equal(normalizeLegacyDocument({...base,dueDate:"2026-12-08"},{kind:"invoice"}).dueDate,"2026-12-08"));
+test("Reject due date before issue",()=>throws(()=>normalizeLegacyDocument({...base,dueDate:"2026-11-07"},{kind:"invoice"})));
+test("Require trusted reservation before issue",()=>throws(()=>assertReadyForIssue(normalizeLegacyDocument(base,{kind:"quote"}),null)));
+document.getElementById("run").addEventListener("click",()=>{const list=document.getElementById("results");list.replaceChildren();let passed=0;for(const check of checks){const li=document.createElement("li");try{check.fn();li.textContent="PASS · "+check.name;li.className="pass";passed++}catch(error){li.textContent="FAIL · "+check.name+" — "+error.message;li.className="fail"}list.append(li)}const status=document.getElementById("status");status.textContent=passed+"/"+checks.length+" checks passed";status.className=passed===checks.length?"pass":"fail"});
+</script></body></html>
