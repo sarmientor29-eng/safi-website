@@ -1,0 +1,5 @@
+import test from "node:test";import assert from "node:assert/strict";import {createReviewEvent,historyFor} from "./field-review-history.mjs";
+const item={id:"demo-1",project:"Demo Site",status:"received"};const actor={id:"demo-admin",role:"admin"};
+test("creates reviewer-attributed approval event",()=>{const event=createReviewEvent(item,actor,"approved","",100);assert.equal(event.submissionId,item.id);assert.equal(event.actorId,actor.id);assert.equal(event.at,100);assert.equal(Object.isFrozen(event),true)});
+test("reject requires reason and received state",()=>{assert.throws(()=>createReviewEvent(item,actor,"rejected"));assert.throws(()=>createReviewEvent({...item,status:"pending"},actor,"approved"));assert.throws(()=>createReviewEvent(item,{id:"demo-worker",role:"worker"},"approved"))});
+test("history is scoped to visible submissions",()=>{const a=createReviewEvent(item,actor,"approved","",100);const b={...a,submissionId:"other",at:200};assert.deepEqual(historyFor([item],[a,b]),[a])});
