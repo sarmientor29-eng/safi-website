@@ -13,7 +13,8 @@ const routes=[
 
 test('unified shell exposes all finished staging modules without Firebase', async()=>{
   const html=await readFile(new URL('./staging-safi-unified.html',import.meta.url),'utf8');
-  for(const route of routes.filter(x=>x.endsWith('.html')&&x!=='/')) assert.ok(html.includes(route.slice(1)),route+' missing from unified shell');
+  for(const route of routes.filter(x=>x.endsWith('.html')&&x!=='/'&&x!=='/staging-safi-unified.html')) assert.ok(html.includes(route.slice(1)),route+' missing from unified shell');
+  assert.match(html,/<title>SAFI · Unified development preview<\/title>/);
   assert.equal(/firebase/i.test(html),true,'shell should explicitly explain Firebase is disconnected');
   assert.equal(/firebase-config\.js|initializeApp\s*\(/i.test(html),false,'shell must not initialize Firebase');
 });
