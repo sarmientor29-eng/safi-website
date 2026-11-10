@@ -60,3 +60,29 @@ test('demo-only pages warn users that entries are not persistent',()=>{
   assert.match(html,/preview|demo|draft/i,page+' missing preview disclosure');
  }
 });
+
+test('local JavaScript module imports resolve',()=>{
+ const sources=[...pages.map(page=>[page,read(page)]),
+  ...['finance-core.mjs','ledger-core.mjs','crm-core.mjs','document-adapter.mjs',
+      'issue-document.mjs','document-lifecycle.mjs','accounting-core.mjs']
+    .filter(name=>existsSync(join(root,name))).map(name=>[name,read(name)])];
+ for(const [sourceName,source] of sources){
+  for(const match of source.matchAll(/\b(?:import|export)\s+(?:[\s\S]*?\s+from\s+)?["'](\.[^"']+)["']/g)){
+   const target=match[1];
+   assert.ok(existsSync(join(root,target)),sourceName+' imports missing module '+target);
+  }
+ }
+});
+
+test('staging dashboard does not link to legacy admin pages',()=>{
+ const html=read('staging-dashboard.html');
+ assert.doesNotMatch(html,/href\s*=\s*["'][^"']*admin-(?:timesheets|flhas|dashboard|quotes-invoice)\.html/i);
+});
+
+test('development previews do not load Firebase SDK or configuration',()=>{
+ for(const page of pages){
+  const html=read(page);
+  assert.doesNotMatch(html,/<script[^>]+src\s*=\s*["'][^"']*firebase/i,page+' includes Firebase script');
+  assert.doesNotMatch(html,/\b(?:firebaseConfig|initializeApp|firebase\.firestore)\s*\(/,page+' appears to initialize Firebase');
+ }
+});
