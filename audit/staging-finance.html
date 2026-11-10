@@ -24,7 +24,7 @@ function addItem(description="",qty="1",rate="0.00"){
 }
 function readItems(){return [...$("items").children].map(row=>{const inputs=row.querySelectorAll("input");return {description:inputs[0].value,quantity:inputs[1].value,rate:inputs[2].value}});}
 function render(){try{const items=readItems().filter(x=>x.description.trim()||x.rate!=="0.00");if(!items.length){$("subtotal").textContent="$0.00";$("tax-amount").textContent="$0.00";$("total").textContent="$0.00";$("message").textContent="";return;}
- const tax=Number($("tax").value);if(!Number.isFinite(tax)||tax<0||tax>100||!Number.isInteger(tax*100))throw new RangeError("Enter a valid tax percentage.");
+ const taxText=$("tax").value.trim();if(!/^(?:\d{1,3})(?:\.\d{1,2})?$/.test(taxText))throw new RangeError("Enter a tax percentage with up to two decimals.");const tax=Number(taxText);if(tax>100)throw new RangeError("Tax percentage cannot exceed 100%.");
  const c=calculateDocument({items,taxRateBasisPoints:Math.round(tax*100)});$("subtotal").textContent=currency(c.subtotalCents);$("tax-amount").textContent=currency(c.taxCents);$("total").textContent=currency(c.totalCents);$("message").textContent="";
  }catch(e){$("subtotal").textContent="—";$("tax-amount").textContent="—";$("total").textContent="—";$("message").textContent=e.message;}}
 $("add").addEventListener("click",()=>addItem());
