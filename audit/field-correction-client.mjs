@@ -8,6 +8,11 @@ export function validateDraft(record) {
       typeof record.notes !== 'string' || !record.notes.trim() || record.notes.length > 1500) {
     throw new Error('A saved correction with a stable response ID is required.');
   }
+  const round = record.round ?? 1;
+  if (!Number.isSafeInteger(round) || round < 1 || round > 100 ||
+      (round > 1 && (typeof record.parentReceiptId !== 'string' || !record.parentReceiptId.trim()))) {
+    throw new Error('Invalid correction round or missing previous receipt.');
+  }
   if (record.photo && (!TYPES.has(record.photo.type) || !Number.isSafeInteger(record.photo.size) ||
       record.photo.size < 1 || record.photo.size > MAX_PHOTO_BYTES)) {
     throw new Error('Select a JPEG, PNG or WebP photo between 1 byte and 5 MB.');
@@ -69,7 +74,8 @@ export async function sendSavedCorrection({readDraft, writeDraft, fetchImpl = fe
     return requestJson(fetchImpl, '/api/demo-correction-replies', {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({requestId: record.id, responseId: record.responseId,
-        notes: record.notes, photoToken: record.photoToken || null})
+        notes: record.notes, photoToken: record.photoToken || null,
+        round: record.round ?? 1, parentReceiptId: record.parentReceiptId ?? null})
     }, timeoutMs);
   }
   await uploadPhoto();
@@ -85,10 +91,29 @@ export async function sendSavedCorrection({readDraft, writeDraft, fetchImpl = fe
     await uploadPhoto();
     result = await submit();
   }
-  if (result?.status !== 'received' || typeof result.receiptId !== 'string' || !result.receiptId.trim()) {
+  if (result?.status !== 'received' || typeof result.receiptId !== 'string' || !result.receiptId.trim() ||
+      ((record.round ?? 1) > 1 && result.round !== record.round)) {
     throw new Error('Receipt not confirmed. Keep this draft and retry.');
   }
   record = {...record, receiptId: result.receiptId, receivedAt: Date.now(), serverStorage: result.persistent === true ? 'local-disk' : 'memory'};
   await writeDraft(record);
   return record;
+}
+
+/** Prepare a separate local version only after fetching the latest supervisor request.
+ * The UI archives the previous draft and writes the returned draft atomically. */
+export function prepareNextCorrection(current, request, responseId, at = Date.now()) {
+  validateDraft(current);
+  const round = current.round ?? 1;
+  if (!current.receiptId || request?.id !== current.id || request.state !== 'needs-more-information' ||
+      request.latestReceiptId !== current.receiptId || request.latestRound !== round ||
+      request.nextRound !== round+1 || request.nextRound > 100 ||
+      typeof request.reason !== 'string' || !request.reason.trim() ||
+      !Number.isFinite(at) || typeof responseId !== 'string' ||
+      !/^demo-[a-zA-Z0-9-]{8,100}$/.test(responseId) || responseId === current.responseId) {
+    throw new Error('Refresh the supervisor review before preparing another response.');
+  }
+  return {id:current.id, responseId, round:round+1, parentReceiptId:current.receiptId,
+    supervisorReason:request.reason, notes:'', photo:null, photoToken:null, receiptId:null,
+    attemptedAt:null, at};
 }

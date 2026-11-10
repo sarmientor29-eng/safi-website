@@ -43,8 +43,8 @@ async function refresh(){
     $('storage').textContent=storage.restartPersistence?'Local disk storage active - '+storage.photos+' photo(s) retained across restarts.':'Memory-only mode - photos are not retained. Enable local disk mode before testing evidence recovery.';
     const host=$('items');host.replaceChildren();
     if(!corrections.replies.length)host.append(element('p','No correction responses received.','muted'));
-    for(const reply of corrections.replies){
-      const card=element('article',null,'card');card.append(element('span',reply.review?'Reviewed':'Awaiting review','tag'),element('h2','Worker clarification'),element('p',reply.notes),element('p','Reference: '+reply.requestId,'muted'),evidence(reply));
+    for(const reply of [...corrections.replies].sort((a,b)=>(b.round||1)-(a.round||1))){
+      const card=element('article',null,'card');card.append(element('span',reply.review?'Reviewed':'Awaiting review','tag'),element('h2','Worker clarification - round '+(reply.round||1)),element('p',reply.notes),element('p','Reference: '+reply.requestId,'muted'),evidence(reply));
       if(reply.review){card.append(element('p','Decision: '+reply.review.decision+(reply.review.note?' - '+reply.review.note:''),'result'));}
       else {
         const label=element('label','Review note'),input=document.createElement('input');input.id='note-'+reply.receiptId;label.htmlFor=input.id;input.maxLength=1500;input.placeholder='Required when more information is needed';card.append(label,input);
@@ -52,7 +52,7 @@ async function refresh(){
         for(const decision of ['accepted','needs-more-information']){
           const button=element('button',decision==='accepted'?'Accept response':'Request more information',decision==='accepted'?'':'secondary');button.type='button';actions.append(button);
           button.onclick=async()=>{const buttons=[...actions.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);try{
-            const result=await json('/api/demo-correction-review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestId:reply.requestId,decision,note:input.value})});
+            const result=await json('/api/demo-correction-review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestId:reply.requestId,receiptId:reply.receiptId,decision,note:input.value})});
             if(!result.review)throw Error('Review not confirmed');$('status').textContent=storage.restartPersistence?'Review saved in local test storage.':'Review recorded in memory only.';await refresh();
           }catch(error){$('status').textContent=error.message;}finally{buttons.forEach(b=>b.disabled=false);}};
         }

@@ -6,6 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {dirname, resolve} from 'node:path';
 import {acceptOnce, validateUpload} from './field-upload-contract.mjs';
 import {openEvidenceStore} from './field-evidence-store.mjs';
+import {correctionRequest, correctionVersions, receiveCorrection, reviewCorrection} from './field-correction-rounds.mjs';
 const root = dirname(fileURLToPath(import.meta.url));
 const hash = data => createHash('sha256').update(data).digest('hex');
 const fail = (status, message) => { throw Object.assign(new Error(message), {status}); };
@@ -53,46 +54,21 @@ export function createDemoServer(options = {}) {
         send(200, {demoOnly:true, mode:store.persistent?'local-disk':'memory-metadata', restartPersistence:store.persistent, ...store.usage()}); return;
       }
       if (req.method === 'GET' && path === '/api/demo-corrections') {
-        const reply = correctionReplies.get('demo-correction-001');
-        send(200, {requests:[{id:'demo-correction-001', submissionId:'demo-progress', project:'Demo - Commercial Interior', reason:'Clarify completed rooms', state:reply?.review?.decision || (reply?'responded':'requested')}]}); return;
+        send(200, {requests:[correctionRequest(correctionReplies)]}); return;
       }
       if (req.method === 'GET' && path === '/api/demo-correction-replies') {
-        send(200, {replies:correctionReplies.values().map(({photoToken, ...reply}) => ({...reply, evidenceUrls:evidenceUrls(reply.receiptId, photoToken?[photoToken]:[])}))}); return;
+        send(200, {replies:correctionVersions(correctionReplies).map(({photoToken, ...reply}) =>
+          ({...reply, evidenceUrls:evidenceUrls(reply.receiptId, photoToken?[photoToken]:[])}))}); return;
       }
       if (req.method === 'POST' && path === '/api/demo-correction-review') {
         const data = await jsonBody(req);
-        const result = store.transaction(() => {
-          const reply = correctionReplies.get(data?.requestId || '');
-          if (!reply) fail(404, 'No response received');
-          if (!['accepted','needs-more-information'].includes(data.decision) || typeof data.note !== 'string' || data.note.length > 1500 || (data.decision === 'needs-more-information' && !data.note.trim())) fail(400, 'Invalid review decision or note');
-          if (reply.review) {
-            if (reply.review.decision !== data.decision || reply.review.note !== data.note.trim()) fail(409, 'Review already recorded');
-            return {review:reply.review, duplicate:true};
-          }
-          const review = {decision:data.decision, note:data.note.trim(), reviewerId:'demo-admin', at:Date.now()};
-          correctionReplies.set(data.requestId, {...reply, review});
-          return {review, duplicate:false};
-        });
+        const result = store.transaction(() => reviewCorrection({replies:correctionReplies, data}));
         send(result.duplicate?200:201, result); return;
       }
       if (req.method === 'POST' && path === '/api/demo-correction-replies') {
         const data = await jsonBody(req);
-        if (data?.requestId !== 'demo-correction-001' || typeof data.notes !== 'string' || !data.notes.trim() || data.notes.length > 1500 || typeof data.responseId !== 'string' || !/^demo-[a-zA-Z0-9-]{8,100}$/.test(data.responseId) || (data.photoToken != null && typeof data.photoToken !== 'string')) fail(400, 'Invalid demo correction response');
-        const result = store.transaction(() => {
-          const existing = correctionReplies.get(data.requestId);
-          if (existing) {
-            if (existing.responseId !== data.responseId || existing.notes !== data.notes.trim() || existing.photoToken !== (data.photoToken ?? null)) fail(409, 'Correction already answered with different data');
-            return {status:'received', duplicate:true, receiptId:existing.receiptId};
-          }
-          if (data.photoToken) {
-            const photo = photoTokens.get(data.photoToken);
-            if (!photo || photo.boundKey) fail(400, 'Photo token invalid or already used');
-            photoTokens.set(data.photoToken, {...photo, boundKey:'correction:' + data.requestId});
-          }
-          const receiptId = randomUUID();
-          correctionReplies.set(data.requestId, {requestId:data.requestId, responseId:data.responseId, notes:data.notes.trim(), photoToken:data.photoToken ?? null, photoCount:data.photoToken?1:0, receiptId, receivedAt:Date.now()});
-          return {status:'received', duplicate:false, receiptId};
-        });
+        const result = store.transaction(() => receiveCorrection({replies:correctionReplies,
+          photos:photoTokens, data, newReceipt:randomUUID}));
         // Acknowledge only AFTER the SQLite transaction has committed.
         send(result.duplicate?200:201, {...result, persistent:store.persistent}); return;
       }

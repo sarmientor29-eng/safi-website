@@ -26,16 +26,16 @@ fake=r'''
   tx.objectStore=()=>{
    const operation=(type,value)=>{
     const req={};setTimeout(()=>{
-     req.result=type==='get'?structuredClone(memory.get(value)):value?.id;
+     req.result=type==='get'?structuredClone(memory.get(value)):type==='getAll'?structuredClone([...memory.values()]):value?.id;
      req.onsuccess?.();
      setTimeout(()=>{
-      if(type!=='get'&&window.__abortWrite){tx.error=new Error('Simulated transaction abort');tx.onabort?.();return;}
+      if(!['get','getAll'].includes(type)&&window.__abortWrite){tx.error=new Error('Simulated transaction abort');tx.onabort?.();return;}
       if(type==='put')memory.set(value.id,structuredClone(value));
       if(type==='delete')memory.delete(value);
       tx.oncomplete?.();
      },0);
     },0);return req;
-   };return {get:key=>operation('get',key),put:value=>operation('put',value),delete:key=>operation('delete',key)};
+   };return {get:key=>operation('get',key),getAll:()=>operation('getAll'),put:value=>operation('put',value),delete:key=>operation('delete',key)};
   };return tx;
  }};
  Object.defineProperty(window,'indexedDB',{value:{open(){const req={};setTimeout(()=>{req.result=db;req.onsuccess?.();},0);return req;}}});
