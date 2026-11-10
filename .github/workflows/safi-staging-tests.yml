@@ -1,0 +1,21 @@
+name: SAFI staging checks
+on:
+  push:
+    branches:
+      - dev/safi-audit-finance-core
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out development branch
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run isolated SAFI tests
+        run: node --test audit/*.test.mjs
