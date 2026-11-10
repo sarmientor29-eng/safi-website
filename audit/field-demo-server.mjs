@@ -11,10 +11,25 @@ const root = dirname(fileURLToPath(import.meta.url));
 const hash = data => createHash('sha256').update(data).digest('hex');
 const fail = (status, message) => { throw Object.assign(new Error(message), {status}); };
 const staticFiles = new Map(Object.entries({
-  '/': 'staging-field-transfer.html', '/staging-field-transfer.html': 'staging-field-transfer.html',
+  '/': 'staging-safi-unified.html',
+  '/staging-safi-unified.html': 'staging-safi-unified.html',
+  '/staging-dashboard.html': 'staging-dashboard.html',
+  '/staging-documents.html': 'staging-documents.html',
+  '/staging-expenses.html': 'staging-expenses.html',
+  '/staging-finance.html': 'staging-finance.html',
+  '/staging-projects.html': 'staging-projects.html',
+  '/staging-labor.html': 'staging-labor.html',
+  '/staging-flha.html': 'staging-flha.html',
+  '/staging-accounting.html': 'staging-accounting.html',
+  '/staging-worker-mobile.html': 'staging-worker-mobile.html',
+  '/staging-field-transfer.html': 'staging-field-transfer.html',
   '/staging-worker-corrections.html': 'staging-worker-corrections.html',
-  '/field-correction-core.mjs': 'field-correction-core.mjs', '/field-correction-client.mjs': 'field-correction-client.mjs',
-  '/staging-correction-review-local.html': 'staging-correction-review-local.html'
+  '/staging-correction-review-local.html': 'staging-correction-review-local.html',
+  '/finance-core.mjs': 'finance-core.mjs',
+  '/document-adapter.mjs': 'document-adapter.mjs',
+  '/accounting-core.mjs': 'accounting-core.mjs',
+  '/field-correction-core.mjs': 'field-correction-core.mjs',
+  '/field-correction-client.mjs': 'field-correction-client.mjs'
 }));
 async function bodyBytes(req, limit) {
   if (Number(req.headers['content-length']) > limit) fail(413, 'Payload too large');

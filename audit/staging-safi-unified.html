@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SAFI · Unified development preview</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,sans-serif;color:#e9f0f7;background:#08111f;--panel:#101d2f;--line:#263a52;--muted:#9db0c4;--brand:#22a7a2}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#08111f;color:#e9f0f7}.app{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}.side{border-right:1px solid var(--line);background:#0b1727;padding:22px 16px;position:sticky;top:0;height:100vh;overflow:auto}.brand{font-weight:900;letter-spacing:.08em;font-size:20px}.sub{color:var(--muted);font-size:12px;margin:4px 0 18px}.notice{font-size:12px;line-height:1.45;background:#2b2516;border:1px solid #64522b;padding:10px;border-radius:10px;margin:0 0 18px;color:#f3ddb0}.nav{display:grid;gap:7px}.nav button{all:unset;cursor:pointer;padding:11px 12px;border-radius:10px;color:#c8d5e2;font-weight:700;font-size:13px}.nav button:hover,.nav button:focus-visible{background:#18283d;outline:2px solid #5acdc8}.nav button.active{background:#153a42;color:#dffffc}.foot{font-size:11px;color:#8397ac;margin-top:22px;line-height:1.5}.main{min-width:0;display:flex;flex-direction:column}.top{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:18px 24px;border-bottom:1px solid var(--line);background:#0c1828}.top h1{font-size:20px;margin:0}.top p{margin:3px 0 0;color:var(--muted);font-size:12px}.badge{font-size:11px;padding:7px 10px;border-radius:999px;background:#153a42;color:#aef0eb;font-weight:800}.frame-wrap{padding:18px;min-height:0;flex:1}.frame{width:100%;height:calc(100vh - 104px);min-height:650px;border:1px solid var(--line);border-radius:16px;background:white}.overview{padding:32px;max-width:1150px;margin:auto}.hero{padding:30px;background:linear-gradient(135deg,#10283f,#12394a);border:1px solid #2a5264;border-radius:20px}.hero h2{font-size:34px;margin:0 0 8px}.hero p{color:#c2d5e4;max-width:760px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}.card strong{display:block;margin-bottom:6px}.card span{font-size:12px;color:var(--muted)}.ok{color:#8ee8c6!important}.pending{color:#ffd98b!important}.public{margin-top:18px;padding:18px;border:1px solid var(--line);border-radius:16px;background:#0e1a2b}.public a{color:#73d8d2}.mobile{display:none}@media(max-width:800px){.app{display:block}.side{display:none}.top{position:sticky;top:0;z-index:5;padding:14px 16px}.mobile{display:flex;gap:8px;overflow:auto;padding:10px 12px;border-bottom:1px solid var(--line);background:#0b1727}.mobile button{white-space:nowrap;border:1px solid var(--line);background:#132238;color:#e9f0f7;border-radius:10px;padding:9px 11px;font-weight:700}.frame-wrap{padding:10px}.frame{height:calc(100vh - 128px);min-height:560px}.cards{grid-template-columns:1fr}.overview{padding:18px}.hero h2{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="brand">SAFI</div><div class="sub">Unified development workspace</div>
+  <div class="notice">Development preview only. Firebase and production remain disconnected.</div>
+  <div class="nav" id="nav"></div>
+  <div class="foot">Synthetic/test data only.<br>Authentication integration is the next unfinished block.</div>
+</aside>
+<main class="main">
+<header class="top"><div><h1 id="title">Overview</h1><p id="description">One place to review the SAFI modules already built.</p></div><span class="badge">DEV · LOCAL</span></header>
+<div class="mobile" id="mobile"></div>
+<section id="overview" class="overview">
+  <div class="hero"><h2>SAFI Construction workspace</h2><p>This unified preview brings the existing development modules together without activating Firebase or changing the published site.</p></div>
+  <div class="cards">
+    <div class="card"><strong>Quotes & invoices</strong><span class="ok">Workflow modules available</span></div>
+    <div class="card"><strong>Expenses & GST</strong><span class="ok">Expense, GST and accounting previews available</span></div>
+    <div class="card"><strong>Projects & labour</strong><span class="ok">Project and labour previews available</span></div>
+    <div class="card"><strong>Safety / FLHA</strong><span class="ok">Safety preview available</span></div>
+    <div class="card"><strong>Worker field app</strong><span class="ok">Mobile, transfer and correction flows available</span></div>
+    <div class="card"><strong>Authentication</strong><span class="pending">In development — not represented as complete</span></div>
+  </div>
+  <div class="public"><strong>Public website</strong><p>The published SAFI website is intentionally not embedded here so this local preview cannot accidentally activate existing production integrations. The public site remains separate and unchanged.</p><a href="https://saficonstruction.com" target="_blank" rel="noopener">Open SAFI public website ↗</a></div>
+</section>
+<div class="frame-wrap" id="frameWrap" hidden><iframe id="frame" class="frame" title="SAFI module preview"></iframe></div>
+</main>
+</div>
+<script>
+const modules=[
+ {id:'overview',label:'Overview',title:'Overview',desc:'One place to review the SAFI modules already built.'},
+ {id:'dashboard',label:'Admin',title:'Admin dashboard',desc:'Administrative workspace preview.',src:'staging-dashboard.html'},
+ {id:'quotes',label:'Quotes',title:'Quotes & documents',desc:'Quote and document workflows.',src:'staging-finance.html'},
+ {id:'documents',label:'Documents',title:'Document center',desc:'Document lifecycle and records.',src:'staging-documents.html'},
+ {id:'expenses',label:'Expenses',title:'Expenses & GST',desc:'Expense capture and GST separation.',src:'staging-expenses.html'},
+ {id:'accounting',label:'Accounting',title:'Accounting & GST',desc:'Accounting totals and GST estimates.',src:'staging-accounting.html'},
+ {id:'projects',label:'Projects',title:'Projects',desc:'Project operations preview.',src:'staging-projects.html'},
+ {id:'labor',label:'Labour',title:'Labour & time',desc:'Labour tracking preview.',src:'staging-labor.html'},
+ {id:'flha',label:'FLHA',title:'Safety / FLHA',desc:'Field-level hazard assessment preview.',src:'staging-flha.html'},
+ {id:'worker',label:'Worker',title:'Worker mobile',desc:'Worker field interface.',src:'staging-worker-mobile.html'},
+ {id:'transfer',label:'Transfer',title:'Field transfer',desc:'Local evidence transfer test.',src:'staging-field-transfer.html'},
+ {id:'corrections',label:'Corrections',title:'Worker corrections',desc:'Versioned correction responses.',src:'staging-worker-corrections.html'},
+ {id:'review',label:'Review',title:'Evidence review',desc:'Supervisor review and evidence history.',src:'staging-correction-review-local.html'}
+];
+const nav=document.getElementById('nav'), mobile=document.getElementById('mobile'), frame=document.getElementById('frame');
+function buttons(parent){for(const m of modules){const b=document.createElement('button');b.textContent=m.label;b.dataset.id=m.id;b.onclick=()=>open(m.id);parent.appendChild(b);}}
+buttons(nav);buttons(mobile);
+function open(id){
+ const m=modules.find(x=>x.id===id)||modules[0];
+ document.getElementById('title').textContent=m.title;document.getElementById('description').textContent=m.desc;
+ document.querySelectorAll('[data-id]').forEach(b=>b.classList.toggle('active',b.dataset.id===m.id));
+ const isOverview=m.id==='overview';document.getElementById('overview').hidden=!isOverview;document.getElementById('frameWrap').hidden=isOverview;
+ if(!isOverview&&frame.getAttribute('src')!==m.src)frame.src=m.src;
+ history.replaceState(null,'','#'+m.id);
+}
+open(location.hash.slice(1)||'overview');
+</script>
+</body></html>
