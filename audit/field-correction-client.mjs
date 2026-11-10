@@ -88,7 +88,7 @@ export async function sendSavedCorrection({readDraft, writeDraft, fetchImpl = fe
   if (result?.status !== 'received' || typeof result.receiptId !== 'string' || !result.receiptId.trim()) {
     throw new Error('Receipt not confirmed. Keep this draft and retry.');
   }
-  record = {...record, receiptId: result.receiptId, receivedAt: Date.now()};
+  record = {...record, receiptId: result.receiptId, receivedAt: Date.now(), serverStorage: result.persistent === true ? 'local-disk' : 'memory'};
   await writeDraft(record);
   return record;
 }

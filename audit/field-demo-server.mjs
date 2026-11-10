@@ -1,3 +1,166 @@
-import {createServer} from "node:http";import {randomUUID,createHash} from "node:crypto";import {readFile} from "node:fs/promises";import {fileURLToPath} from "node:url";import {dirname,join,extname,resolve} from "node:path";import {acceptOnce,validateUpload} from "./field-upload-contract.mjs";
-const root=dirname(fileURLToPath(import.meta.url));export function createDemoServer(){const records=new Map(),photoTokens=new Map(),correctionReplies=new Map();return createServer(async(req,res)=>{const send=(status,data)=>{res.writeHead(status,{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"});res.end(JSON.stringify(data))};try{const url=new URL(req.url,"http://localhost");if(req.method==="GET"&&url.pathname==="/api/demo-corrections"){send(200,{requests:[{id:"demo-correction-001",submissionId:"demo-progress",project:"Demo - Commercial Interior",reason:"Clarify completed rooms",state:correctionReplies.has("demo-correction-001")?"responded":"requested"}]});return}if(req.method==="GET"&&url.pathname==="/api/demo-correction-replies"){send(200,{replies:[...correctionReplies.values()]});return}if(req.method==="POST"&&url.pathname==="/api/demo-correction-review"){const jsonChunks=[];let size=0;for await(const chunk of req){size+=chunk.length;if(size>10000){send(413,{error:"Request too large"});return}jsonChunks.push(chunk)}const raw=Buffer.concat(jsonChunks).toString("utf8");let data;try{data=JSON.parse(raw)}catch{send(400,{error:"Invalid JSON"});return}const reply=correctionReplies.get(data?.requestId);if(!reply){send(404,{error:"No response received"});return}if(!["accepted","needs-more-information"].includes(data.decision)||typeof data.note!=="string"||data.note.length>1500||(data.decision==="needs-more-information"&&!data.note.trim())){send(400,{error:"Invalid review decision or note"});return}if(reply.review){if(reply.review.decision===data.decision&&reply.review.note===data.note.trim()){send(200,{review:reply.review,duplicate:true});return}send(409,{error:"Review already recorded"});return}reply.review={decision:data.decision,note:data.note.trim(),reviewerId:"demo-admin",at:Date.now()};send(201,{review:reply.review,duplicate:false});return}if(req.method==="POST"&&url.pathname==="/api/demo-correction-replies"){const jsonChunks=[];let size=0;for await(const chunk of req){size+=chunk.length;if(size>10000){send(413,{error:"Request too large"});return}jsonChunks.push(chunk)}const raw=Buffer.concat(jsonChunks).toString("utf8");let payload;try{payload=JSON.parse(raw)}catch{send(400,{error:"Invalid JSON"});return}if(payload?.requestId!=="demo-correction-001"||typeof payload.notes!=="string"||!payload.notes.trim()||payload.notes.length>1500||typeof payload.responseId!=="string"||!/^demo-[a-zA-Z0-9-]{8,100}$/.test(payload.responseId)||payload.photoToken!=null&&typeof payload.photoToken!=="string"){send(400,{error:"Invalid demo correction response"});return}const existing=correctionReplies.get(payload.requestId);if(existing){if(existing.responseId!==payload.responseId||existing.notes!==payload.notes.trim()||existing.photoToken!==(payload.photoToken??null)){send(409,{error:"Correction already answered with different data"});return}send(200,{status:"received",duplicate:true,receiptId:existing.receiptId});return}if(payload.photoToken){const photo=photoTokens.get(payload.photoToken);if(!photo||photo.boundKey){send(400,{error:"Photo token invalid or already used"});return}photo.boundKey="correction:"+payload.requestId}const receiptId=randomUUID();correctionReplies.set(payload.requestId,{requestId:payload.requestId,responseId:payload.responseId,notes:payload.notes.trim(),photoToken:payload.photoToken??null,photoCount:payload.photoToken?1:0,receiptId,receivedAt:Date.now()});send(201,{status:"received",duplicate:false,receiptId});return}if(req.method==="POST"&&url.pathname==="/api/submissions"){const jsonChunks=[];let bytes=0;for await(const chunk of req){bytes+=chunk.length;if(bytes>50000){send(413,{error:"Payload too large"});return}jsonChunks.push(chunk)}const raw=Buffer.concat(jsonChunks).toString("utf8");let payload;try{payload=JSON.parse(raw)}catch{send(400,{error:"Invalid JSON"});return}let valid;try{valid=validateUpload(payload)}catch(e){send(400,{error:e.message});return}const key=valid.workerId+":"+valid.id;const tokens=payload.photoTokens??[];if(!Array.isArray(tokens)||tokens.length!==valid.photos.length||tokens.some((token,i)=>typeof token!=="string"||!photoTokens.has(token)||photoTokens.get(token).type!==valid.photos[i].type||photoTokens.get(token).size!==valid.photos[i].size)){send(400,{error:"Each photo requires a validated demo upload token"});return}const photoDigests=tokens.map(token=>photoTokens.get(token).digest);if(new Set(tokens).size!==tokens.length){send(400,{error:"A photo token cannot be repeated in one submission"});return}if(tokens.some(token=>photoTokens.get(token).boundKey&&photoTokens.get(token).boundKey!==key)){send(409,{error:"Photo token already linked to another submission"});return}try{const existing=records.get(key);if(existing&&JSON.stringify(existing.photoDigests)!==JSON.stringify(photoDigests)){send(409,{error:"Photo contents differ for this submission ID"});return}const result=acceptOnce(existing,valid,randomUUID(),Date.now());if(!result.duplicate){records.set(key,{...result.record,photoDigests});for(const token of tokens)photoTokens.get(token).boundKey=key}send(result.duplicate?200:201,{receiptId:result.record.receiptId,status:"received",duplicate:result.duplicate,id:valid.id})}catch(e){send(409,{error:e.message})}return}if(req.method==="POST"&&url.pathname==="/api/demo-photo"){const chunks=[];let size=0;for await(const chunk of req){size+=chunk.length;if(size>5*1024*1024){send(413,{error:"Photo exceeds 5 MB demo limit"});return}chunks.push(chunk)}const data=Buffer.concat(chunks);const jpeg=data.length>=3&&data[0]===255&&data[1]===216&&data[2]===255;const png=data.length>=8&&data.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]));const webp=data.length>=12&&data.toString("ascii",0,4)==="RIFF"&&data.toString("ascii",8,12)==="WEBP";if(!jpeg&&!png&&!webp){send(415,{error:"Only JPEG, PNG or WebP photo bytes accepted"});return}const detectedType=jpeg?"image/jpeg":png?"image/png":"image/webp";const token=randomUUID();photoTokens.set(token,{type:detectedType,size:data.length,digest:createHash("sha256").update(data).digest("hex")});send(200,{demoOnly:true,bytes:data.length,detectedType,photoToken:token,stored:false,metadataHeldInMemory:true});return}if(req.method==="GET"&&url.pathname==="/api/submissions"){send(200,{items:[...records.values()].map(({photoDigests,...item})=>({...item,photoCount:photoDigests.length}))});return}if(req.method!=="GET"){send(405,{error:"Method not allowed"});return}const allowed={"/":"staging-field-transfer.html","/staging-field-transfer.html":"staging-field-transfer.html","/staging-worker-corrections.html":"staging-worker-corrections.html","/field-correction-core.mjs":"field-correction-core.mjs","/field-correction-client.mjs":"field-correction-client.mjs","/staging-correction-review-local.html":"staging-correction-review-local.html"};const filename=Object.hasOwn(allowed,url.pathname)?allowed[url.pathname]:null;if(!filename){send(404,{error:"Not found"});return}const content=await readFile(resolve(root,filename));res.writeHead(200,{"Content-Type":filename.endsWith(".mjs")?"text/javascript; charset=utf-8":"text/html; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"});res.end(content)}catch(e){send(500,{error:"Demo server error"})}})}
-if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){const server=createDemoServer();const port=Number(process.env.PORT||8787);server.listen(port,"127.0.0.1",()=>console.log("SAFI demo only: http://127.0.0.1:"+port))}
+/** Loopback-only test server. Never expose this service to a network. */
+import {createServer} from 'node:http';
+import {randomUUID, createHash} from 'node:crypto';
+import {readFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import {dirname, resolve} from 'node:path';
+import {acceptOnce, validateUpload} from './field-upload-contract.mjs';
+import {openEvidenceStore} from './field-evidence-store.mjs';
+const root = dirname(fileURLToPath(import.meta.url));
+const hash = data => createHash('sha256').update(data).digest('hex');
+const fail = (status, message) => { throw Object.assign(new Error(message), {status}); };
+const staticFiles = new Map(Object.entries({
+  '/': 'staging-field-transfer.html', '/staging-field-transfer.html': 'staging-field-transfer.html',
+  '/staging-worker-corrections.html': 'staging-worker-corrections.html',
+  '/field-correction-core.mjs': 'field-correction-core.mjs', '/field-correction-client.mjs': 'field-correction-client.mjs',
+  '/staging-correction-review-local.html': 'staging-correction-review-local.html'
+}));
+async function bodyBytes(req, limit) {
+  if (Number(req.headers['content-length']) > limit) fail(413, 'Payload too large');
+  const chunks = []; let size = 0;
+  for await (const chunk of req) { size += chunk.length; if (size > limit) fail(413, 'Payload too large'); chunks.push(chunk); }
+  return Buffer.concat(chunks);
+}
+async function jsonBody(req, limit = 10000) {
+  const bytes = await bodyBytes(req, limit);
+  try { return JSON.parse(bytes.toString('utf8')); } catch { fail(400, 'Invalid JSON'); }
+}
+function imageType(data) {
+  // Signature check only: NOT full decoding, malware scanning or content inspection.
+  if (data.length >= 3 && data[0] === 255 && data[1] === 216 && data[2] === 255) return 'image/jpeg';
+  if (data.length >= 8 && data.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))) return 'image/png';
+  if (data.length >= 12 && data.toString('ascii',0,4) === 'RIFF' && data.toString('ascii',8,12) === 'WEBP') return 'image/webp';
+  fail(415, 'Only JPEG, PNG or WebP photo bytes accepted');
+}
+export function createDemoServer(options = {}) {
+  const store = openEvidenceStore(options);
+  const {records, photoTokens, correctionReplies} = store;
+  const evidenceUrls = (receiptId, tokens = []) => store.persistent ? tokens.map((_, i) => '/api/demo-evidence/' + receiptId + '/' + i) : [];
+  const server = createServer(async (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader('X-Frame-Options', 'DENY');
+    const send = (status, data) => { res.writeHead(status, {'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(data)); };
+    try {
+      const local = server.address();
+      const allowedHosts = new Set(['127.0.0.1:' + local.port, 'localhost:' + local.port, '[::1]:' + local.port]);
+      if (!['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(req.socket.remoteAddress) || !allowedHosts.has(req.headers.host)) fail(403, 'Local demo access only');
+      if (req.headers['sec-fetch-site'] === 'cross-site' || (req.headers.origin && req.headers.origin !== 'http://' + req.headers.host)) fail(403, 'Cross-origin access is not allowed');
+      const url = new URL(req.url, 'http://' + req.headers.host);
+      const path = url.pathname;
+      if (req.method === 'GET' && path === '/api/demo-storage') {
+        send(200, {demoOnly:true, mode:store.persistent?'local-disk':'memory-metadata', restartPersistence:store.persistent, ...store.usage()}); return;
+      }
+      if (req.method === 'GET' && path === '/api/demo-corrections') {
+        const reply = correctionReplies.get('demo-correction-001');
+        send(200, {requests:[{id:'demo-correction-001', submissionId:'demo-progress', project:'Demo - Commercial Interior', reason:'Clarify completed rooms', state:reply?.review?.decision || (reply?'responded':'requested')}]}); return;
+      }
+      if (req.method === 'GET' && path === '/api/demo-correction-replies') {
+        send(200, {replies:correctionReplies.values().map(({photoToken, ...reply}) => ({...reply, evidenceUrls:evidenceUrls(reply.receiptId, photoToken?[photoToken]:[])}))}); return;
+      }
+      if (req.method === 'POST' && path === '/api/demo-correction-review') {
+        const data = await jsonBody(req);
+        const result = store.transaction(() => {
+          const reply = correctionReplies.get(data?.requestId || '');
+          if (!reply) fail(404, 'No response received');
+          if (!['accepted','needs-more-information'].includes(data.decision) || typeof data.note !== 'string' || data.note.length > 1500 || (data.decision === 'needs-more-information' && !data.note.trim())) fail(400, 'Invalid review decision or note');
+          if (reply.review) {
+            if (reply.review.decision !== data.decision || reply.review.note !== data.note.trim()) fail(409, 'Review already recorded');
+            return {review:reply.review, duplicate:true};
+          }
+          const review = {decision:data.decision, note:data.note.trim(), reviewerId:'demo-admin', at:Date.now()};
+          correctionReplies.set(data.requestId, {...reply, review});
+          return {review, duplicate:false};
+        });
+        send(result.duplicate?200:201, result); return;
+      }
+      if (req.method === 'POST' && path === '/api/demo-correction-replies') {
+        const data = await jsonBody(req);
+        if (data?.requestId !== 'demo-correction-001' || typeof data.notes !== 'string' || !data.notes.trim() || data.notes.length > 1500 || typeof data.responseId !== 'string' || !/^demo-[a-zA-Z0-9-]{8,100}$/.test(data.responseId) || (data.photoToken != null && typeof data.photoToken !== 'string')) fail(400, 'Invalid demo correction response');
+        const result = store.transaction(() => {
+          const existing = correctionReplies.get(data.requestId);
+          if (existing) {
+            if (existing.responseId !== data.responseId || existing.notes !== data.notes.trim() || existing.photoToken !== (data.photoToken ?? null)) fail(409, 'Correction already answered with different data');
+            return {status:'received', duplicate:true, receiptId:existing.receiptId};
+          }
+          if (data.photoToken) {
+            const photo = photoTokens.get(data.photoToken);
+            if (!photo || photo.boundKey) fail(400, 'Photo token invalid or already used');
+            photoTokens.set(data.photoToken, {...photo, boundKey:'correction:' + data.requestId});
+          }
+          const receiptId = randomUUID();
+          correctionReplies.set(data.requestId, {requestId:data.requestId, responseId:data.responseId, notes:data.notes.trim(), photoToken:data.photoToken ?? null, photoCount:data.photoToken?1:0, receiptId, receivedAt:Date.now()});
+          return {status:'received', duplicate:false, receiptId};
+        });
+        // Acknowledge only AFTER the SQLite transaction has committed.
+        send(result.duplicate?200:201, {...result, persistent:store.persistent}); return;
+      }
+      if (req.method === 'POST' && path === '/api/submissions') {
+        const payload = await jsonBody(req, 50000);
+        let valid; try { valid = validateUpload(payload); } catch (error) { fail(400, error.message); }
+        const key = JSON.stringify([valid.workerId, valid.id]);
+        const tokens = payload.photoTokens ?? [];
+        const result = store.transaction(() => {
+          if (!Array.isArray(tokens) || tokens.length !== valid.photos.length || tokens.some((token,i) => typeof token !== 'string' || !photoTokens.has(token) || photoTokens.get(token).type !== valid.photos[i].type || photoTokens.get(token).size !== valid.photos[i].size)) fail(400, 'Each photo requires a validated demo upload token');
+          if (new Set(tokens).size !== tokens.length) fail(400, 'A photo token cannot be repeated in one submission');
+          if (tokens.some(token => photoTokens.get(token).boundKey && photoTokens.get(token).boundKey !== key)) fail(409, 'Photo token already linked to another submission');
+          const photoDigests = tokens.map(token => photoTokens.get(token).digest);
+          const existing = records.get(key);
+          if (existing && JSON.stringify(existing.photoDigests) !== JSON.stringify(photoDigests)) fail(409, 'Photo contents differ for this submission ID');
+          let accepted; try { accepted = acceptOnce(existing, valid, randomUUID(), Date.now()); } catch (error) { fail(409, error.message); }
+          if (!accepted.duplicate) {
+            records.set(key, {...accepted.record, photoDigests, photoTokens:tokens});
+            for (const token of tokens) photoTokens.set(token, {...photoTokens.get(token), boundKey:key});
+          }
+          return {receiptId:accepted.record.receiptId, status:'received', duplicate:accepted.duplicate, id:valid.id, persistent:store.persistent};
+        });
+        send(result.duplicate?200:201, result); return;
+      }
+      if (req.method === 'POST' && path === '/api/demo-photo') {
+        const data = await bodyBytes(req, 5 * 1024 * 1024);
+        const type = imageType(data), token = randomUUID();
+        store.transaction(() => {
+          if (photoTokens.values().length >= 100) fail(507, 'Demo photo limit reached. No files were deleted.');
+          store.addPhoto(token, data);
+          photoTokens.set(token, {type, size:data.length, digest:hash(data)});
+        });
+        send(200, {demoOnly:true, bytes:data.length, detectedType:type, photoToken:token, stored:store.persistent, storage:store.persistent?'local-disk':'memory-metadata'}); return;
+      }
+      if (req.method === 'GET' && path === '/api/submissions') {
+        send(200, {items:records.values().map(({photoDigests, photoTokens:tokens, ...item}) => ({...item, photoCount:photoDigests.length, evidenceUrls:evidenceUrls(item.receiptId, tokens)}))}); return;
+      }
+      if (req.method === 'GET' && path.startsWith('/api/demo-evidence/')) {
+        const match = path.match(/^\/api\/demo-evidence\/([a-f0-9-]{36})\/([0-4])$/);
+        if (!match || !store.persistent) fail(404, 'Evidence unavailable');
+        const receiptId = match[1], index = Number(match[2]);
+        const record = records.values().find(x => x.receiptId === receiptId);
+        const reply = correctionReplies.values().find(x => x.receiptId === receiptId);
+        const tokens = record?.photoTokens || (reply?.photoToken ? [reply.photoToken] : []);
+        const token = tokens[index];
+        const metadata = token && photoTokens.get(token), data = token && store.photo(token);
+        if (!metadata?.boundKey || !data) fail(404, 'Evidence unavailable');
+        if (data.length !== metadata.size || hash(data) !== metadata.digest) fail(500, 'Evidence integrity check failed');
+        res.writeHead(200, {'Content-Type':metadata.type, 'Content-Length':data.length, 'Content-Security-Policy':"default-src 'none'; sandbox", 'Content-Disposition':'inline'});
+        res.end(data); return;
+      }
+      if (req.method !== 'GET') fail(405, 'Method not allowed');
+      const filename = staticFiles.get(path);
+      if (!filename) fail(404, 'Not found');
+      const content = await readFile(resolve(root, filename));
+      res.writeHead(200, {'Content-Type':filename.endsWith('.mjs')?'text/javascript; charset=utf-8':'text/html; charset=utf-8'}); res.end(content);
+    } catch (error) {
+      if (res.headersSent) { res.end(); return; }
+      send(error.status || 503, {error:error.status ? error.message : 'Demo storage unavailable. No operation is confirmed.'});
+    }
+  });
+  server.on('close', () => store.close());
+  return server;
+}
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const port = Number(process.env.PORT || 8787);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid local port');
+  const server = createDemoServer({storageDir:process.env.SAFI_DEMO_DATA_DIR});
+  server.listen(port, '127.0.0.1', () => console.log('SAFI LOCAL DEMO: http://127.0.0.1:' + port + ' | Storage: ' + (process.env.SAFI_DEMO_DATA_DIR?'local disk, unencrypted':'memory only')));
+  for (const signal of ['SIGTERM','SIGINT']) process.once(signal, () => server.close());
+}

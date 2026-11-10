@@ -1,1 +1,69 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SAFI | Local correction review</title><style>body{font:16px system-ui;background:#f1f5f9;color:#183047;margin:0;padding:20px}main{max-width:720px;margin:auto}.card{background:white;border:1px solid #cbd5e1;border-radius:14px;padding:18px;margin:16px 0}button,input{font:inherit;padding:12px;border-radius:8px;min-height:44px}button{background:#145b80;color:white;border:0;margin:5px}input{width:100%;box-sizing:border-box;border:1px solid #94a3b8}.warn{background:#fff1c7;padding:14px;border-radius:10px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style></head><body><main><h1>Correction review — localhost demo</h1><p class="warn">Fictional data only. No login, authorization, permanent storage or real worker notifications. Do not expose this demo server to a network.</p><button id="refresh">Refresh received replies</button><div id="items"></div><p id="status" role="status"></p></main><script>const $=id=>document.getElementById(id);async function refresh(){const host=$("items");host.replaceChildren();try{const res=await fetch("/api/demo-correction-replies");if(!res.ok)throw Error("Server error");const data=await res.json();if(!data.replies.length){host.textContent="No worker responses received by this demo server.";return}for(const reply of data.replies){const card=document.createElement("section");card.className="card";const title=document.createElement("h2");title.textContent=reply.requestId;const p=document.createElement("p");p.textContent="Worker response: "+reply.notes;const photo=document.createElement("p");photo.textContent=reply.photoCount+" validated photo(s); originals are not stored.";card.append(title,p,photo);if(reply.review){const result=document.createElement("p");result.textContent="Reviewed: "+reply.review.decision+" · "+reply.review.note;card.append(result)}else{const input=document.createElement("input");input.placeholder="Reason required when requesting more information";card.append(input);for(const decision of ["accepted","needs-more-information"]){const button=document.createElement("button");button.textContent=decision==="accepted"?"Accept response":"Request more information";button.onclick=async()=>{button.disabled=true;try{const response=await fetch("/api/demo-correction-review",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({requestId:reply.requestId,decision,note:input.value})});const result=await response.json();if(!response.ok)throw Error(result.error);$("status").textContent="Review recorded in server memory (demo).";await refresh()}catch(e){$("status").textContent=e.message}finally{button.disabled=false}};card.append(button)}}host.append(card)}}catch(e){host.textContent="Local demo server unavailable: "+e.message}}$("refresh").onclick=refresh;refresh();</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SAFI | Field evidence review</title>
+<style>
+:root{font:16px/1.55 system-ui,-apple-system,sans-serif;background:#f2f5f8;color:#172e43}*{box-sizing:border-box}body{margin:0}.top{background:#10283f;color:#fff;padding:18px 22px}.top a{color:#c5f2eb;text-decoration:none}.top div{max-width:1000px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px}.wrap{max-width:1000px;margin:auto;padding:28px 18px 60px}h1{font-size:clamp(28px,5vw,38px);letter-spacing:-.03em;margin:4px 0 8px}h2{font-size:20px;margin:0 0 10px}p{overflow-wrap:anywhere;margin:8px 0 18px}.eyebrow{font-size:12px;font-weight:800;color:#147578;letter-spacing:.12em}.muted{color:#586f80;font-size:14px}.card{background:#fff;border:1px solid #d7e1e9;border-radius:16px;padding:22px;margin:16px 0}.warn{background:#fff7e7;border:1px solid #e3c78f;border-radius:12px;padding:14px;font-size:13px;color:#6a5027}.storage{padding:14px 0;color:#496174;font-size:14px}.toolbar,.actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.actions{justify-content:flex-start}.tag{display:inline-block;font-size:12px;font-weight:750;border-radius:30px;padding:5px 11px;color:#12605c;background:#e0f4ee}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}button{background:#147577;color:white;border:1px solid transparent;border-radius:10px;padding:12px 16px;min-height:48px;cursor:pointer;font:inherit;font-weight:700}button.secondary{background:white;color:#284c62;border-color:#b4c5d3}button:disabled{opacity:.5;cursor:not-allowed}input{width:100%;padding:12px;border:1px solid #8ca2b2;border-radius:9px;font:inherit;min-height:48px;margin:8px 0 12px}label{font-size:14px;font-weight:650}a{color:#176d73}a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #178a98;outline-offset:3px}.evidence{margin-top:15px;border-top:1px solid #e1e7ed;padding-top:12px}.evidence summary{font-weight:650;cursor:pointer;min-height:44px;padding:10px 0}.photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.photos figure{margin:0}.photos img{width:100%;max-height:280px;object-fit:contain;border:1px solid #d3dfe7;border-radius:10px;background:#f0f4f7}.photos figcaption{font-size:13px;padding-top:5px}.result{background:#edf7f1;color:#25563d;padding:12px;border-radius:10px}.status{min-height:24px;overflow-wrap:anywhere}#items,#submissions{min-width:0}@media(max-width:680px){.grid{grid-template-columns:1fr}.wrap{padding:22px 12px}.card{padding:18px}.top{padding:15px}.actions button{width:100%}}
+</style>
+</head>
+<body>
+<header class="top"><div><strong>SAFI CONSTRUCTION</strong><a href="staging-worker-corrections.html">Worker preview</a></div></header>
+<main class="wrap"><div class="eyebrow">FIELD OPERATIONS</div><h1>Review work &amp; receipts</h1><p class="muted">Read the worker's update and check the supporting evidence.</p>
+<div class="warn"><strong>Local test only.</strong> No production login or worker permissions. Use fictional records only. Disk mode keeps photos on this computer, unencrypted and without backups. Do not expose this server to a network.</div>
+<div id="storage" class="storage" role="status">Checking local storage...</div>
+<div class="toolbar"><h2>Received records</h2><button id="refresh" type="button">Refresh records</button></div>
+<p id="status" class="status" role="status" aria-live="polite"></p>
+<div class="grid"><section aria-labelledby="correction-heading"><h2 id="correction-heading">Correction responses</h2><div id="items"></div></section><section aria-labelledby="submission-heading"><h2 id="submission-heading">Progress &amp; expenses</h2><div id="submissions"></div></section></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const element=(tag,text,cls)=>{const e=document.createElement(tag);if(text)e.textContent=text;if(cls)e.className=cls;return e;};
+async function json(path,options){const response=await fetch(path,options);const data=await response.json();if(!response.ok)throw Error(data.error||'Local server error');return data;}
+function evidence(record){
+  const box=element('div',null,'evidence');
+  if(!record.photoCount){box.append(element('p','No photo attached.','muted'));return box;}
+  const urls=record.evidenceUrls||[];
+  if(!urls.length){box.append(element('p','Photo metadata only. Original not available in memory-only mode.','muted'));return box;}
+  const details=document.createElement('details');const summary=element('summary','View evidence ('+urls.length+')');details.append(summary);
+  const images=element('div',null,'photos');details.append(images);
+  details.addEventListener('toggle',()=>{if(!details.open||images.children.length)return;urls.forEach((path,index)=>{
+    // Reject URLs outside the fixed local evidence API; no arbitrary remote images.
+    if(!/^\/api\/demo-evidence\/[a-f0-9-]{36}\/[0-4]$/.test(path))return;
+    const figure=document.createElement('figure'),img=document.createElement('img');img.alt='Supporting evidence '+(index+1);img.loading='lazy';img.src=path;
+    img.onerror=()=>{figure.replaceChildren(element('p','Evidence unavailable or integrity check failed. Refresh before reviewing.','muted'));};
+    const caption=document.createElement('figcaption'),link=element('a','Open full image');link.href=path;link.target='_blank';link.rel='noopener noreferrer';caption.append(link);figure.append(img,caption);images.append(figure);
+  });});
+  box.append(details);return box;
+}
+async function refresh(){
+  $('refresh').disabled=true;
+  try{
+    const [storage,corrections,submissions]=await Promise.all([json('/api/demo-storage'),json('/api/demo-correction-replies'),json('/api/submissions')]);
+    $('storage').textContent=storage.restartPersistence?'Local disk storage active - '+storage.photos+' photo(s) retained across restarts.':'Memory-only mode - photos are not retained. Enable local disk mode before testing evidence recovery.';
+    const host=$('items');host.replaceChildren();
+    if(!corrections.replies.length)host.append(element('p','No correction responses received.','muted'));
+    for(const reply of corrections.replies){
+      const card=element('article',null,'card');card.append(element('span',reply.review?'Reviewed':'Awaiting review','tag'),element('h2','Worker clarification'),element('p',reply.notes),element('p','Reference: '+reply.requestId,'muted'),evidence(reply));
+      if(reply.review){card.append(element('p','Decision: '+reply.review.decision+(reply.review.note?' - '+reply.review.note:''),'result'));}
+      else {
+        const label=element('label','Review note'),input=document.createElement('input');input.id='note-'+reply.receiptId;label.htmlFor=input.id;input.maxLength=1500;input.placeholder='Required when more information is needed';card.append(label,input);
+        const actions=element('div',null,'actions');card.append(actions);
+        for(const decision of ['accepted','needs-more-information']){
+          const button=element('button',decision==='accepted'?'Accept response':'Request more information',decision==='accepted'?'':'secondary');button.type='button';actions.append(button);
+          button.onclick=async()=>{const buttons=[...actions.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);try{
+            const result=await json('/api/demo-correction-review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestId:reply.requestId,decision,note:input.value})});
+            if(!result.review)throw Error('Review not confirmed');$('status').textContent=storage.restartPersistence?'Review saved in local test storage.':'Review recorded in memory only.';await refresh();
+          }catch(error){$('status').textContent=error.message;}finally{buttons.forEach(b=>b.disabled=false);}};
+        }
+      }
+      host.append(card);
+    }
+    const work=$('submissions');work.replaceChildren();
+    if(!submissions.items.length)work.append(element('p','No progress or expense records received.','muted'));
+    for(const record of submissions.items){const card=element('article',null,'card');card.append(element('span',record.kind==='expense'?'Expense':'Progress','tag'),element('h2',record.projectId),element('p',record.notes));if(record.amountCents!=null)card.append(element('p',new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD'}).format(record.amountCents/100)));card.append(element('p','Worker: '+record.workerId,'muted'),evidence(record));work.append(card);}
+  }catch(error){$('status').textContent='Could not load all records: '+error.message;}
+  finally{$('refresh').disabled=false;}
+}
+$('refresh').onclick=refresh;refresh();
+</script></body></html>

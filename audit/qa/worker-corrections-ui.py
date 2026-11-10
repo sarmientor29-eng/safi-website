@@ -76,7 +76,7 @@ with sync_playwright() as p:
  page.evaluate('window.__offline=false;window.__delay=150')
  page.locator('#send').click();expect(page.locator('#send-status')).to_contain_text('Sending')
  record('buttons lock while a request is running',page.locator('#delete').is_disabled() and page.locator('#send').is_disabled())
- expect(page.locator('#send-status')).to_contain_text('confirmed receipt')
+ expect(page.locator('#send-status')).to_contain_text('Received in server memory only')
  expect(page.locator('#send')).to_be_disabled();expect(page.locator('#save')).to_be_disabled()
  record('receipt keeps send and save disabled',page.locator('#send').is_disabled() and page.locator('#save').is_disabled())
  page.locator('#check-review').click();expect(page.locator('#send-status')).to_contain_text('accepted')
